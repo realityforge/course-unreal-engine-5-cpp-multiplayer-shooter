@@ -1,0 +1,22 @@
+# DO NOT EDIT: File is auto-generated
+* -text
+Config/*.ini text=auto
+*.json text
+*.md text
+*.sh text eol=lf
+*.txt text
+.gitattributes text
+.gitignore text
+.ruby-version text
+Gemfile text
+LICENSE text
+
+*.uasset !text !filter !merge !diff
+*.fbx !text !filter !merge !diff
+*.png !text !filter !merge !diff
+*.mp3 !text !filter !merge !diff
+*.wav !text !filter !merge !diff
+*.xcf !text !filter !merge !diff
+*.jpg !text !filter !merge !diff
+**/*.umap !text !filter !merge !diff
+*.umap !text !filter !merge !diff
