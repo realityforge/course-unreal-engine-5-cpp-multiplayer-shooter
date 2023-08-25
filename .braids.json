@@ -1,0 +1,10 @@
+{
+  "config_version": 1,
+  "mirrors": {
+    "vendor/MultiplayerCourseBlasterGame": {
+      "url": "https://github.com/DruidMech/MultiplayerCourseBlasterGame.git",
+      "branch": "main",
+      "revision": "8cf5611ee27e89471a747cab980fd7653db404ec"
+    }
+  }
+}
