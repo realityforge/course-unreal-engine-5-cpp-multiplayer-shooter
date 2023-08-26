@@ -5,6 +5,11 @@
       "url": "https://github.com/DruidMech/MultiplayerCourseBlasterGame.git",
       "branch": "main",
       "revision": "8cf5611ee27e89471a747cab980fd7653db404ec"
+    },
+    "vendor/MultiplayerCourseMenuSystem": {
+      "url": "https://github.com/DruidMech/MultiplayerCourseMenuSystem.git",
+      "branch": "main",
+      "revision": "5611708e31ab857f0cb56bb1c5b3d879a5e98089"
     }
   }
 }
