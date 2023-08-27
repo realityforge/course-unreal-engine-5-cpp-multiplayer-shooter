@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "MenuSystemCharacter.generated.h"
 
+class IOnlineSession;
 
 UCLASS(config=Game)
 class AMenuSystemCharacter : public ACharacter
@@ -62,5 +63,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+public:
+	// Section containing code related to the online subsystem
+
+	TSharedPtr<IOnlineSession, ESPMode::ThreadSafe> /* a.k.a. IOnlineSessionPtr */ OnlineSessionInterface;
 };
 
