@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ABlasterCharacter
@@ -76,6 +77,32 @@ void ABlasterCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ABlasterCharacter::OnResetVR);
 }
 
+void ABlasterCharacter::OpenLobby()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OpenLobby"));
+	if (const auto World = GetWorld())
+	{
+		// The listen option on url means that when we open this map it will be opened as a listen server
+		World->ServerTravel("/Game/ThirdPersonCPP/Maps/Lobby?listen");
+	}
+}
+
+void ABlasterCharacter::CallOpenLevel(const FString& Address)
+{
+	UE_LOG(LogTemp, Warning, TEXT("CallOpenLevel %s"), *Address);
+	UGameplayStatics::OpenLevel(this, *Address);
+}
+
+void ABlasterCharacter::CallClientTravel(const FString& Address)
+{
+	UE_LOG(LogTemp, Warning, TEXT("CallClientTravel %s"), *Address);
+
+	//APlayerController* PlayerController = GetGameInstance()->GetFirstLocalPlayerController();
+	if (const auto PlayerController = Cast<APlayerController>(GetController()))
+	{
+		PlayerController->ClientTravel(Address, TRAVEL_Absolute);
+	}
+}
 
 void ABlasterCharacter::OnResetVR()
 {
