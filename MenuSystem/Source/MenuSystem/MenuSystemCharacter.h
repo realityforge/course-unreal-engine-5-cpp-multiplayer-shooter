@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Interfaces/OnlineSessionDelegates.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "MenuSystemCharacter.generated.h"
 
@@ -64,5 +65,13 @@ public:
 	// Section containing code related to the online subsystem
 
 	IOnlineSessionPtr OnlineSessionInterface;
-};
 
+protected:
+	UFUNCTION(BlueprintCallable)
+	void CreateGameSession();
+
+	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
+
+private:
+	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
+};

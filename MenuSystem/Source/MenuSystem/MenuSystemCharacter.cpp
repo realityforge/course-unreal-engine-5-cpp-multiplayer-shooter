@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,6 +80,64 @@ void AMenuSystemCharacter::BeginPlay()
 			UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+	}
+}
+
+void AMenuSystemCharacter::CreateGameSession()
+{
+	if (OnlineSessionInterface.IsValid())
+	{
+		// There can not be multiple sessions so if we try to create another then we should destroy the current
+		if (OnlineSessionInterface->GetNamedSession(NAME_GameSession))
+		{
+			// DestroySession is async ... presumably we should wait until destroy completes
+			// Before moving onto next phase ... we should do something if  the session was not successfully deleted
+			// which we do not ... weird ...
+			if (!OnlineSessionInterface->DestroySession(NAME_GameSession))
+			{
+				UE_LOG(LogTemp, Error, TEXT("AMenuSystemCharacter: Failed to DestroySession.\n"));
+			}
+		}
+
+		OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
+
+		const TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
+		SessionSettings->bIsLANMatch = false;
+		SessionSettings->NumPublicConnections = 4;
+		SessionSettings->bAllowJoinInProgress = true;
+		SessionSettings->bAllowJoinViaPresence = true;
+		SessionSettings->bShouldAdvertise = true;
+		SessionSettings->bUsesPresence = true;
+		const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+		UE_LOG(LogTemp, Error, TEXT("AMenuSystemCharacter: Calling CreateSession.\n"));
+		OnlineSessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), NAME_GameSession, *SessionSettings);
+	}
+}
+
+void AMenuSystemCharacter::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
+{
+	UE_LOG(LogTemp, Error, TEXT("AMenuSystemCharacter: OnCreateSessionComplete(%d).\n"), bWasSuccessful);
+	if (bWasSuccessful)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,
+			                                 15.f,
+			                                 FColor::Blue,
+			                                 FString::Printf(TEXT("Created Session %s"),
+			                                                 *SessionName.ToString()));
+		}
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1,
+			                                 15.f,
+			                                 FColor::Red,
+			                                 FString::Printf(TEXT("Failed to create Session %s"),
+			                                                 *SessionName.ToString()));
 		}
 	}
 }
