@@ -7,6 +7,7 @@ public class MenuSystem : ModuleRules
 	public MenuSystem(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_2;
 
 		PublicDependencyModuleNames.AddRange(new[]
 		{
