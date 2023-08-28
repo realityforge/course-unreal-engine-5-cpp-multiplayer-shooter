@@ -73,7 +73,7 @@ void AMenuSystemCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	//Add Input Mapping Context
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	if (const auto PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
 			UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
