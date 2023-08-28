@@ -5,9 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "MenuSystemCharacter.generated.h"
-
-class IOnlineSession;
 
 UCLASS(config=Game)
 class AMenuSystemCharacter : public ACharacter
@@ -64,6 +63,6 @@ public:
 public:
 	// Section containing code related to the online subsystem
 
-	TSharedPtr<IOnlineSession, ESPMode::ThreadSafe> /* a.k.a. IOnlineSessionPtr */ OnlineSessionInterface;
+	IOnlineSessionPtr OnlineSessionInterface;
 };
 
