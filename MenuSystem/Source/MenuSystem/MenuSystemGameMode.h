@@ -7,13 +7,9 @@
 #include "MenuSystemGameMode.generated.h"
 
 UCLASS(minimalapi)
-class AMenuSystemGameMode : public AGameModeBase
-{
-	GENERATED_BODY()
+class AMenuSystemGameMode : public AGameModeBase {
+  GENERATED_BODY()
 
 public:
-	AMenuSystemGameMode();
+  AMenuSystemGameMode();
 };
-
-
-
