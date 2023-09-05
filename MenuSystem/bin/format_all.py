@@ -17,10 +17,9 @@ import subprocess
 try:
     files = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "HEAD"],
                                     universal_newlines=True).splitlines()
-
     files_to_format = []
     for file in files:
-        if file.startswith("MenuSystem/Source/") and (file.lower().endswith(".h") or file.lower().endswith(".cpp")):
+        if file.startswith("Source/") and (file.lower().endswith(".h") or file.lower().endswith(".cpp")):
             files_to_format.append(file)
 
     if 0 != len(files_to_format):

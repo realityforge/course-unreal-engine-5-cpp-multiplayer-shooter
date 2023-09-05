@@ -27,7 +27,7 @@ try:
 
     files_to_format = []
     for file in changed_files:
-        if file.startswith("MenuSystem/Source/") and (file.lower().endswith(".h") or file.lower().endswith(".cpp")):
+        if file.startswith("Source/") and (file.lower().endswith(".h") or file.lower().endswith(".cpp")):
             files_to_format.append(file)
 
     if 0 != len(files_to_format):
