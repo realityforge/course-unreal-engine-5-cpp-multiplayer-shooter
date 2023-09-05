@@ -11,13 +11,16 @@
 #include "EnhancedInputSubsystems.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "Online/OnlineSessionNames.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMenuSystemCharacter
 
 AMenuSystemCharacter::AMenuSystemCharacter() :
 	CreateSessionCompleteDelegate(FOnCreateSessionCompleteDelegate::CreateUObject(this,
-		                              &AMenuSystemCharacter::OnCreateSessionComplete))
+		                              &AMenuSystemCharacter::OnCreateSessionComplete)),
+	FindSessionsCompleteDelegate(FOnFindSessionsCompleteDelegate::CreateUObject(this,
+		                                                                            &AMenuSystemCharacter::OnFindSessionsComplete))
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -109,10 +112,42 @@ void AMenuSystemCharacter::CreateGameSession()
 		SessionSettings->bAllowJoinViaPresence = true;
 		SessionSettings->bShouldAdvertise = true;
 		SessionSettings->bUsesPresence = true;
+
+		// TODO: Maybe try thisg
+		//SessionSettings->bUseLobbiesIfAvailable = true;
+
 		const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 		UE_LOG(LogTemp, Error, TEXT("AMenuSystemCharacter: Calling CreateSession.\n"));
-		OnlineSessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), NAME_GameSession, *SessionSettings);
+		OnlineSessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(),
+		                                      NAME_GameSession,
+		                                      *SessionSettings);
 	}
+}
+
+void AMenuSystemCharacter::JoinGameSession()
+{
+	if (!OnlineSessionInterface.IsValid())
+	{
+		return;
+	}
+
+	// TODO: Unclear why we do not do this in the constructor ... rather than potentially adding multiple
+	OnlineSessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
+
+	// Find Game Sessions
+	// TODO: Unclear why this is not setup in ctor?
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+
+	// We set a very high session count as we are using the DevId for game and lots of other devs
+	// will be adding sessions
+	SessionSearch->MaxSearchResults = 10000;
+	SessionSearch->bIsLanQuery = false;
+
+	// Make sure any sessions we find are using presence
+	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+	OnlineSessionInterface->FindSessions(*LocalPlayer->GetPreferredUniqueNetId(), SessionSearch.ToSharedRef());
 }
 
 void AMenuSystemCharacter::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
@@ -138,6 +173,28 @@ void AMenuSystemCharacter::OnCreateSessionComplete(FName SessionName, bool bWasS
 			                                 FColor::Red,
 			                                 FString::Printf(TEXT("Failed to create Session %s"),
 			                                                 *SessionName.ToString()));
+		}
+	}
+}
+
+void AMenuSystemCharacter::OnFindSessionsComplete(bool bWasSuccessful)
+{
+	if (bWasSuccessful)
+	{
+		for (auto Result : SessionSearch->SearchResults)
+		{
+			FString SessionId = Result.GetSessionIdStr();
+			FString OwningUserName = Result.Session.OwningUserName;
+			FUniqueNetIdPtr OwningUserId = Result.Session.OwningUserId;
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(
+				                                 -1,
+				                                 15.f,
+				                                 FColor::Cyan,
+				                                 FString::Printf(TEXT("Id: %s, User: %s"), *SessionId,
+				                                                 *OwningUserName));
+			}
 		}
 	}
 }

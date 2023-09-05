@@ -70,8 +70,27 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void CreateGameSession();
 
+	UFUNCTION(BlueprintCallable)
+	void JoinGameSession();
+
+	/**
+	 * Called when a session create request has completed
+	 *
+	 * @param SessionName the name of the session this callback is for
+	 * @param bWasSuccessful true if the async action completed without error, false if there was an error
+	 */
 	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
+
+	/**
+	 * Called when the search for an online session has completed
+	*
+	* @param bWasSuccessful true if the async action completed without error, false if there was an error
+	*/
+	void OnFindSessionsComplete(bool bWasSuccessful);
 
 private:
 	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
+	FOnFindSessionsCompleteDelegate FindSessionsCompleteDelegate;
+
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 };
