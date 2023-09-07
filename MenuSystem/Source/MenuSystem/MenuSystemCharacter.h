@@ -90,9 +90,18 @@ protected:
      */
     void OnFindSessionsComplete(bool bWasSuccessful);
 
+    /**
+     * Called when the joining process for an online session has completed
+     *
+     * @param SessionName the name of the session this callback is for
+     * @param Result the result of the attempt to join the session.
+     */
+    void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+
 private:
     FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
     FOnFindSessionsCompleteDelegate FindSessionsCompleteDelegate;
+    FOnJoinSessionCompleteDelegate JoinSessionCompleteDelegate;
 
     TSharedPtr<FOnlineSessionSearch> SessionSearch;
 };
