@@ -91,6 +91,8 @@ protected:
 private:
     IOnlineSessionPtr OnlineSessionInterface;
 
+    TSharedPtr<FOnlineSessionSettings> LastSessionSettings;
+
     // ---------------------------------------------------------------------------------
     // The following delegates are added to the OnlineSessionInterface and bound to local callbacks.
     // ---------------------------------------------------------------------------------

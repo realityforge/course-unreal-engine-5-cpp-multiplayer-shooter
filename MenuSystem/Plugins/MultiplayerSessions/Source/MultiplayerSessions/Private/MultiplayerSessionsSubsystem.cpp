@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MultiplayerSessionsSubsystem.h"
+#include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "OnlineSubsystemUtils.h"
 
 UMultiplayerSessionsSubsystem::UMultiplayerSessionsSubsystem()
     : CreateSessionCompleteDelegate(
@@ -25,6 +27,47 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, co
     if (GEngine)
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("CreateSession")));
+    }
+    if (ensure(OnlineSessionInterface))
+    {
+        if (OnlineSessionInterface->GetNamedSession(NAME_GameSession))
+        {
+            // DestroySession is async ... presumably we should wait until destroy
+            // completes Before moving onto next phase ... we should do something if
+            // the session was not successfully deleted which we do not ... weird ...
+            if (!OnlineSessionInterface->DestroySession(NAME_GameSession, DestroySessionCompleteDelegate))
+            {
+                UE_LOG(LogTemp, Error, TEXT("UMultiplayerSessionsSubsystem: Failed to DestroySession.\n"));
+            }
+        }
+        CreateSessionCompleteDelegateHandle =
+            OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
+
+        LastSessionSettings = MakeShareable(new FOnlineSessionSettings());
+        const auto OnlineSubsystem = Online::GetSubsystem(GetWorld());
+
+        // Identify OnlineSubsystemNull which we can run on a lan if needed.
+        const bool isNullOnlineSubsystem = "NULL" == OnlineSubsystem->GetSubsystemName();
+        LastSessionSettings->bIsLANMatch = isNullOnlineSubsystem ? true : false;
+        LastSessionSettings->NumPublicConnections = NumPublicConnections;
+        LastSessionSettings->bAllowJoinInProgress = true;
+        LastSessionSettings->bAllowJoinViaPresence = true;
+        LastSessionSettings->bShouldAdvertise = true;
+        LastSessionSettings->bUsesPresence = true;
+
+        // This sets a property on our session so that later when we look up sessions we can look for this key
+        // to make sure we get the desired type of session
+        LastSessionSettings->Set(FName("MatchType"), MatchType, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+
+        const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+        UE_LOG(LogTemp, Error, TEXT("UMultiplayerSessionsSubsystem: Calling CreateSession.\n"));
+        if (!OnlineSessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(),
+                                                   NAME_GameSession,
+                                                   *LastSessionSettings))
+        {
+            // If we fail to create the session then remove the delegate
+            OnlineSessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
+        }
     }
 }
 
