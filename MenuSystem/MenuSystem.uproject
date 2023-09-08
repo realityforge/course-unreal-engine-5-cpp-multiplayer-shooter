@@ -12,6 +12,34 @@
 	],
 	"Plugins": [
 		{
+			"Name": "PluginBrowser",
+			"Enabled": true
+		},
+		{
+			"Name": "EngineAssetDefinitions",
+			"Enabled": true
+		},
+		{
+			"Name": "ContentBrowserFileDataSource",
+			"Enabled": true
+		},
+		{
+			"Name": "ContentBrowserAssetDataSource",
+			"Enabled": true
+		},
+		{
+			"Name": "ContentBrowserClassDataSource",
+			"Enabled": true
+		},
+		{
+			"Name": "ContentBrowserAliasDataSource",
+			"Enabled": true
+		},
+		{
+			"Name": "PropertyAccessNode",
+			"Enabled": true
+		},
+		{
 			"Name": "ModelingToolsEditorMode",
 			"Enabled": true,
 			"TargetAllowList": [
