@@ -5,12 +5,6 @@
 
 UMultiplayerSessionsSubsystem::UMultiplayerSessionsSubsystem()
 {
-    if (const auto Subsystem = IOnlineSubsystem::Get())
-    {
-        OnlineSessionInterface = Subsystem->GetSessionInterface();
-    }
-    else
-    {
-        OnlineSessionInterface = nullptr;
-    }
+    const auto Subsystem = IOnlineSubsystem::Get();
+    OnlineSessionInterface = Subsystem ? Subsystem->GetSessionInterface() : nullptr;
 }
