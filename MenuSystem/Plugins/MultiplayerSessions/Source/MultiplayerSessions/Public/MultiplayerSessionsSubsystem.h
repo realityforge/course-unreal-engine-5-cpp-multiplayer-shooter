@@ -12,6 +12,12 @@
 ///---------------------------------------------------------------------------------
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnCreateSessionComplete, bool, bWasSuccessful);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FMultiplayerOnFindSessionsComplete,
+                                     const TArray<FOnlineSessionSearchResult>& SearchResults,
+                                     bool bWasSuccessful);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMultiplayerOnJoinSessionComplete, EOnJoinSessionCompleteResult::Type Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnDestroySessionComplete, bool, bWasSuccessful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnStartSessionComplete, bool, bWasSuccessful);
 
 ///---------------------------------------------------------------------------------
 
@@ -58,6 +64,10 @@ public:
     // Delegates to interact with this class
 
     FMultiplayerOnCreateSessionComplete MultiplayerOnCreateSessionComplete;
+    FMultiplayerOnFindSessionsComplete MultiplayerOnFindSessionsComplete;
+    FMultiplayerOnJoinSessionComplete MultiplayerOnJoinSessionComplete;
+    FMultiplayerOnDestroySessionComplete MultiplayerOnDestroySessionComplete;
+    FMultiplayerOnStartSessionComplete MultiplayerOnStartSessionComplete;
 
 protected:
     // ---------------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "CoreMinimal.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "Menu.generated.h"
 
 class UButton;
@@ -30,16 +31,41 @@ public:
 
 protected:
     // Callbacks bound to delegates from MultiplayerOnCreateSessionComplete
+    // NOTE: UFUNCTION added where passed to a dynamic delegate!
 
     /**
      * @brief Called when session creation completes.
-     *
-     * NOTE: This needs to be a UFUNCTION as it is bound to a dynamic delegate!
-     *
      * @param bWasSuccessful True if session was successfully created, false otherwise.
      */
     UFUNCTION()
-    void OnCreateSessionComplete(bool bWasSuccessful);
+    void OnCreateSession(bool bWasSuccessful);
+
+    /**
+     * @brief invoked when search  operation completes.
+     * @param SearchResults The results returned from find query
+     * @param bWasSuccessful True if operation was successful, false otherwise.
+     */
+    void OnFindSessions(const TArray<FOnlineSessionSearchResult>& SearchResults, bool bWasSuccessful);
+
+    /**
+     * @brief Called when Join session attempt completes.
+     * @param Result Result of join attempt.
+     */
+    void OnJoinSession(EOnJoinSessionCompleteResult::Type Result);
+
+    /**
+     * @brief Called when session destroy completes.
+     * @param bWasSuccessful True if session was successfully created, false otherwise.
+     */
+    UFUNCTION()
+    void OnDestroySession(bool bWasSuccessful);
+
+    /**
+     * @brief Called when start session completes.
+     * @param bWasSuccessful True if operation was successful, false otherwise.
+     */
+    UFUNCTION()
+    void OnStartSession(bool bWasSuccessful);
 
 private:
     UPROPERTY(meta = (BindWidget))

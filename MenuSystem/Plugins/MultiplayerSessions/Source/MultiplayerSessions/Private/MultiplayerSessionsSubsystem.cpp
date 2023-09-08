@@ -126,6 +126,8 @@ void UMultiplayerSessionsSubsystem::OnFindSessionsComplete(bool bWasSuccessful)
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnFindSessionsComplete")));
     }
+
+    //-MultiplayerOnFindSessionsComplete.Broadcast(SessionSearch->SearchResults);
 }
 
 void UMultiplayerSessionsSubsystem::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
@@ -134,6 +136,7 @@ void UMultiplayerSessionsSubsystem::OnJoinSessionComplete(FName SessionName, EOn
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnJoinSessionComplete")));
     }
+    MultiplayerOnJoinSessionComplete.Broadcast(Result);
 }
 
 void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
@@ -142,6 +145,7 @@ void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, 
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnDestroySessionComplete")));
     }
+    MultiplayerOnDestroySessionComplete.Broadcast(bWasSuccessful);
 }
 
 void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bool bWasSuccessful)
@@ -150,4 +154,5 @@ void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bo
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnStartSessionComplete")));
     }
+    MultiplayerOnStartSessionComplete.Broadcast(bWasSuccessful);
 }
