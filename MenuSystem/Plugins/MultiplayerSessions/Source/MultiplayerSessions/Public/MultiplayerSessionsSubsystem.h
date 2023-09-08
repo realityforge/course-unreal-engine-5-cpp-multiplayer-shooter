@@ -7,6 +7,14 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MultiplayerSessionsSubsystem.generated.h"
 
+///---------------------------------------------------------------------------------
+///  Delegates used by clients to receive notifications from this system
+///---------------------------------------------------------------------------------
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnCreateSessionComplete, bool, bWasSuccessful);
+
+///---------------------------------------------------------------------------------
+
 /**
  *
  */
@@ -46,6 +54,10 @@ public:
      * @brief Start the session.
      */
     void StartSession();
+
+    // Delegates to interact with this class
+
+    FMultiplayerOnCreateSessionComplete MultiplayerOnCreateSessionComplete;
 
 protected:
     // ---------------------------------------------------------------------------------
@@ -89,6 +101,12 @@ protected:
     void OnStartSessionComplete(FName SessionName, bool bWasSuccessful);
 
 private:
+    /**
+     * @brief Remove delegate from OnlineSubsystem and notify listeners that session was created.
+     * @param bWasSuccessful True if session creation was successful, false otherwise.
+     */
+    void CompleteSessionCreate(bool bWasSuccessful);
+
     IOnlineSessionPtr OnlineSessionInterface;
 
     TSharedPtr<FOnlineSessionSettings> LastSessionSettings;

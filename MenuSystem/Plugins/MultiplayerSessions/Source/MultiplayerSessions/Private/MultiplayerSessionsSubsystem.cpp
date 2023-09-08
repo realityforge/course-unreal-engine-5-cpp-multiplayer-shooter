@@ -22,6 +22,15 @@ UMultiplayerSessionsSubsystem::UMultiplayerSessionsSubsystem()
     OnlineSessionInterface = Subsystem ? Subsystem->GetSessionInterface() : nullptr;
 }
 
+void UMultiplayerSessionsSubsystem::CompleteSessionCreate(const bool bWasSuccessful)
+{
+    // Remove the delegate  on session interface
+    OnlineSessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
+
+    // Notify listeners that session creation completed either successfully or as a failure
+    MultiplayerOnCreateSessionComplete.Broadcast(bWasSuccessful);
+}
+
 void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, const FString& MatchType)
 {
     if (GEngine)
@@ -65,8 +74,7 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, co
                                                    NAME_GameSession,
                                                    *LastSessionSettings))
         {
-            // If we fail to create the session then remove the delegate
-            OnlineSessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
+            CompleteSessionCreate(false);
         }
     }
 }
@@ -109,6 +117,7 @@ void UMultiplayerSessionsSubsystem::OnCreateSessionComplete(FName SessionName, b
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnCreateSessionComplete")));
     }
+    CompleteSessionCreate(true);
 }
 
 void UMultiplayerSessionsSubsystem::OnFindSessionsComplete(bool bWasSuccessful)

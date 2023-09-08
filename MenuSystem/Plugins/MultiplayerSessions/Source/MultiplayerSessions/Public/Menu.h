@@ -17,6 +17,11 @@ class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget
 {
     GENERATED_BODY()
 
+protected:
+    UMenu(const FObjectInitializer& ObjectInitializer);
+
+    virtual void NativeDestruct() override;
+
 public:
     UFUNCTION(BlueprintCallable)
     void MenuSetup(int32 InNumPublicConnections = 4, FString InMatchType = TEXT("FreeForAll"));
@@ -24,9 +29,17 @@ public:
     virtual bool Initialize() override;
 
 protected:
-    virtual void NativeDestruct() override;
+    // Callbacks bound to delegates from MultiplayerOnCreateSessionComplete
 
-    UMenu(const FObjectInitializer& ObjectInitializer);
+    /**
+     * @brief Called when session creation completes.
+     *
+     * NOTE: This needs to be a UFUNCTION as it is bound to a dynamic delegate!
+     *
+     * @param bWasSuccessful True if session was successfully created, false otherwise.
+     */
+    UFUNCTION()
+    void OnCreateSessionComplete(bool bWasSuccessful);
 
 private:
     UPROPERTY(meta = (BindWidget))
