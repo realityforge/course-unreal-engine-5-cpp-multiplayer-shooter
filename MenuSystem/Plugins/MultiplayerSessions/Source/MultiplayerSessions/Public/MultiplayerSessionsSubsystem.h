@@ -7,11 +7,10 @@
 #include "MultiplayerSessionsSubsystem.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class MULTIPLAYERSESSIONS_API UMultiplayerSessionsSubsystem : public UGameInstanceSubsystem
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
 };

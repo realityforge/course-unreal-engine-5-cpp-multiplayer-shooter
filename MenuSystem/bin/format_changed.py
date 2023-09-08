@@ -17,6 +17,8 @@ import sys
 
 path_relative_to_git_root = "MenuSystem/"
 
+plugins_to_process = ["MultiplayerSessions"]
+
 # If files are passed in then restrict formatting to those
 direct_matches = []
 if 1 != len(sys.argv):
@@ -29,8 +31,14 @@ try:
 
     files_to_format = []
     for file in changed_files:
-        if file.startswith(f"{path_relative_to_git_root}Source/") and (file.lower().endswith(".h") or file.lower().endswith(".cpp")):
-            files_to_format.append(file[len(path_relative_to_git_root):])
+        lower_filename = file.lower()
+        if lower_filename.endswith(".h") or lower_filename.endswith(".cpp"):
+            if file.startswith(f"{path_relative_to_git_root}Source/"):
+                files_to_format.append(file)
+            elif file.startswith(f"{path_relative_to_git_root}Plugins/"):
+                for plugin in plugins_to_process:
+                    if file.startswith(f"{path_relative_to_git_root}Plugins/{plugin}/Source/"):
+                        files_to_format.append(file)
 
     if 0 != len(files_to_format):
         subprocess.run(["clang-format", "-i", *files_to_format])

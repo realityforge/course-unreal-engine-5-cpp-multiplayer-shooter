@@ -14,13 +14,21 @@
 
 import subprocess
 
+plugins_to_process = ["MultiplayerSessions"]
+
 try:
     files = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "HEAD"],
                                     universal_newlines=True).splitlines()
     files_to_format = []
     for file in files:
-        if file.startswith("Source/") and (file.lower().endswith(".h") or file.lower().endswith(".cpp")):
-            files_to_format.append(file)
+        lower_filename = file.lower()
+        if lower_filename.endswith(".h") or lower_filename.endswith(".cpp"):
+            if file.startswith("Source/"):
+                files_to_format.append(file)
+            elif file.startswith("Plugins/"):
+                for plugin in plugins_to_process:
+                    if file.startswith(f"Plugins/{plugin}/Source/"):
+                        files_to_format.append(file)
 
     if 0 != len(files_to_format):
         subprocess.run(["clang-format", "-i", *files_to_format])
