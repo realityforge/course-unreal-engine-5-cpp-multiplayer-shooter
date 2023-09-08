@@ -161,5 +161,8 @@
 			"Name": "CodeLiteSourceCodeAccess",
 			"Enabled": false
 		}
+	],
+	"TargetPlatforms": [
+		"Windows"
 	]
 }
