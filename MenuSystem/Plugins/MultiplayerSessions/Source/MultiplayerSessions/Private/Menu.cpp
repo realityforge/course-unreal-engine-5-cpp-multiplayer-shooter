@@ -100,6 +100,10 @@ void UMenu::OnHostButtonClicked()
     if (MultiplayerSessionsSubsystem)
     {
         MultiplayerSessionsSubsystem->CreateSession(NumPublicConnections, MatchType);
+        if (const auto World = GetWorld())
+        {
+            World->ServerTravel(FString("Lobby?listen"));
+        }
     }
 }
 
