@@ -24,6 +24,8 @@ public:
     virtual bool Initialize() override;
 
 protected:
+    virtual void NativeDestruct() override;
+
     UMenu(const FObjectInitializer& ObjectInitializer);
 
 private:
@@ -41,4 +43,6 @@ private:
 
     UPROPERTY()
     UMultiplayerSessionsSubsystem* MultiplayerSessionsSubsystem;
+
+    void MenuTearDown();
 };

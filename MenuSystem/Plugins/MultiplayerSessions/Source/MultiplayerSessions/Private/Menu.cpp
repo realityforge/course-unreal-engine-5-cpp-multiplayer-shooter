@@ -39,6 +39,25 @@ void UMenu::MenuSetup()
     }
 }
 
+void UMenu::MenuTearDown()
+{
+    // The "inverse" of MenuSetup above
+
+    RemoveFromParent();
+
+    if (const auto World = GetWorld())
+    {
+        if (const auto PlayerController = World->GetFirstPlayerController())
+        {
+            // Data structure used to setup an input mode that allows only the Game to respond to user input
+            const FInputModeGameOnly InputModeData;
+
+            PlayerController->SetInputMode(InputModeData);
+            PlayerController->SetShowMouseCursor(false);
+        }
+    }
+}
+
 bool UMenu::Initialize()
 {
     if (Super::Initialize())
@@ -57,6 +76,16 @@ bool UMenu::Initialize()
     {
         return false;
     }
+}
+
+void UMenu::NativeDestruct()
+{
+    // Invoked when the underlying ui widget disappears which means we can tear down menu
+    // infrastructure and re-enable user input to the game
+
+    MenuTearDown();
+
+    Super::NativeDestruct();
 }
 
 void UMenu::OnHostButtonClicked()
