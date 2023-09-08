@@ -12,6 +12,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "MultiplayerSessions",
+			"Enabled": true
+		},
+		{
 			"Name": "PluginBrowser",
 			"Enabled": true
 		},
