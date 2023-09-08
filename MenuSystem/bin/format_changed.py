@@ -15,6 +15,7 @@
 import subprocess
 import sys
 
+# This code assumes we are running from this directory
 path_relative_to_git_root = "MenuSystem/"
 
 plugins_to_process = ["MultiplayerSessions"]
@@ -29,15 +30,17 @@ try:
     changed_files = subprocess.check_output(["git", "diff", "--name-only", "HEAD", *direct_matches],
                                             universal_newlines=True).splitlines()
 
+    project_changed_files = [x[len(path_relative_to_git_root):] for x in changed_files if x.startswith(path_relative_to_git_root)]
+
     files_to_format = []
-    for file in changed_files:
+    for file in project_changed_files:
         lower_filename = file.lower()
         if lower_filename.endswith(".h") or lower_filename.endswith(".cpp"):
-            if file.startswith(f"{path_relative_to_git_root}Source/"):
+            if file.startswith("Source/"):
                 files_to_format.append(file)
-            elif file.startswith(f"{path_relative_to_git_root}Plugins/"):
+            elif file.startswith("Plugins/"):
                 for plugin in plugins_to_process:
-                    if file.startswith(f"{path_relative_to_git_root}Plugins/{plugin}/Source/"):
+                    if file.startswith(f"Plugins/{plugin}/Source/"):
                         files_to_format.append(file)
 
     if 0 != len(files_to_format):
