@@ -131,7 +131,7 @@
 		},
 		{
 			"Name": "VisualStudioSourceCodeAccess",
-			"Enabled": false
+			"Enabled": true
 		},
 		{
 			"Name": "VisualStudioCodeSourceCodeAccess",
