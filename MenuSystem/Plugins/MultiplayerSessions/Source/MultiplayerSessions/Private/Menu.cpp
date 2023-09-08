@@ -9,8 +9,11 @@ UMenu::UMenu(const FObjectInitializer& ObjectInitializer)
 {
 }
 
-void UMenu::MenuSetup()
+void UMenu::MenuSetup(int32 InNumPublicConnections, FString InMatchType)
 {
+    NumPublicConnections = InNumPublicConnections;
+    MatchType = InMatchType;
+
     AddToViewport();
     SetVisibility(ESlateVisibility::Visible);
     SetIsFocusable(true);
@@ -96,7 +99,7 @@ void UMenu::OnHostButtonClicked()
     }
     if (MultiplayerSessionsSubsystem)
     {
-        MultiplayerSessionsSubsystem->CreateSession(4, FString(TEXT("FreeForAll")));
+        MultiplayerSessionsSubsystem->CreateSession(NumPublicConnections, MatchType);
     }
 }
 
