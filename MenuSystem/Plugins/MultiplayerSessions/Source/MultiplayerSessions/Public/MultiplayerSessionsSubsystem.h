@@ -12,11 +12,13 @@
 ///---------------------------------------------------------------------------------
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnCreateSessionComplete, bool, bWasSuccessful);
+
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMultiplayerOnFindSessionsComplete,
                                      const TArray<FOnlineSessionSearchResult>& SearchResults,
                                      bool bWasSuccessful);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMultiplayerOnJoinSessionComplete, EOnJoinSessionCompleteResult::Type Result);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnDestroySessionComplete, bool, bWasSuccessful);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnStartSessionComplete, bool, bWasSuccessful);
 
 ///---------------------------------------------------------------------------------
@@ -117,9 +119,30 @@ private:
      */
     void CompleteSessionCreate(bool bWasSuccessful);
 
+    /**
+     * @brief Remove delegate from OnlineSubsystem and notify listeners that FindSession operation completed.
+     * @param Results Results the results of the search.
+     * @param bWasSuccessful True if operation was successful, false otherwise.
+     */
+    void CompleteFindSessions(const TArray<FOnlineSessionSearchResult>& Results, bool bWasSuccessful);
+
+    /**
+     * @brief Remove delegate from OnlineSubsystem and notify listeners that JoinSession operation completed.
+     * @param ResultType the code describing completion type.
+     */
+    void CompleteJoinSession(const EOnJoinSessionCompleteResult::Type ResultType);
+
+    /**
+     * @brief Return true if the current OnlineSubsystem is the NULL online subsystem.
+     * @return true if the current OnlineSubsystem is the NULL online subsystem, false otherwise.
+     */
+    bool IsNullOnlineSubsystem() const;
+
     IOnlineSessionPtr OnlineSessionInterface;
 
     TSharedPtr<FOnlineSessionSettings> LastSessionSettings;
+
+    TSharedPtr<FOnlineSessionSearch> LastSessionSearch;
 
     // ---------------------------------------------------------------------------------
     // The following delegates are added to the OnlineSessionInterface and bound to local callbacks.

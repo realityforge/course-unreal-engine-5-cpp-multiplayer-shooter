@@ -3,6 +3,9 @@
 #include "Menu.h"
 #include "Components/Button.h"
 #include "MultiplayerSessionsSubsystem.h"
+#include "OnlineSessionSettings.h"
+#include "OnlineSubsystem.h"
+#include "OnlineSubsystemUtils.h"
 
 UMenu::UMenu(const FObjectInitializer& ObjectInitializer)
     : UUserWidget(ObjectInitializer), HostButton(nullptr), JoinButton(nullptr), MultiplayerSessionsSubsystem(nullptr)
@@ -122,19 +125,120 @@ void UMenu::OnCreateSession(bool bWasSuccessful)
     }
 }
 
-void UMenu::OnFindSessions(const TArray<FOnlineSessionSearchResult>& SearchResults, bool bWasSuccessful)
+void UMenu::OnFindSessions(const TArray<FOnlineSessionSearchResult>& SearchResults, const bool bWasSuccessful)
 {
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString(TEXT("UMenu::OnFindSessionsComplete ")));
+        GEngine->AddOnScreenDebugMessage(
+            -1,
+            15.f,
+            FColor::Yellow,
+            FString::Printf(TEXT("UMenu::OnFindSessionsComplete - bWasSuccessful=%d SearchResults.Len=%d"),
+                            bWasSuccessful,
+                            SearchResults.Num()));
+    }
+    if (MultiplayerSessionsSubsystem)
+    {
+        for (const auto Result : SearchResults)
+        {
+            // Look for a result that matches our desired MatchType
+            if (FString ResultMatchType;
+                Result.Session.SessionSettings.Get(FName("MatchType"), ResultMatchType) && ResultMatchType == MatchType)
+            {
+                MultiplayerSessionsSubsystem->JoinSession(Result);
+                if (GEngine)
+                {
+                    GEngine->AddOnScreenDebugMessage(
+                        -1,
+                        15.f,
+                        FColor::Yellow,
+                        FString(TEXT("UMenu::OnFindSessionsComplete - Found matching session")));
+                }
+                return;
+            }
+        }
+    }
+    else
+    {
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1,
+                                             15.f,
+                                             FColor::Yellow,
+                                             FString(TEXT("UMenu::OnFindSessionsComplete - Failed to get subsystem")));
+        }
     }
 }
 
-void UMenu::OnJoinSession(EOnJoinSessionCompleteResult::Type Result)
+void UMenu::OnJoinSession(const EOnJoinSessionCompleteResult::Type Result)
 {
     if (GEngine)
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString(TEXT("UMenu::OnJoinSessionComplete ")));
+    }
+    if (const auto Subsystem = Online::GetSubsystem(GetWorld()))
+    {
+        if (const auto SessionInterface = Subsystem->GetSessionInterface(); SessionInterface.IsValid())
+        {
+            if (FString Address; SessionInterface->GetResolvedConnectString(NAME_GameSession, Address))
+            {
+                if (APlayerController* PlayerController = GetGameInstance()->GetFirstLocalPlayerController())
+                {
+                    PlayerController->ClientTravel(Address, TRAVEL_Absolute);
+                    if (GEngine)
+                    {
+                        GEngine->AddOnScreenDebugMessage(
+                            -1,
+                            15.f,
+                            FColor::Yellow,
+                            FString(TEXT("UMenu::OnJoinSessionComplete - Client Travel Complete")));
+                    }
+                }
+                else
+                {
+                    if (GEngine)
+                    {
+                        GEngine->AddOnScreenDebugMessage(
+                            -1,
+                            15.f,
+                            FColor::Yellow,
+                            FString(TEXT("UMenu::OnJoinSessionComplete - No local player controller")));
+                    }
+                }
+            }
+            else
+            {
+                // TODO: Error here?
+                if (GEngine)
+                {
+                    GEngine->AddOnScreenDebugMessage(-1,
+                                                     15.f,
+                                                     FColor::Yellow,
+                                                     FString(TEXT("UMenu::OnJoinSessionComplete - No get Address")));
+                }
+            }
+        }
+        else
+        {
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(
+                    -1,
+                    15.f,
+                    FColor::Yellow,
+                    FString(TEXT("UMenu::OnJoinSessionComplete - Invalid Session INterface")));
+            }
+        }
+    }
+    else
+    {
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1,
+                                             15.f,
+                                             FColor::Yellow,
+                                             FString(TEXT("UMenu::OnJoinSessionComplete - Failed to get subsystem")));
+        }
     }
 }
 
@@ -171,5 +275,15 @@ void UMenu::OnJoinButtonClicked()
     if (GEngine)
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString(TEXT("Join button clicked!")));
+    }
+    if (MultiplayerSessionsSubsystem)
+    {
+        // We set a very high session count as we are using the DevId for game and
+        // lots of other devs will be adding sessions
+        MultiplayerSessionsSubsystem->FindSessions(10000);
+    }
+    else
+    {
+        // TODO: Really should deal gracefully with this error
     }
 }
