@@ -225,6 +225,19 @@ void UMultiplayerSessionsSubsystem::DestroySession()
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("DestroySession")));
     }
+    if (OnlineSessionInterface.IsValid())
+    {
+        DestroySessionCompleteDelegateHandle =
+            OnlineSessionInterface->AddOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegate);
+        if (!OnlineSessionInterface->DestroySession(NAME_GameSession))
+        {
+            DestroySessionComplete(false);
+        }
+    }
+    else
+    {
+        DestroySessionComplete(false);
+    }
 }
 
 void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
@@ -233,13 +246,40 @@ void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, 
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnDestroySessionComplete")));
     }
-    if (OnlineSessionInterface.IsValid())
+    DestroySessionComplete(bWasSuccessful);
+    if (bCreateSessionOnDestroy)
     {
-        OnlineSessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
+        if (bWasSuccessful)
+        {
+            const int32 NumPublicConnections = LastNumPublicConnections;
+            const FString MatchType = LastMatchType;
+            LastNumPublicConnections = 0;
+            LastMatchType = "";
+            bCreateSessionOnDestroy = false;
+            CreateSession(NumPublicConnections, MatchType);
+        }
+        else
+        {
+            UE_LOG(LogTemp,
+                   Error,
+                   TEXT("UMultiplayerSessionsSubsystem Failed to Destroy session when a create session was pening.\n"));
+            // Unclear what to do here ... call session create failed?
+        }
     }
-    else
+}
+
+void UMultiplayerSessionsSubsystem::DestroySessionComplete(bool bWasSuccessful)
+{
+    if (DestroySessionCompleteDelegateHandle.IsValid())
     {
-        DestroySessionCompleteDelegateHandle.Reset();
+        if (OnlineSessionInterface.IsValid())
+        {
+            OnlineSessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
+        }
+        else
+        {
+            DestroySessionCompleteDelegateHandle.Reset();
+        }
     }
     MultiplayerOnDestroySessionComplete.Broadcast(bWasSuccessful);
 }

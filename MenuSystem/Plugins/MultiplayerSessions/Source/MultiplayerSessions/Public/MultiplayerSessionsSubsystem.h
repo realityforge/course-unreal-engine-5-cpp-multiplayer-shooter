@@ -132,6 +132,8 @@ private:
      */
     void CompleteJoinSession(const EOnJoinSessionCompleteResult::Type ResultType);
 
+    void DestroySessionComplete(bool bWasSuccessful);
+
     void CompleteStartSession(bool bWasSuccessful);
 
     /**
@@ -160,4 +162,8 @@ private:
     FDelegateHandle DestroySessionCompleteDelegateHandle;
     FOnStartSessionCompleteDelegate StartSessionCompleteDelegate;
     FDelegateHandle StartSessionCompleteDelegateHandle;
+
+    bool bCreateSessionOnDestroy{ false };
+    int32 LastNumPublicConnections{ 0 };
+    FString LastMatchType{ TEXT("") };
 };
