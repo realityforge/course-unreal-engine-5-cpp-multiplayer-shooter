@@ -62,6 +62,7 @@ void UMultiplayerSessionsSubsystem::CreateSession(const int32 NumPublicConnectio
         LastSessionSettings->bAllowJoinViaPresence = true;
         LastSessionSettings->bShouldAdvertise = true;
         LastSessionSettings->bUsesPresence = true;
+        LastSessionSettings->BuildUniqueId = 1;
 
         // This sets a property on our session so that later when we look up sessions we can look for this key
         // to make sure we get the desired type of session
