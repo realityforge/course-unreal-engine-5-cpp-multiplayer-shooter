@@ -14,6 +14,7 @@
 
 import subprocess
 
+projects_to_process = ["Blaster", "MenuSystem"]
 plugins_to_process = ["MultiplayerSessions"]
 
 try:
@@ -23,12 +24,13 @@ try:
     for file in files:
         lower_filename = file.lower()
         if lower_filename.endswith(".h") or lower_filename.endswith(".cpp"):
-            if file.startswith("Source/"):
-                files_to_format.append(file)
-            elif file.startswith("Plugins/"):
-                for plugin in plugins_to_process:
-                    if file.startswith(f"Plugins/{plugin}/Source/"):
-                        files_to_format.append(file)
+            for project in projects_to_process:
+                if file.startswith(f"{project}/Source/"):
+                    files_to_format.append(file)
+                elif file.startswith(f"{project}/Plugins/"):
+                    for plugin in plugins_to_process:
+                        if file.startswith(f"{project}/Plugins/{plugin}/Source/"):
+                            files_to_format.append(file)
 
     if 0 != len(files_to_format):
         subprocess.run(["clang-format", "-i", *files_to_format])
