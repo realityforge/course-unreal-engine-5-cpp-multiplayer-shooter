@@ -7,12 +7,8 @@
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
 
-UMenu::UMenu(const FObjectInitializer& ObjectInitializer)
-    : UUserWidget(ObjectInitializer), HostButton(nullptr), JoinButton(nullptr), MultiplayerSessionsSubsystem(nullptr)
-{
-}
+UMenu::UMenu(const FObjectInitializer& ObjectInitializer) : UUserWidget(ObjectInitializer) {}
 
-void UMenu::MenuSetup(int32 InNumPublicConnections, FString InMatchType)
 {
     NumPublicConnections = InNumPublicConnections;
     MatchType = InMatchType;

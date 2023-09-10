@@ -69,10 +69,10 @@ protected:
 
 private:
     UPROPERTY(meta = (BindWidget))
-    UButton* HostButton;
+    UButton* HostButton{ nullptr };
 
     UPROPERTY(meta = (BindWidget))
-    UButton* JoinButton;
+    UButton* JoinButton{ nullptr };
 
     UFUNCTION()
     void OnHostButtonClicked();
@@ -81,7 +81,7 @@ private:
     void OnJoinButtonClicked();
 
     UPROPERTY()
-    UMultiplayerSessionsSubsystem* MultiplayerSessionsSubsystem;
+    UMultiplayerSessionsSubsystem* MultiplayerSessionsSubsystem{ nullptr };
 
     void MenuTearDown();
 
