@@ -9,9 +9,11 @@
 
 UMenu::UMenu(const FObjectInitializer& ObjectInitializer) : UUserWidget(ObjectInitializer) {}
 
+void UMenu::MenuSetup(const int32 InNumPublicConnections, const FString& InMatchType, const FString& InPathToLobby)
 {
     NumPublicConnections = InNumPublicConnections;
     MatchType = InMatchType;
+    PathToLobby = InPathToLobby;
 
     AddToViewport();
     SetVisibility(ESlateVisibility::Visible);
@@ -109,7 +111,8 @@ void UMenu::OnCreateSession(const bool bWasSuccessful)
     {
         if (const auto World = GetWorld())
         {
-            World->ServerTravel(FString("Lobby?listen"));
+            const FString URL = FString::Printf(TEXT("%s?listen"), *PathToLobby);
+            World->ServerTravel(URL);
         }
     }
     else
