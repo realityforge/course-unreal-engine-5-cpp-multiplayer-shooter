@@ -43,38 +43,40 @@ void UMultiplayerSessionsSubsystem::CreateSession(const int32 NumPublicConnectio
     {
         if (OnlineSessionInterface->GetNamedSession(NAME_GameSession))
         {
-            // DestroySession is async ... presumably we should wait until destroy
-            // completes Before moving onto next phase ... we should do something if
-            // the session was not successfully deleted which we do not ... weird ...
-            if (!OnlineSessionInterface->DestroySession(NAME_GameSession, DestroySessionCompleteDelegate))
-            {
-                UE_LOG(LogTemp, Error, TEXT("UMultiplayerSessionsSubsystem: Failed to DestroySession.\n"));
-            }
+            bCreateSessionOnDestroy = true;
+            LastNumPublicConnections = NumPublicConnections;
+            LastMatchType = MatchType;
+            DestroySession();
         }
-        CreateSessionCompleteDelegateHandle =
-            OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
-
-        LastSessionSettings = MakeShareable(new FOnlineSessionSettings());
-
-        LastSessionSettings->bIsLANMatch = IsNullOnlineSubsystem() ? true : false;
-        LastSessionSettings->NumPublicConnections = NumPublicConnections;
-        LastSessionSettings->bAllowJoinInProgress = true;
-        LastSessionSettings->bAllowJoinViaPresence = true;
-        LastSessionSettings->bShouldAdvertise = true;
-        LastSessionSettings->bUsesPresence = true;
-        LastSessionSettings->BuildUniqueId = 1;
-
-        // This sets a property on our session so that later when we look up sessions we can look for this key
-        // to make sure we get the desired type of session
-        LastSessionSettings->Set(FName("MatchType"), MatchType, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-
-        UE_LOG(LogTemp, Error, TEXT("UMultiplayerSessionsSubsystem: Calling CreateSession.\n"));
-        if (!OnlineSessionInterface->CreateSession(
-                *GetWorld()->GetFirstLocalPlayerFromController()->GetPreferredUniqueNetId(),
-                NAME_GameSession,
-                *LastSessionSettings))
+        else
         {
-            CompleteSessionCreate(false);
+            CreateSessionCompleteDelegateHandle =
+                OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
+
+            LastSessionSettings = MakeShareable(new FOnlineSessionSettings());
+
+            LastSessionSettings->bIsLANMatch = IsNullOnlineSubsystem() ? true : false;
+            LastSessionSettings->NumPublicConnections = NumPublicConnections;
+            LastSessionSettings->bAllowJoinInProgress = true;
+            LastSessionSettings->bAllowJoinViaPresence = true;
+            LastSessionSettings->bShouldAdvertise = true;
+            LastSessionSettings->bUsesPresence = true;
+            LastSessionSettings->BuildUniqueId = 1;
+
+            // This sets a property on our session so that later when we look up sessions we can look for this key
+            // to make sure we get the desired type of session
+            LastSessionSettings->Set(FName("MatchType"),
+                                     MatchType,
+                                     EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+
+            UE_LOG(LogTemp, Error, TEXT("UMultiplayerSessionsSubsystem: Calling CreateSession.\n"));
+            if (!OnlineSessionInterface->CreateSession(
+                    *GetWorld()->GetFirstLocalPlayerFromController()->GetPreferredUniqueNetId(),
+                    NAME_GameSession,
+                    *LastSessionSettings))
+            {
+                CompleteSessionCreate(false);
+            }
         }
     }
 }
