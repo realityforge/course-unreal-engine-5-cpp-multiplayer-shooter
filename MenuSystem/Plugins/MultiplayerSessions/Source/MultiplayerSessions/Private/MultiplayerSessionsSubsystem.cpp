@@ -95,6 +95,10 @@ void UMultiplayerSessionsSubsystem::CompleteSessionCreate(const bool bWasSuccess
         // Remove the delegate  on session interface
         OnlineSessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
     }
+    else
+    {
+        CreateSessionCompleteDelegateHandle.Reset();
+    }
 
     // Notify listeners that session creation completed either successfully or as a failure
     MultiplayerOnCreateSessionComplete.Broadcast(bWasSuccessful);
@@ -151,6 +155,10 @@ void UMultiplayerSessionsSubsystem::CompleteFindSessions(const TArray<FOnlineSes
     {
         OnlineSessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
     }
+    else
+    {
+        FindSessionsCompleteDelegateHandle.Reset();
+    }
 
     // A successful search that returns zero results is converted to a failure for listeners
     MultiplayerOnFindSessionsComplete.Broadcast(Results, bWasSuccessful && Results.Num() > 0);
@@ -199,6 +207,10 @@ void UMultiplayerSessionsSubsystem::CompleteJoinSession(const EOnJoinSessionComp
     if (OnlineSessionInterface.IsValid())
     {
         OnlineSessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
+    }
+    else
+    {
+        JoinSessionCompleteDelegateHandle.Reset();
     }
     MultiplayerOnJoinSessionComplete.Broadcast(ResultType);
 }
