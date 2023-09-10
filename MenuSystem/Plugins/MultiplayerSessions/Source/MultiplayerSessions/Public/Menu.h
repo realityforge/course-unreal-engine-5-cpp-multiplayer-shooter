@@ -76,11 +76,17 @@ private:
     UPROPERTY(meta = (BindWidget))
     UButton* JoinButton{ nullptr };
 
+    UPROPERTY(meta = (BindWidget))
+    UButton* QuitButton{ nullptr };
+
     UFUNCTION()
     void OnHostButtonClicked();
 
     UFUNCTION()
     void OnJoinButtonClicked();
+
+    UFUNCTION()
+    void OnQuitButtonClicked();
 
     UPROPERTY()
     UMultiplayerSessionsSubsystem* MultiplayerSessionsSubsystem{ nullptr };

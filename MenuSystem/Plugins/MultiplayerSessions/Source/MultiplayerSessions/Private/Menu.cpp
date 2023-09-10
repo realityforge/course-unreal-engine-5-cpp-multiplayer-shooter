@@ -2,6 +2,7 @@
 
 #include "Menu.h"
 #include "Components/Button.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "MultiplayerSessionsSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
@@ -82,6 +83,10 @@ bool UMenu::Initialize()
         if (JoinButton)
         {
             JoinButton->OnClicked.AddDynamic(this, &UMenu::OnJoinButtonClicked);
+        }
+        if (QuitButton)
+        {
+            QuitButton->OnClicked.AddDynamic(this, &UMenu::OnQuitButtonClicked);
         }
         return true;
     }
@@ -284,5 +289,21 @@ void UMenu::OnJoinButtonClicked()
     else
     {
         // TODO: Really should deal gracefully with this error
+    }
+}
+
+void UMenu::OnQuitButtonClicked()
+{
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString(TEXT("Quit button clicked!")));
+    }
+    if (const auto World = GetWorld())
+    {
+        if (const auto PlayerController = World->GetFirstPlayerController())
+        {
+
+            UKismetSystemLibrary::QuitGame(this, PlayerController, EQuitPreference::Quit, false);
+        }
     }
 }
