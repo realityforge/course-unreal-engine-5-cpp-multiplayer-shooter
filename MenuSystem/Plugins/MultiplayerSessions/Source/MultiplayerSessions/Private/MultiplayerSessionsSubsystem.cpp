@@ -254,14 +254,24 @@ void UMultiplayerSessionsSubsystem::StartSession()
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("StartSession")));
     }
+    if (OnlineSessionInterface.IsValid())
+    {
+        StartSessionCompleteDelegateHandle =
+            OnlineSessionInterface->AddOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegate);
+
+        if (!OnlineSessionInterface->StartSession(NAME_GameSession))
+        {
+            CompleteStartSession(false);
+        }
+    }
+    else
+    {
+        CompleteStartSession(false);
+    }
 }
 
-void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bool bWasSuccessful)
+void UMultiplayerSessionsSubsystem::CompleteStartSession(const bool bWasSuccessful)
 {
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnStartSessionComplete")));
-    }
     if (OnlineSessionInterface.IsValid())
     {
         OnlineSessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
@@ -271,4 +281,13 @@ void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bo
         StartSessionCompleteDelegateHandle.Reset();
     }
     MultiplayerOnStartSessionComplete.Broadcast(bWasSuccessful);
+}
+
+void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bool bWasSuccessful)
+{
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnStartSessionComplete")));
+    }
+    CompleteStartSession(bWasSuccessful);
 }

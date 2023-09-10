@@ -132,6 +132,8 @@ private:
      */
     void CompleteJoinSession(const EOnJoinSessionCompleteResult::Type ResultType);
 
+    void CompleteStartSession(bool bWasSuccessful);
+
     /**
      * @brief Return true if the current OnlineSubsystem is the NULL online subsystem.
      * @return true if the current OnlineSubsystem is the NULL online subsystem, false otherwise.
