@@ -233,6 +233,14 @@ void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, 
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnDestroySessionComplete")));
     }
+    if (OnlineSessionInterface.IsValid())
+    {
+        OnlineSessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
+    }
+    else
+    {
+        DestroySessionCompleteDelegateHandle.Reset();
+    }
     MultiplayerOnDestroySessionComplete.Broadcast(bWasSuccessful);
 }
 
@@ -253,6 +261,14 @@ void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bo
     if (GEngine)
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("OnStartSessionComplete")));
+    }
+    if (OnlineSessionInterface.IsValid())
+    {
+        OnlineSessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
+    }
+    else
+    {
+        StartSessionCompleteDelegateHandle.Reset();
     }
     MultiplayerOnStartSessionComplete.Broadcast(bWasSuccessful);
 }
