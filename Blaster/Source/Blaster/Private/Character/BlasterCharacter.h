@@ -38,4 +38,8 @@ private:
     //---------------------------------------------------------------------------
 
 public:
+    /** Return the CameraBoom SubObject **/
+    FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+    /** Return the FollowCamera SubObject **/
+    FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
