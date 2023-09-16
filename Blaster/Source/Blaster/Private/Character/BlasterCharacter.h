@@ -25,11 +25,17 @@ protected:
     virtual void BeginPlay() override;
 
 private:
+    //---------------------------------------------------------------------------
+    // Third Person Camera Section
+    //---------------------------------------------------------------------------
+
     UPROPERTY(VisibleAnywhere, Category = "Camera")
     USpringArmComponent* CameraBoom{ nullptr };
 
     UPROPERTY(VisibleAnywhere, Category = "Camera")
     UCameraComponent* FollowCamera{ nullptr };
+
+    //---------------------------------------------------------------------------
 
 public:
 };
