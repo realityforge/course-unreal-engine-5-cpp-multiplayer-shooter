@@ -14,6 +14,7 @@
 
 import subprocess
 import sys
+import os
 
 projects_to_process = ["Blaster", "MenuSystem"]
 plugins_to_process = ["MultiplayerSessions"]
@@ -34,14 +35,16 @@ try:
         if lower_filename.endswith(".h") or lower_filename.endswith(".cpp"):
             for project in projects_to_process:
                 if file.startswith(f"{project}/Source/"):
-                    files_to_format.append(file)
+                    files_to_format.append(file[len(project)+1:])
                 elif file.startswith(f"{project}/Plugins/"):
                     for plugin in plugins_to_process:
                         if file.startswith(f"{project}/Plugins/{plugin}/Source/"):
-                            files_to_format.append(file)
+                            files_to_format.append(file[len(project)+1:])
+
 
     if 0 != len(files_to_format):
-        subprocess.run(["clang-format", "-i", *files_to_format])
+        print(f'{os.getcwd()}: clang-format -i {" ".join(files_to_format)}')
+        subprocess.run(["clang-format", "--verbose", "-i", *files_to_format])
         print("Formatted the following files:")
         for file in files_to_format:
             print(file)
