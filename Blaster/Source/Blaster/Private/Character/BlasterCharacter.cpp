@@ -29,7 +29,7 @@ void ABlasterCharacter::BeginPlay()
     Super::BeginPlay();
 }
 
-void ABlasterCharacter::Tick(float DeltaTime)
+void ABlasterCharacter::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
