@@ -19,7 +19,7 @@ ABlasterCharacter::ABlasterCharacter()
     // We attach to the socket at the end of the boom that has a constant name
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 
-    // Make sure the rotation from controller drives the boom rotation and not the camea
+    // Make sure the rotation from controller drives the boom rotation and not the camera
     CameraBoom->bUsePawnControlRotation = true;
     FollowCamera->bUsePawnControlRotation = false;
 }
