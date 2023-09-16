@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "BlasterCharacter.generated.h"
 
+struct FInputActionValue;
+class UInputAction;
+class UInputMappingContext;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -24,7 +27,40 @@ public:
 protected:
     virtual void BeginPlay() override;
 
+    //---------------------------------------------------------------------------
+    // User Inputs Section
+    //---------------------------------------------------------------------------
+
+    /** Called for movement input */
+    void Move(const FInputActionValue& Value);
+
+    /** Called for looking input */
+    void Look(const FInputActionValue& Value);
+
+    //---------------------------------------------------------------------------
+
 private:
+    //---------------------------------------------------------------------------
+    // User Inputs Section
+    //---------------------------------------------------------------------------
+
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    TSoftObjectPtr<UInputMappingContext> InputMapping{ nullptr };
+
+    /** Jump Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UInputAction* JumpAction{ nullptr };
+
+    /** Move Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UInputAction* MoveAction{ nullptr };
+
+    /** Look Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UInputAction* LookAction{ nullptr };
+
+    //---------------------------------------------------------------------------
+
     //---------------------------------------------------------------------------
     // Third Person Camera Section
     //---------------------------------------------------------------------------
