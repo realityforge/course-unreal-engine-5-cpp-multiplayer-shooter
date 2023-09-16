@@ -2,6 +2,7 @@
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "InputMappingContext.h"
 
@@ -23,6 +24,9 @@ ABlasterCharacter::ABlasterCharacter()
     // Make sure the rotation from controller drives the boom rotation and not the camera
     CameraBoom->bUsePawnControlRotation = true;
     FollowCamera->bUsePawnControlRotation = false;
+
+    bUseControllerRotationYaw = false;
+    GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 void ABlasterCharacter::BeginPlay()
