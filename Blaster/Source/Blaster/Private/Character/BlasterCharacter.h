@@ -14,11 +14,14 @@ class ABlasterCharacter : public ACharacter
 public:
     ABlasterCharacter();
 
-protected:
-    virtual void BeginPlay() override;
-
-public:
     virtual void Tick(float DeltaTime) override;
 
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+protected:
+    virtual void BeginPlay() override;
+
+private:
+
+public:
 };
