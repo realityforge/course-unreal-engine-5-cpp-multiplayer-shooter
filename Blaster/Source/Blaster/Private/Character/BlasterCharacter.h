@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "BlasterCharacter.generated.h"
 
+class UCameraComponent;
+class USpringArmComponent;
+
 UCLASS()
 class ABlasterCharacter : public ACharacter
 {
@@ -22,6 +25,11 @@ protected:
     virtual void BeginPlay() override;
 
 private:
+    UPROPERTY(VisibleAnywhere, Category = "Camera")
+    USpringArmComponent* CameraBoom{ nullptr };
+
+    UPROPERTY(VisibleAnywhere, Category = "Camera")
+    UCameraComponent* FollowCamera{ nullptr };
 
 public:
 };
