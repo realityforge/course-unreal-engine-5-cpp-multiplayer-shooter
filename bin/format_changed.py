@@ -52,3 +52,7 @@ except subprocess.CalledProcessError as e:
     print(f"Error executing git diff: {e}")
 except Exception as e:
     print(f"An error occurred: {e}")
+
+
+# TODO: Add formatting of json files and make sure match json (as well as uproject, uplugin etc)
+# TODO: Add formatting of C# files
