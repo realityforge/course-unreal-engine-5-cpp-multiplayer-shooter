@@ -27,7 +27,7 @@ void AWeapon::BeginPlay()
 
     if (HasAuthority())
     {
-        // We only enable the collission on the server
+        // We only enable the collision on the server
         AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
         AreaSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
     }
