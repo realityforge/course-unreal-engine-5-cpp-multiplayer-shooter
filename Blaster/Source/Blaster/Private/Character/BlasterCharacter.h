@@ -48,15 +48,15 @@ private:
 
     /** Jump Input Action */
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
-    UInputAction* JumpAction{ nullptr };
+    TObjectPtr<UInputAction> JumpAction{ nullptr };
 
     /** Move Input Action */
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
-    UInputAction* MoveAction{ nullptr };
+    TObjectPtr<UInputAction> MoveAction{ nullptr };
 
     /** Look Input Action */
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
-    UInputAction* LookAction{ nullptr };
+    TObjectPtr<UInputAction> LookAction{ nullptr };
 
     //---------------------------------------------------------------------------
 
@@ -65,10 +65,10 @@ private:
     //---------------------------------------------------------------------------
 
     UPROPERTY(VisibleAnywhere, Category = "Camera")
-    USpringArmComponent* CameraBoom{ nullptr };
+    TObjectPtr<USpringArmComponent> CameraBoom{ nullptr };
 
     UPROPERTY(VisibleAnywhere, Category = "Camera")
-    UCameraComponent* FollowCamera{ nullptr };
+    TObjectPtr<UCameraComponent> FollowCamera{ nullptr };
 
     //---------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ private:
     //---------------------------------------------------------------------------
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HUD", meta = (AllowPrivateAccess = "true"))
-    UWidgetComponent* OverheadWidget{ nullptr };
+    TObjectPtr<UWidgetComponent> OverheadWidget{ nullptr };
 
     //---------------------------------------------------------------------------
 
