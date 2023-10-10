@@ -6,6 +6,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "InputMappingContext.h"
+#include "Net/UnrealNetwork.h"
+#include "Weapon/Weapon.h"
 
 ABlasterCharacter::ABlasterCharacter()
 {
@@ -31,6 +33,13 @@ ABlasterCharacter::ABlasterCharacter()
 
     OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
     OverheadWidget->SetupAttachment(GetMesh());
+}
+
+void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME_CONDITION(ABlasterCharacter, OverlappingWeapon, COND_OwnerOnly);
 }
 
 void ABlasterCharacter::BeginPlay()
@@ -76,6 +85,39 @@ void ABlasterCharacter::Look(const FInputActionValue& Value)
         const FVector2D LookAxisVector = Value.Get<FVector2D>();
         AddControllerYawInput(LookAxisVector.X);
         AddControllerPitchInput(LookAxisVector.Y);
+    }
+}
+
+void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const
+{
+    if (OldOverlappingWeapon)
+    {
+        // This hide is invoked on clients that receive OverlappingWeapon via replication
+        OldOverlappingWeapon->ShowPickupWidget(false);
+    }
+    if (OverlappingWeapon)
+    {
+        OverlappingWeapon->ShowPickupWidget(true);
+    }
+}
+
+void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
+{
+    if (IsLocallyControlled())
+    {
+        if (OverlappingWeapon)
+        {
+            // This hide is invoked on listen server for locally controlled actors
+            OverlappingWeapon->ShowPickupWidget(false);
+        }
+    }
+    OverlappingWeapon = Weapon;
+    if (IsLocallyControlled())
+    {
+        if (OverlappingWeapon)
+        {
+            OverlappingWeapon->ShowPickupWidget(true);
+        }
     }
 }
 

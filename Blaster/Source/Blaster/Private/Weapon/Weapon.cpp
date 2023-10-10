@@ -35,7 +35,8 @@ void AWeapon::BeginPlay()
         // We only enable the collision on the server
         AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
         AreaSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-        AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnAreaSphereOverlap);
+        AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnAreaSphereBeginOverlap);
+        AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnAreaSphereEndOverlap);
     }
     if (PickupWidget)
     {
@@ -43,23 +44,39 @@ void AWeapon::BeginPlay()
     }
 }
 
-void AWeapon::OnAreaSphereOverlap(UPrimitiveComponent* OverlappedComponent,
-                                  AActor* OtherActor,
-                                  UPrimitiveComponent* OtherComp,
-                                  int32 OtherBodyIndex,
-                                  bool bFromSweep,
-                                  const FHitResult& SweepResult)
+void AWeapon::OnAreaSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                       AActor* OtherActor,
+                                       UPrimitiveComponent* OtherComp,
+                                       int32 OtherBodyIndex,
+                                       bool bFromSweep,
+                                       const FHitResult& SweepResult)
 {
-    if ([[maybe_unused]] const auto BlasterCharacter = Cast<ABlasterCharacter>(OtherActor))
+    if (const auto BlasterCharacter = Cast<ABlasterCharacter>(OtherActor))
     {
-        if (PickupWidget)
-        {
-            PickupWidget->SetVisibility(true);
-        }
+        BlasterCharacter->SetOverlappingWeapon(this);
+    }
+}
+
+void AWeapon::OnAreaSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
+                                     AActor* OtherActor,
+                                     UPrimitiveComponent* OtherComp,
+                                     int32 OtherBodyIndex)
+{
+    if (const auto BlasterCharacter = Cast<ABlasterCharacter>(OtherActor))
+    {
+        BlasterCharacter->SetOverlappingWeapon(nullptr);
     }
 }
 
 void AWeapon::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+}
+
+void AWeapon::ShowPickupWidget(const bool bShowWidget)
+{
+    if (PickupWidget)
+    {
+        PickupWidget->SetVisibility(bShowWidget);
+    }
 }
