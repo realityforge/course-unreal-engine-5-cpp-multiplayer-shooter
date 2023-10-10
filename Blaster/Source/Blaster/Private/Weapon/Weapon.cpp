@@ -68,7 +68,7 @@ void AWeapon::OnAreaSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
     }
 }
 
-void AWeapon::Tick(float DeltaTime)
+void AWeapon::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
