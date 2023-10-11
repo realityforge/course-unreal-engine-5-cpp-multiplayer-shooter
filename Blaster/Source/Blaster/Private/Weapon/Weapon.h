@@ -60,4 +60,7 @@ private:
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<UWidgetComponent> PickupWidget;
+
+public:
+    FORCEINLINE void SetWeaponState(const EWeaponState InWeaponState) { WeaponState = InWeaponState; }
 };

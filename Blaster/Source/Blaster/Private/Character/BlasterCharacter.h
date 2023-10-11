@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "BlasterCharacter.generated.h"
 
+class UCombatComponent;
 class AWeapon;
 class UWidgetComponent;
 struct FInputActionValue;
@@ -25,6 +26,8 @@ public:
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&) const override;
 
+    virtual void PostInitializeComponents() override;
+
 protected:
     virtual void BeginPlay() override;
 
@@ -37,6 +40,9 @@ protected:
 
     /** Called for looking input */
     void Look(const FInputActionValue& Value);
+
+    /** Called for attempting to equipping an item */
+    void Equip(const FInputActionValue& Value);
 
     //---------------------------------------------------------------------------
 
@@ -89,6 +95,9 @@ private:
 
     UFUNCTION()
     void OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const;
+
+    UPROPERTY(VisibleAnywhere, Category = "Camera")
+    TObjectPtr<UCombatComponent> Combat{ nullptr };
 
 public:
     /** Return the CameraBoom SubObject **/

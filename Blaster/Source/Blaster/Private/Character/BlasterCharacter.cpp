@@ -1,4 +1,5 @@
 #include "Character/BlasterCharacter.h"
+#include "BlasterComponents/CombatComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/WidgetComponent.h"
 #include "EnhancedInputComponent.h"
@@ -33,6 +34,9 @@ ABlasterCharacter::ABlasterCharacter()
 
     OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
     OverheadWidget->SetupAttachment(GetMesh());
+
+    Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+    Combat->SetIsReplicated(true);
 }
 
 void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -40,6 +44,15 @@ void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME_CONDITION(ABlasterCharacter, OverlappingWeapon, COND_OwnerOnly);
+}
+
+void ABlasterCharacter::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+    if (Combat)
+    {
+        Combat->Character = this;
+    }
 }
 
 void ABlasterCharacter::BeginPlay()
@@ -85,6 +98,14 @@ void ABlasterCharacter::Look(const FInputActionValue& Value)
         const FVector2D LookAxisVector = Value.Get<FVector2D>();
         AddControllerYawInput(LookAxisVector.X);
         AddControllerPitchInput(LookAxisVector.Y);
+    }
+}
+
+void ABlasterCharacter::Equip(const FInputActionValue& Value)
+{
+    if (Combat && HasAuthority())
+    {
+        Combat->EquipWeapon(OverlappingWeapon);
     }
 }
 
