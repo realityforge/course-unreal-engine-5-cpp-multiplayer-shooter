@@ -11,8 +11,9 @@ void UBlasterAnimInstance::NativeInitializeAnimation()
 void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
 {
     Super::NativeUpdateAnimation(DeltaSeconds);
-    if (ensure(nullptr != BlasterCharacter))
+    if (!BlasterCharacter)
     {
+        // BlasterCharacter can be null when run in editor
         BlasterCharacter = Cast<ABlasterCharacter>(TryGetPawnOwner());
     }
     if (BlasterCharacter)
