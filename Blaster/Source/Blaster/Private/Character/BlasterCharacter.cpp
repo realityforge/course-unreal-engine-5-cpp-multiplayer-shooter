@@ -101,9 +101,24 @@ void ABlasterCharacter::Look(const FInputActionValue& Value)
     }
 }
 
-void ABlasterCharacter::Equip(const FInputActionValue& Value)
+void ABlasterCharacter::Equip([[maybe_unused]] const FInputActionValue& Value)
 {
-    if (Combat && HasAuthority())
+    if (Combat)
+    {
+        if (HasAuthority())
+        {
+            Combat->EquipWeapon(OverlappingWeapon);
+        }
+        else
+        {
+            // We are on the client so call the server
+            ServerEquip();
+        }
+    }
+}
+void ABlasterCharacter::ServerEquip_Implementation()
+{
+    if (Combat)
     {
         Combat->EquipWeapon(OverlappingWeapon);
     }
@@ -155,13 +170,44 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     if (const auto Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
     {
         // Jumping
-        Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-        Input->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+        if (UNLIKELY(nullptr == JumpAction))
+        {
+            UE_LOG(LogLoad, Error, TEXT("ABlasterCharacter::SetupPlayerInputComponent - JumpAction is not specified"));
+        }
+        else
+        {
+            Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+            Input->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+        }
 
         // Moving
-        Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABlasterCharacter::Move);
+        if (UNLIKELY(nullptr == MoveAction))
+        {
+            UE_LOG(LogLoad, Error, TEXT("ABlasterCharacter::SetupPlayerInputComponent - MoveAction is not specified"));
+        }
+        else
+        {
+            Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABlasterCharacter::Move);
+        }
 
         // Looking
-        Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABlasterCharacter::Look);
+        if (UNLIKELY(nullptr == LookAction))
+        {
+            UE_LOG(LogLoad, Error, TEXT("ABlasterCharacter::SetupPlayerInputComponent - LookAction is not specified"));
+        }
+        else
+        {
+            Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABlasterCharacter::Look);
+        }
+
+        // Perform equipping action
+        if (UNLIKELY(nullptr == EquipAction))
+        {
+            UE_LOG(LogLoad, Error, TEXT("ABlasterCharacter::SetupPlayerInputComponent - EquipAction is not specified"));
+        }
+        else
+        {
+            Input->BindAction(EquipAction, ETriggerEvent::Triggered, this, &ABlasterCharacter::Equip);
+        }
     }
 }

@@ -66,6 +66,10 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UInputAction> LookAction{ nullptr };
 
+    /** Equip Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<UInputAction> EquipAction{ nullptr };
+
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
@@ -98,6 +102,9 @@ private:
 
     UPROPERTY(VisibleAnywhere, Category = "Camera")
     TObjectPtr<UCombatComponent> Combat{ nullptr };
+
+    UFUNCTION(Server, Reliable)
+    void ServerEquip();
 
 public:
     /** Return the CameraBoom SubObject **/
