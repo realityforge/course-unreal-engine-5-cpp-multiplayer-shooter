@@ -22,13 +22,15 @@ void UCombatComponent::TickComponent(float DeltaTime,
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+static const FName RightHandSocketName("RightHandSocket");
+
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
     if (IsValid(Character) && IsValid(WeaponToEquip))
     {
         EquippedWeapon = WeaponToEquip;
         EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
-        if (const auto HandSocket = Character->GetMesh()->GetSocketByName(FName("RightHandSocket")))
+        if (const auto HandSocket = Character->GetMesh()->GetSocketByName(RightHandSocketName))
         {
             HandSocket->AttachActor(EquippedWeapon, Character->GetMesh());
         }
