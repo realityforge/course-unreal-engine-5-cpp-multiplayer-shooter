@@ -66,7 +66,7 @@ void AWeapon::OnAreaSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
     }
 }
 
-void AWeapon::OnWeaponStateUpdated()
+void AWeapon::OnWeaponStateUpdated() const
 {
     if (EWeaponState::EWS_Equipped == WeaponState)
     {
@@ -74,7 +74,7 @@ void AWeapon::OnWeaponStateUpdated()
     }
 }
 
-void AWeapon::OnRep_WeaponState()
+void AWeapon::OnRep_WeaponState() const
 {
     ensure(!HasAuthority());
     OnWeaponStateUpdated();
@@ -101,7 +101,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
     DOREPLIFETIME(AWeapon, WeaponState);
 }
 
-void AWeapon::ShowPickupWidget(const bool bShowWidget)
+void AWeapon::ShowPickupWidget(const bool bShowWidget) const
 {
     if (IsValid(PickupWidget))
     {

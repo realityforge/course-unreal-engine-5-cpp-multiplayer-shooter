@@ -30,7 +30,7 @@ public:
     virtual void Tick(float DeltaTime) override;
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&) const override;
 
-    void ShowPickupWidget(bool bShowWidget);
+    void ShowPickupWidget(bool bShowWidget) const;
 
     void SetWeaponState(const EWeaponState InWeaponState);
 
@@ -66,10 +66,10 @@ private:
 
     /** Called when WeaponState has been replicated. */
     UFUNCTION()
-    void OnRep_WeaponState();
+    void OnRep_WeaponState() const;
 
     /** Called on both server and client to represent actions that must occur on both sides. */
-    void OnWeaponStateUpdated();
+    void OnWeaponStateUpdated() const;
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<UWidgetComponent> PickupWidget;
