@@ -115,4 +115,6 @@ public:
     FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
     void SetOverlappingWeapon(AWeapon* Weapon);
+
+    bool IsWeaponEquipped() const;
 };

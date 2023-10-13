@@ -28,5 +28,7 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
         // Current acceleration vector is calculated each update based on input vector so we are calculating whether
         // we are receiving movement input this update and could rename the flag... but leaving to align with course
         bAccelerating = BlasterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.f;
+
+        bWeaponEquipped = BlasterCharacter->IsWeaponEquipped();
     }
 }

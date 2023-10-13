@@ -19,6 +19,8 @@ public:
     virtual void
     TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&) const override;
+
     // As ABlasterCharacter is closely integrated with this component we made it a friend class to avoid excessive
     // public accessors etc
     friend class ABlasterCharacter;
@@ -31,7 +33,9 @@ protected:
 private:
     UPROPERTY(Transient)
     TObjectPtr<ABlasterCharacter> Character;
-    UPROPERTY(Transient)
+
+    /** The currently equipped weapon. */
+    UPROPERTY(Replicated)
     TObjectPtr<AWeapon> EquippedWeapon;
 
 public:

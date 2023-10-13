@@ -31,4 +31,8 @@ private:
     /** True if the character is accelerating. */
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     bool bAccelerating{ false };
+
+    /** True if the character has a weapon currently equipped. */
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    bool bWeaponEquipped{ false };
 };
