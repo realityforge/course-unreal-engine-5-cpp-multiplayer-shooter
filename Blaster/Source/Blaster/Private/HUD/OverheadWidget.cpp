@@ -5,7 +5,7 @@
 
 void UOverheadWidget::SetDisplayText(const FString& TextToDisplay) const
 {
-    if (DisplayText)
+    if (IsValid(DisplayText))
     {
         DisplayText->SetText(FText::FromString(TextToDisplay));
     }

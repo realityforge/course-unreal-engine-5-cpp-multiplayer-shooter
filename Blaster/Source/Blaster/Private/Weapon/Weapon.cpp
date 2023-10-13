@@ -103,7 +103,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 
 void AWeapon::ShowPickupWidget(const bool bShowWidget)
 {
-    if (PickupWidget)
+    if (IsValid(PickupWidget))
     {
         PickupWidget->SetVisibility(bShowWidget);
     }

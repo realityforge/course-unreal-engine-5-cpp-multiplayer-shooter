@@ -49,7 +49,7 @@ void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 void ABlasterCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
-    if (Combat)
+    if (IsValid(Combat))
     {
         Combat->Character = this;
     }
@@ -58,10 +58,11 @@ void ABlasterCharacter::PostInitializeComponents()
 void ABlasterCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    if (const auto PlayerController = Cast<APlayerController>(Controller))
+    if (const auto PlayerController = Cast<APlayerController>(Controller); IsValid(PlayerController))
     {
         if (const auto Subsystem =
-                ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+                ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+            IsValid(Subsystem))
         {
             Subsystem->AddMappingContext(InputMapping.LoadSynchronous(), 0);
         }
@@ -70,7 +71,7 @@ void ABlasterCharacter::BeginPlay()
 
 void ABlasterCharacter::Move(const FInputActionValue& Value)
 {
-    if (Controller)
+    if (IsValid(Controller))
     {
         // find out which way is forward
         const FRotator Rotation = Controller->GetControlRotation();
@@ -92,7 +93,7 @@ void ABlasterCharacter::Move(const FInputActionValue& Value)
 
 void ABlasterCharacter::Look(const FInputActionValue& Value)
 {
-    if (Controller)
+    if (IsValid(Controller))
     {
         // add yaw and pitch input to controller
         const FVector2D LookAxisVector = Value.Get<FVector2D>();
@@ -103,22 +104,22 @@ void ABlasterCharacter::Look(const FInputActionValue& Value)
 
 void ABlasterCharacter::Equip([[maybe_unused]] const FInputActionValue& Value)
 {
-    if (Combat)
+    if (HasAuthority())
     {
-        if (HasAuthority())
+        if (IsValid(Combat))
         {
             Combat->EquipWeapon(OverlappingWeapon);
         }
-        else
-        {
-            // We are on the client so call the server
-            ServerEquip();
-        }
+    }
+    else
+    {
+        // We are on the client so call the server
+        ServerEquip();
     }
 }
 void ABlasterCharacter::ServerEquip_Implementation()
 {
-    if (Combat)
+    if (IsValid(Combat))
     {
         Combat->EquipWeapon(OverlappingWeapon);
     }
@@ -126,14 +127,19 @@ void ABlasterCharacter::ServerEquip_Implementation()
 
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const
 {
-    if (OldOverlappingWeapon)
+    if (IsValid(OldOverlappingWeapon))
     {
         // This hide is invoked on clients that receive OverlappingWeapon via replication
         OldOverlappingWeapon->ShowPickupWidget(false);
     }
-    if (OverlappingWeapon)
+    ShowPickupWidgetOnOverlappingWeapon(true);
+}
+
+void ABlasterCharacter::ShowPickupWidgetOnOverlappingWeapon(const bool bShowWidget) const
+{
+    if (IsValid(OverlappingWeapon))
     {
-        OverlappingWeapon->ShowPickupWidget(true);
+        OverlappingWeapon->ShowPickupWidget(bShowWidget);
     }
 }
 
@@ -141,19 +147,13 @@ void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 {
     if (IsLocallyControlled())
     {
-        if (OverlappingWeapon)
-        {
-            // This hide is invoked on listen server for locally controlled actors
-            OverlappingWeapon->ShowPickupWidget(false);
-        }
+        // This hide is invoked on listen server for locally controlled actors
+        ShowPickupWidgetOnOverlappingWeapon(false);
     }
     OverlappingWeapon = Weapon;
     if (IsLocallyControlled())
     {
-        if (OverlappingWeapon)
-        {
-            OverlappingWeapon->ShowPickupWidget(true);
-        }
+        ShowPickupWidgetOnOverlappingWeapon(true);
     }
 }
 

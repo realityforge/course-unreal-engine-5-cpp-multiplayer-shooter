@@ -16,7 +16,7 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
         // BlasterCharacter can be null when run in editor
         BlasterCharacter = Cast<ABlasterCharacter>(TryGetPawnOwner());
     }
-    if (BlasterCharacter)
+    if (IsValid(BlasterCharacter))
     {
         FVector Velocity = BlasterCharacter->GetVelocity();
         // We are only looking for lateral Velocity so we zero out height

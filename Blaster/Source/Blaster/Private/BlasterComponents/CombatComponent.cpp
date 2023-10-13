@@ -24,7 +24,7 @@ void UCombatComponent::TickComponent(float DeltaTime,
 
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
-    if (Character && WeaponToEquip)
+    if (IsValid(Character) && IsValid(WeaponToEquip))
     {
         EquippedWeapon = WeaponToEquip;
         EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);

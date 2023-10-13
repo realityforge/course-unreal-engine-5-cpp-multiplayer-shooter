@@ -106,6 +106,8 @@ private:
     UFUNCTION(Server, Reliable)
     void ServerEquip();
 
+    void ShowPickupWidgetOnOverlappingWeapon(bool bShowWidget) const;
+
 public:
     /** Return the CameraBoom SubObject **/
     FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
