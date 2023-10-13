@@ -2,6 +2,7 @@
 #include "Character/BlasterCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Net/UnrealNetwork.h"
 
 AWeapon::AWeapon()
 {
@@ -65,9 +66,39 @@ void AWeapon::OnAreaSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
     }
 }
 
+void AWeapon::OnWeaponStateUpdated()
+{
+    if (EWeaponState::EWS_Equipped == WeaponState)
+    {
+        ShowPickupWidget(false);
+    }
+}
+
+void AWeapon::OnRep_WeaponState()
+{
+    ensure(!HasAuthority());
+    OnWeaponStateUpdated();
+}
+
+void AWeapon::SetWeaponState(const EWeaponState InWeaponState)
+{
+    ensure(HasAuthority());
+    WeaponState = InWeaponState;
+    // This is only required on the server
+    AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    OnWeaponStateUpdated();
+}
+
 void AWeapon::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
+}
+
+void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(AWeapon, WeaponState);
 }
 
 void AWeapon::ShowPickupWidget(const bool bShowWidget)

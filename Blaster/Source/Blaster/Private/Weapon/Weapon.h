@@ -28,8 +28,11 @@ public:
     AWeapon();
 
     virtual void Tick(float DeltaTime) override;
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&) const override;
 
     void ShowPickupWidget(bool bShowWidget);
+
+    void SetWeaponState(const EWeaponState InWeaponState);
 
 protected:
     virtual void BeginPlay() override;
@@ -55,12 +58,19 @@ private:
     UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<USphereComponent> AreaSphere;
 
-    UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
+    UPROPERTY(ReplicatedUsing = OnRep_WeaponState,
+              VisibleAnywhere,
+              Category = "Weapon Properties",
+              meta = (AllowPrivateAccess))
     EWeaponState WeaponState;
+
+    /** Called when WeaponState has been replicated. */
+    UFUNCTION()
+    void OnRep_WeaponState();
+
+    /** Called on both server and client to represent actions that must occur on both sides. */
+    void OnWeaponStateUpdated();
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<UWidgetComponent> PickupWidget;
-
-public:
-    FORCEINLINE void SetWeaponState(const EWeaponState InWeaponState) { WeaponState = InWeaponState; }
 };
