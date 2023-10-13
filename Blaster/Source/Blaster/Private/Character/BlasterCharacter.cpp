@@ -167,6 +167,22 @@ void ABlasterCharacter::Tick(const float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
+void ABlasterCharacter::SafeBindAction(UEnhancedInputComponent* const Input,
+                                       const TCHAR* Label,
+                                       const TObjectPtr<UInputAction> InputAction,
+                                       const ETriggerEvent TriggerEvent,
+                                       void (ABlasterCharacter::*Func)(const FInputActionValue&))
+{
+    if (UNLIKELY(nullptr == InputAction))
+    {
+        UE_LOG(LogLoad, Error, TEXT("SetupPlayerInputComponent - InputAction property %s is not specified"), Label);
+    }
+    else
+    {
+        Input->BindAction(InputAction, TriggerEvent, this, Func);
+    }
+}
+
 void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -186,33 +202,12 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
         }
 
         // Moving
-        if (UNLIKELY(nullptr == MoveAction))
-        {
-            UE_LOG(LogLoad, Error, TEXT("ABlasterCharacter::SetupPlayerInputComponent - MoveAction is not specified"));
-        }
-        else
-        {
-            Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABlasterCharacter::Move);
-        }
+        SafeBindAction(Input, TEXT("MoveAction"), MoveAction, ETriggerEvent::Triggered, &ABlasterCharacter::Move);
 
-        // Looking
-        if (UNLIKELY(nullptr == LookAction))
-        {
-            UE_LOG(LogLoad, Error, TEXT("ABlasterCharacter::SetupPlayerInputComponent - LookAction is not specified"));
-        }
-        else
-        {
-            Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABlasterCharacter::Look);
-        }
+        // Looking action
+        SafeBindAction(Input, TEXT("LookAction"), LookAction, ETriggerEvent::Triggered, &ABlasterCharacter::Look);
 
         // Perform equipping action
-        if (UNLIKELY(nullptr == EquipAction))
-        {
-            UE_LOG(LogLoad, Error, TEXT("ABlasterCharacter::SetupPlayerInputComponent - EquipAction is not specified"));
-        }
-        else
-        {
-            Input->BindAction(EquipAction, ETriggerEvent::Triggered, this, &ABlasterCharacter::Equip);
-        }
+        SafeBindAction(Input, TEXT("EquipAction"), EquipAction, ETriggerEvent::Triggered, &ABlasterCharacter::Equip);
     }
 }

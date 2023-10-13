@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnhancedInputComponent.h"
 #include "GameFramework/Character.h"
 #include "BlasterCharacter.generated.h"
 
@@ -113,6 +114,13 @@ private:
     void ShowPickupWidgetOnOverlappingWeapon(bool bShowWidget) const;
 
     //---------------------------------------------------------------------------
+
+    void SafeBindAction(UEnhancedInputComponent* Input,
+                        const TCHAR* Label,
+                        TObjectPtr<UInputAction> InputAction,
+                        ETriggerEvent TriggerEvent,
+                        void (ABlasterCharacter::*Func)(const FInputActionValue&));
+
 public:
     /** Return the CameraBoom SubObject **/
     FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
