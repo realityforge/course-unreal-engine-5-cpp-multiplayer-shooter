@@ -93,6 +93,10 @@ private:
 
     //---------------------------------------------------------------------------
 
+    //---------------------------------------------------------------------------
+    // Weapon Management
+    //---------------------------------------------------------------------------
+
     // The reference to the weapon we are overlapping
     UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
     TObjectPtr<AWeapon> OverlappingWeapon;
@@ -108,6 +112,7 @@ private:
 
     void ShowPickupWidgetOnOverlappingWeapon(bool bShowWidget) const;
 
+    //---------------------------------------------------------------------------
 public:
     /** Return the CameraBoom SubObject **/
     FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
