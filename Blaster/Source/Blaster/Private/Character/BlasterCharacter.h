@@ -41,7 +41,7 @@ protected:
     /** Called for looking input */
     void Look(const FInputActionValue& Value);
 
-    /** Called for attempting to equipping an item */
+    /** Called for attempting to equip an item */
     void Equip(const FInputActionValue& Value);
 
     //---------------------------------------------------------------------------
