@@ -72,7 +72,7 @@ void ABlasterCharacter::BeginPlay()
     }
 }
 
-void ABlasterCharacter::Move(const FInputActionValue& Value)
+void ABlasterCharacter::MoveInputActionTriggered(const FInputActionValue& Value)
 {
     if (IsValid(Controller))
     {
@@ -94,7 +94,7 @@ void ABlasterCharacter::Move(const FInputActionValue& Value)
     }
 }
 
-void ABlasterCharacter::Look(const FInputActionValue& Value)
+void ABlasterCharacter::LookInputActionTriggered(const FInputActionValue& Value)
 {
     if (IsValid(Controller))
     {
@@ -105,7 +105,7 @@ void ABlasterCharacter::Look(const FInputActionValue& Value)
     }
 }
 
-void ABlasterCharacter::Equip([[maybe_unused]] const FInputActionValue& Value)
+void ABlasterCharacter::EquipInputActionTriggered([[maybe_unused]] const FInputActionValue& Value)
 {
     if (HasAuthority())
     {
@@ -217,13 +217,25 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
         }
 
         // Moving
-        SafeBindAction(Input, TEXT("MoveAction"), MoveAction, ETriggerEvent::Triggered, &ABlasterCharacter::Move);
+        SafeBindAction(Input,
+                       TEXT("MoveAction"),
+                       MoveAction,
+                       ETriggerEvent::Triggered,
+                       &ABlasterCharacter::MoveInputActionTriggered);
 
         // Looking action
-        SafeBindAction(Input, TEXT("LookAction"), LookAction, ETriggerEvent::Triggered, &ABlasterCharacter::Look);
+        SafeBindAction(Input,
+                       TEXT("LookAction"),
+                       LookAction,
+                       ETriggerEvent::Triggered,
+                       &ABlasterCharacter::LookInputActionTriggered);
 
         // Perform equipping action
-        SafeBindAction(Input, TEXT("EquipAction"), EquipAction, ETriggerEvent::Triggered, &ABlasterCharacter::Equip);
+        SafeBindAction(Input,
+                       TEXT("EquipAction"),
+                       EquipAction,
+                       ETriggerEvent::Triggered,
+                       &ABlasterCharacter::EquipInputActionTriggered);
 
         // Bind crouching actions
         SafeBindAction(Input,

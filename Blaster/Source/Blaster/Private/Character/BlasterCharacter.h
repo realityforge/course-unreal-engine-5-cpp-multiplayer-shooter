@@ -37,13 +37,13 @@ protected:
     //---------------------------------------------------------------------------
 
     /** Called for movement input */
-    void Move(const FInputActionValue& Value);
+    void MoveInputActionTriggered(const FInputActionValue& Value);
 
     /** Called for looking input */
-    void Look(const FInputActionValue& Value);
+    void LookInputActionTriggered(const FInputActionValue& Value);
 
     /** Called for attempting to equip an item */
-    void Equip(const FInputActionValue& Value);
+    void EquipInputActionTriggered(const FInputActionValue& Value);
 
     /** Called when player start to crouch */
     void OnCrouchInputActionStarted(const FInputActionValue& Value);
