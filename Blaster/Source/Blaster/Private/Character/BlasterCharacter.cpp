@@ -139,6 +139,7 @@ void ABlasterCharacter::ServerEquip_Implementation()
     }
 }
 
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const
 {
     if (IsValid(OldOverlappingWeapon))
