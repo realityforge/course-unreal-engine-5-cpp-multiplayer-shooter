@@ -186,7 +186,23 @@ void ABlasterCharacter::SafeBindAction(UEnhancedInputComponent* const Input,
                                        const TCHAR* Label,
                                        const TObjectPtr<UInputAction> InputAction,
                                        const ETriggerEvent TriggerEvent,
-                                       void (ABlasterCharacter::*Func)(const FInputActionValue&))
+                                       void (ThisClass::*Func)(const FInputActionValue&))
+{
+    if (UNLIKELY(nullptr == InputAction))
+    {
+        UE_LOG(LogLoad, Error, TEXT("SetupPlayerInputComponent - InputAction property %s is not specified"), Label);
+    }
+    else
+    {
+        Input->BindAction(InputAction, TriggerEvent, this, Func);
+    }
+}
+
+void ABlasterCharacter::SafeBindAction(UEnhancedInputComponent* const Input,
+                                       const TCHAR* Label,
+                                       const TObjectPtr<UInputAction> InputAction,
+                                       const ETriggerEvent TriggerEvent,
+                                       void (ThisClass::*Func)())
 {
     if (UNLIKELY(nullptr == InputAction))
     {
@@ -206,15 +222,8 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     if (const auto Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
     {
         // Jumping
-        if (UNLIKELY(nullptr == JumpAction))
-        {
-            UE_LOG(LogLoad, Error, TEXT("ABlasterCharacter::SetupPlayerInputComponent - JumpAction is not specified"));
-        }
-        else
-        {
-            Input->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-            Input->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-        }
+        SafeBindAction(Input, TEXT("JumpAction"), JumpAction, ETriggerEvent::Started, &ACharacter::Jump);
+        SafeBindAction(Input, TEXT("JumpAction"), JumpAction, ETriggerEvent::Completed, &ACharacter::StopJumping);
 
         // Moving
         SafeBindAction(Input,

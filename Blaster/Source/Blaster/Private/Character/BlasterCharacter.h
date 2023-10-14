@@ -124,12 +124,17 @@ private:
     void ShowPickupWidgetOnOverlappingWeapon(bool bShowWidget) const;
 
     //---------------------------------------------------------------------------
+    void SafeBindAction(UEnhancedInputComponent* const Input,
+                        const TCHAR* Label,
+                        const TObjectPtr<UInputAction> InputAction,
+                        const ETriggerEvent TriggerEvent,
+                        void (ThisClass::*Func)());
 
     void SafeBindAction(UEnhancedInputComponent* Input,
                         const TCHAR* Label,
                         TObjectPtr<UInputAction> InputAction,
                         ETriggerEvent TriggerEvent,
-                        void (ABlasterCharacter::*Func)(const FInputActionValue&));
+                        void (ThisClass::*Func)(const FInputActionValue&));
 
 public:
     /** Return the CameraBoom SubObject **/
