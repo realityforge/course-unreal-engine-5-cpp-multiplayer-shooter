@@ -45,6 +45,12 @@ protected:
     /** Called for attempting to equip an item */
     void Equip(const FInputActionValue& Value);
 
+    /** Called when player start to crouch */
+    void OnCrouchInputActionStarted(const FInputActionValue& Value);
+
+    /** Called when player releases key to crouch */
+    void OnCrouchInputActionCompleted(const FInputActionValue& Value);
+
     //---------------------------------------------------------------------------
 
 private:
@@ -70,6 +76,10 @@ private:
     /** Equip Input Action */
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UInputAction> EquipAction{ nullptr };
+
+    /** Crouch Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<UInputAction> CrouchAction{ nullptr };
 
     //---------------------------------------------------------------------------
 

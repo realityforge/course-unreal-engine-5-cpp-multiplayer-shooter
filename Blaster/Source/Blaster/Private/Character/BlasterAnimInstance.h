@@ -35,4 +35,8 @@ private:
     /** True if the character has a weapon currently equipped. */
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     bool bWeaponEquipped{ false };
+
+    /** True if the character is currently crouching. */
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    bool bIsCrouched{ false };
 };

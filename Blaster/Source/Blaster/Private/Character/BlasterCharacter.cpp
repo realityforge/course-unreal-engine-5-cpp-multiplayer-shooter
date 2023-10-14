@@ -37,6 +37,9 @@ ABlasterCharacter::ABlasterCharacter()
 
     Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
     Combat->SetIsReplicated(true);
+
+    // The CharacterMovement component already supports crouching - we just need to enable it.
+    GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 }
 
 void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -117,6 +120,17 @@ void ABlasterCharacter::Equip([[maybe_unused]] const FInputActionValue& Value)
         ServerEquip();
     }
 }
+
+void ABlasterCharacter::OnCrouchInputActionStarted([[maybe_unused]] const FInputActionValue& Value)
+{
+    Crouch();
+}
+
+void ABlasterCharacter::OnCrouchInputActionCompleted([[maybe_unused]] const FInputActionValue& Value)
+{
+    UnCrouch();
+}
+
 void ABlasterCharacter::ServerEquip_Implementation()
 {
     if (IsValid(Combat))
@@ -209,5 +223,17 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
         // Perform equipping action
         SafeBindAction(Input, TEXT("EquipAction"), EquipAction, ETriggerEvent::Triggered, &ABlasterCharacter::Equip);
+
+        // Bind crouching actions
+        SafeBindAction(Input,
+                       TEXT("CrouchAction"),
+                       CrouchAction,
+                       ETriggerEvent::Started,
+                       &ABlasterCharacter::OnCrouchInputActionStarted);
+        SafeBindAction(Input,
+                       TEXT("CrouchAction"),
+                       CrouchAction,
+                       ETriggerEvent::Completed,
+                       &ABlasterCharacter::OnCrouchInputActionCompleted);
     }
 }
