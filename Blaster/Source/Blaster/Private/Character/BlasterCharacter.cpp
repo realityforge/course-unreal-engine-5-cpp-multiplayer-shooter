@@ -105,7 +105,7 @@ void ABlasterCharacter::LookInputActionTriggered(const FInputActionValue& Value)
     }
 }
 
-void ABlasterCharacter::EquipInputActionTriggered([[maybe_unused]] const FInputActionValue& Value)
+void ABlasterCharacter::EquipInputActionTriggered()
 {
     if (HasAuthority())
     {
@@ -121,12 +121,12 @@ void ABlasterCharacter::EquipInputActionTriggered([[maybe_unused]] const FInputA
     }
 }
 
-void ABlasterCharacter::OnCrouchInputActionStarted([[maybe_unused]] const FInputActionValue& Value)
+void ABlasterCharacter::OnCrouchInputActionStarted()
 {
     Crouch();
 }
 
-void ABlasterCharacter::OnCrouchInputActionCompleted([[maybe_unused]] const FInputActionValue& Value)
+void ABlasterCharacter::OnCrouchInputActionCompleted()
 {
     UnCrouch();
 }

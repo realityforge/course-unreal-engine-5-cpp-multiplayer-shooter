@@ -43,13 +43,13 @@ protected:
     void LookInputActionTriggered(const FInputActionValue& Value);
 
     /** Called for attempting to equip an item */
-    void EquipInputActionTriggered(const FInputActionValue& Value);
+    void EquipInputActionTriggered();
 
     /** Called when player start to crouch */
-    void OnCrouchInputActionStarted(const FInputActionValue& Value);
+    void OnCrouchInputActionStarted();
 
     /** Called when player releases key to crouch */
-    void OnCrouchInputActionCompleted(const FInputActionValue& Value);
+    void OnCrouchInputActionCompleted();
 
     //---------------------------------------------------------------------------
 
