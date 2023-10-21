@@ -45,7 +45,7 @@ private:
 
     /** Is the character currently aiming. */
     UPROPERTY(Replicated)
-    bool bAiming;
+    bool bAiming{ false };
 
 public:
 };
