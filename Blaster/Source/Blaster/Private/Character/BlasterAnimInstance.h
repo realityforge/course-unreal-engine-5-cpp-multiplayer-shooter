@@ -39,4 +39,8 @@ private:
     /** True if the character is currently crouching. */
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     bool bIsCrouched{ false };
+
+    /** True if the character is currently Aiming. */
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    bool bAiming{ false };
 };

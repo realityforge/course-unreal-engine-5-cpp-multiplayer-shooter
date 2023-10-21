@@ -131,6 +131,22 @@ void ABlasterCharacter::OnCrouchInputActionCompleted()
     UnCrouch();
 }
 
+void ABlasterCharacter::OnAimInputActionStarted()
+{
+    if (IsValid(Combat))
+    {
+        Combat->setAiming(true);
+    }
+}
+
+void ABlasterCharacter::OnAimInputActionCompleted()
+{
+    if (IsValid(Combat))
+    {
+        Combat->setAiming(false);
+    }
+}
+
 void ABlasterCharacter::ServerEquip_Implementation()
 {
     if (IsValid(Combat))
@@ -175,6 +191,11 @@ void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 bool ABlasterCharacter::IsWeaponEquipped() const
 {
     return IsValid(Combat) && IsValid(Combat->EquippedWeapon);
+}
+
+bool ABlasterCharacter::IsAiming() const
+{
+    return IsValid(Combat) && Combat->bAiming;
 }
 
 void ABlasterCharacter::Tick(const float DeltaTime)
@@ -257,5 +278,17 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
                        CrouchAction,
                        ETriggerEvent::Completed,
                        &ABlasterCharacter::OnCrouchInputActionCompleted);
+
+        // Bind Aiming actions
+        SafeBindAction(Input,
+                       TEXT("AimAction"),
+                       AimAction,
+                       ETriggerEvent::Started,
+                       &ABlasterCharacter::OnAimInputActionStarted);
+        SafeBindAction(Input,
+                       TEXT("AimAction"),
+                       AimAction,
+                       ETriggerEvent::Completed,
+                       &ABlasterCharacter::OnAimInputActionCompleted);
     }
 }

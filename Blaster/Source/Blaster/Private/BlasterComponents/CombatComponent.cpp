@@ -16,6 +16,20 @@ void UCombatComponent::BeginPlay()
     Super::BeginPlay();
 }
 
+void UCombatComponent::setAiming(bool bInAiming)
+{
+    // bAiming is set here because if this is called on client then we will locally set var before calling server
+    // not needed on server as ServerSetAiming falls directly through to the server implementation
+    bAiming = bInAiming;
+    // Note: This is not needed  as Server calls on Server flow through"if (!Character->HasAuthority())"
+    ServerSetAiming(bInAiming);
+}
+
+void UCombatComponent::ServerSetAiming_Implementation(bool bInAiming)
+{
+    bAiming = bInAiming;
+}
+
 void UCombatComponent::TickComponent(float DeltaTime,
                                      ELevelTick TickType,
                                      FActorComponentTickFunction* ThisTickFunction)
@@ -28,6 +42,7 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME(UCombatComponent, EquippedWeapon);
+    DOREPLIFETIME(UCombatComponent, bAiming);
 }
 
 static const FName RightHandSocketName("RightHandSocket");

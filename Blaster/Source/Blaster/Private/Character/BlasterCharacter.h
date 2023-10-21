@@ -51,6 +51,12 @@ protected:
     /** Called when player releases key to crouch */
     void OnCrouchInputActionCompleted();
 
+    /** Called when player starts to aim */
+    void OnAimInputActionStarted();
+
+    /** Called when player releases key to aim */
+    void OnAimInputActionCompleted();
+
     //---------------------------------------------------------------------------
 
 private:
@@ -80,6 +86,10 @@ private:
     /** Crouch Input Action */
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UInputAction> CrouchAction{ nullptr };
+
+    /** Crouch Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<UInputAction> AimAction{ nullptr };
 
     //---------------------------------------------------------------------------
 
@@ -145,4 +155,5 @@ public:
     void SetOverlappingWeapon(AWeapon* Weapon);
 
     bool IsWeaponEquipped() const;
+    bool IsAiming() const;
 };

@@ -30,6 +30,11 @@ public:
 protected:
     virtual void BeginPlay() override;
 
+    void setAiming(bool bInAiming);
+
+    UFUNCTION(Server, Reliable)
+    void ServerSetAiming(bool bInAiming);
+
 private:
     UPROPERTY(Transient)
     TObjectPtr<ABlasterCharacter> Character;
@@ -37,6 +42,10 @@ private:
     /** The currently equipped weapon. */
     UPROPERTY(Replicated)
     TObjectPtr<AWeapon> EquippedWeapon;
+
+    /** Is the character currently aiming. */
+    UPROPERTY(Replicated)
+    bool bAiming;
 
 public:
 };
