@@ -43,4 +43,15 @@ private:
     /** True if the character is currently Aiming. */
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     bool bAiming{ false };
+
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    float YawOffset{ 0.f };
+
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    float Lean{ 0.f };
+
+    // Lean is derived from current rotation and last frames rotation
+    FRotator CharacterRotationLastFrame;
+    FRotator CharacterRotation;
+    FRotator DeltaRotation;
 };

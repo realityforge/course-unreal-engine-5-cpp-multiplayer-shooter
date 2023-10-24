@@ -3,6 +3,7 @@
 #include "BlasterComponents/CombatComponent.h"
 #include "Character/BlasterCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Weapon/Weapon.h"
 
@@ -23,6 +24,14 @@ void UCombatComponent::setAiming(bool bInAiming)
     bAiming = bInAiming;
     // Note: This is not needed  as Server calls on Server flow through"if (!Character->HasAuthority())"
     ServerSetAiming(bInAiming);
+}
+
+void UCombatComponent::OnRep_EquippedWeapon()
+{
+    if (IsValid(EquippedWeapon) && IsValid(Character))
+    {
+        StopOrientingRotationToMovement();
+    }
 }
 
 void UCombatComponent::ServerSetAiming_Implementation(bool bInAiming)
@@ -47,6 +56,12 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 static const FName RightHandSocketName("RightHandSocket");
 
+void UCombatComponent::StopOrientingRotationToMovement() const
+{
+    Character->GetCharacterMovement()->bOrientRotationToMovement = false;
+    Character->bUseControllerRotationYaw = true;
+}
+
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
     if (IsValid(Character) && IsValid(WeaponToEquip))
@@ -60,5 +75,7 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
         // Make sure we set owner of weapon so that weapon will be replicated wih player pawn
         EquippedWeapon->SetOwner(Character);
         EquippedWeapon->ShowPickupWidget(false);
+
+        StopOrientingRotationToMovement();
     }
 }

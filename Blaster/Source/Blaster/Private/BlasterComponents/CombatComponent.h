@@ -35,17 +35,22 @@ protected:
     UFUNCTION(Server, Reliable)
     void ServerSetAiming(bool bInAiming);
 
+    UFUNCTION()
+    void OnRep_EquippedWeapon();
+
 private:
     UPROPERTY(Transient)
     TObjectPtr<ABlasterCharacter> Character;
 
     /** The currently equipped weapon. */
-    UPROPERTY(Replicated)
+    UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon)
     TObjectPtr<AWeapon> EquippedWeapon;
 
     /** Is the character currently aiming. */
     UPROPERTY(Replicated)
     bool bAiming{ false };
+
+    void StopOrientingRotationToMovement() const;
 
 public:
 };
