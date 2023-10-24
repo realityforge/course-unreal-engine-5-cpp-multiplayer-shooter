@@ -1,6 +1,11 @@
 {
   "config_version": 1,
   "mirrors": {
+    "Blaster/Plugins/RuleRanger": {
+      "url": "https://github.com/realityforge/RuleRanger.git",
+      "branch": "main",
+      "revision": "0ee3dfc661635fc3469ad6f6ab1ac91e2cdd1e77"
+    },
     "vendor/MultiplayerCourseBlasterGame": {
       "url": "https://github.com/DruidMech/MultiplayerCourseBlasterGame.git",
       "branch": "main",
