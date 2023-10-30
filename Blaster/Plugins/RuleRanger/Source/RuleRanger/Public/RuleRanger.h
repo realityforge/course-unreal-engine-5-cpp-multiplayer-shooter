@@ -13,13 +13,51 @@
  */
 #pragma once
 
+#include "ContentBrowserDelegates.h"
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
 class FRuleRangerModule : public IModuleInterface
 {
 public:
-    /** IModuleInterface implementation */
+    // -------------------------------------------------------------------------------------------
+    // Core Module functionality
+    // -------------------------------------------------------------------------------------------
+
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
+
+private:
+    // -------------------------------------------------------------------------------------------
+    // MessageLog
+    // -------------------------------------------------------------------------------------------
+
+    void ReregisterMessageLogLogs();
+    void DeregisterStyleSet();
+
+    // -------------------------------------------------------------------------------------------
+    // StyleSet
+    // -------------------------------------------------------------------------------------------
+
+    // StyleSet used for UI elements
+    TSharedPtr<FSlateStyleSet> StyleSet{ nullptr };
+
+    // Initialize the StyleSet. Called during StartupModule
+    void RegisterStyleSet();
+
+    // -------------------------------------------------------------------------------------------
+    // Content browser extensions
+    // -------------------------------------------------------------------------------------------
+
+    // Delegate called when extending ContextBrowser SelectedPaths Context menu
+    FContentBrowserMenuExtender_SelectedPaths ContentBrowserMenuExtender_SelectedPathsDelegate;
+    FDelegateHandle ContentBrowserMenuExtender_SelectedPathsDelegateHandle;
+
+    // Delegate called when extending ContextBrowser SelectedAssets Context menu
+    FContentBrowserMenuExtender_SelectedAssets ContentBrowserMenuExtender_SelectedAssetsDelegate;
+    FDelegateHandle ContentBrowserMenuExtender_SelectedAssetsDelegateHandle;
+
+    void RegisterContentBrowserExtensions();
+    void RegisterMessageLogLogs();
+    void DeregisterContentBrowserExtensions() const;
 };

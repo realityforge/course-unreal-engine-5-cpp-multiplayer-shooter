@@ -21,11 +21,20 @@ public class RuleRanger : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		PublicIncludePaths.AddRange(new string[] { });
 		PrivateIncludePaths.AddRange(new string[] { });
-		PublicDependencyModuleNames.AddRange(new[] { "Core" });
+		PublicDependencyModuleNames.AddRange(new[] { "ContentBrowser", "Core" });
 		PrivateDependencyModuleNames.AddRange(
 			new[]
 			{
-				"CoreUObject", "DataValidation", "DeveloperSettings", "EditorSubsystem", "Engine", "MessageLog", "Slate", "SlateCore", "UnrealEd"
+				"CoreUObject",
+				"DataValidation",
+				"DeveloperSettings",
+				"EditorSubsystem",
+				"Engine",
+				"Projects", // IPluginManager
+				"MessageLog",
+				"Slate",
+				"SlateCore",
+				"UnrealEd"
 			});
 		PrivateIncludePathModuleNames.AddRange(new[] { "MessageLog" });
 		DynamicallyLoadedModuleNames.AddRange(new string[] { });

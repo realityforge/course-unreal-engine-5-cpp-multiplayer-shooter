@@ -13,8 +13,6 @@
  */
 
 #include "RuleRanger/Actions/NameConventionRenameAction.h"
-#include "AssetRegistry/AssetRegistryModule.h"
-#include "AssetToolsModule.h"
 #include "Editor.h"
 #include "Misc/UObjectToken.h"
 #include "RuleRanger/RuleRangerUtilities.h"
