@@ -80,7 +80,7 @@ public:
     int32 Priority{ 1000 };
 
     /** The matchers that an object MUST match before this rule is applied. */
-    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, E))
+    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
     TArray<TObjectPtr<URuleRangerMatcher>> Matchers;
 
     /** The actions that will be applied if the object is matched by the rule. */
