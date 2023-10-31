@@ -17,9 +17,15 @@
 #include "EditorSubsystem.h"
 #include "Factories/Factory.h"
 #include "UObject/Object.h"
+#include <functional>
 #include "RuleRangerEditorSubsystem.generated.h"
 
+class URuleRangerRule;
 class UActionContextImpl;
+
+// Shape of function called to check whether rule will run or actually execute rule.
+// The actual function is determined by where it is used.
+using RuleRangerRuleFn = std::function<bool(URuleRangerRule* Rule, UObject* InObject)>;
 
 /**
  * The subsystem responsible for managing callbacks to other subsystems such as ImportSubsystem callbacks.
@@ -36,6 +42,9 @@ public:
     /** Implement this for deinitialization of instances of the system */
     virtual void Deinitialize() override;
 
+    void ProcessRule(UObject* Object, const RuleRangerRuleFn& ProcessRuleFunction);
+    bool IsMatchingRulePresent(UObject* Object, const RuleRangerRuleFn& ProcessRuleFunction);
+
 private:
     UPROPERTY(VisibleAnywhere)
     UActionContextImpl* ActionContext{ nullptr };
@@ -44,4 +53,14 @@ private:
     FDelegateHandle OnAssetPostImportDelegateHandle;
 
     void OnAssetPostImport(UFactory* Factory, UObject* Object);
+
+    /**
+     * Function invoked when each rule is applied to an object during import.
+     *
+     * @param bIsReimport A flag indicating whether it is an import or re-import action.
+     * @param Rule The rule to apply.
+     * @param InObject the object to apply rule to.
+     * @return true to keep processing, false if no more rules should be applied to object.
+     */
+    bool ProcessOnAssetPostImportRule(const bool bIsReimport, URuleRangerRule*  Rule, UObject* InObject);
 };

@@ -15,24 +15,26 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "RuleRangerRuleSet.generated.h"
+#include "RuleRangerRuleSetScope.generated.h"
 
-class URuleRangerRule;
+class URuleRangerRuleSet;
 
 /**
- * A named set of rules that can be for a project.
+ * A scope which applies a RuleSet.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"), Blueprintable, BlueprintType, CollapseCategories, EditInlineNew)
-class RULERANGER_API URuleRangerRuleSet : public UDataAsset
+class RULERANGER_API URuleRangerRuleSetScope : public UDataAsset
 {
     GENERATED_BODY()
 
 public:
-    /** A description of the rule set. */
-    UPROPERTY(EditDefaultsOnly, Category = "Rule Ranger")
-    FText Description;
+    /** The base content directory to which the RuleSet applies. */
+    UPROPERTY(EditDefaultsOnly, Category = "Rule Ranger", meta = (ContentDir))
+    TArray<FDirectoryPath> Dirs;
 
-    /** A set of rules to be applied to different types. */
-    UPROPERTY(EditDefaultsOnly, Category = "Rules", meta = (AllowAbstract = "false", DisplayThumbnail = "false"))
-    TArray<TObjectPtr<URuleRangerRule>> Rules;
+    /** A set of rule sets to be applied to directories. */
+    UPROPERTY(EditDefaultsOnly, Category = "Rule Sets", meta = (AllowAbstract = "false", DisplayThumbnail = "false"))
+    TArray<TObjectPtr<URuleRangerRuleSet>> RuleSets;
+
+    bool ScopeMatches(const FString& Path);
 };

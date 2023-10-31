@@ -14,9 +14,9 @@
 #include "RuleRanger/RuleRangerEditorValidator.h"
 #include "ActionContextImpl.h"
 #include "RuleRangerActionContext.h"
-#include "RuleRangerDeveloperSettings.h"
 #include "RuleRangerLogging.h"
 #include "RuleRangerRule.h"
+#include "RuleRanger/RuleRangerEditorSubsystem.h"
 
 URuleRangerEditorValidator::URuleRangerEditorValidator()
 {
@@ -56,162 +56,125 @@ bool URuleRangerEditorValidator::CanValidate_Implementation(const EDataValidatio
 
 bool URuleRangerEditorValidator::CanValidateAsset_Implementation(UObject* InAsset) const
 {
-    const bool IsSave = EDataValidationUsecase::Save == DataValidationUsecase;
-    const auto DeveloperSettings = GetMutableDefault<URuleRangerDeveloperSettings>();
-    check(IsValid(DeveloperSettings));
-    UE_LOG(RuleRanger,
-           VeryVerbose,
-           TEXT("CanValidateAsset(%s) discovered %d Rule Set(s)"),
-           *InAsset->GetName(),
-           DeveloperSettings->Rules.Num());
-    for (auto RuleSetIt = DeveloperSettings->Rules.CreateIterator(); RuleSetIt; ++RuleSetIt)
-    {
-        if (const auto RuleSet = RuleSetIt->LoadSynchronous())
-        {
-            if (const auto Path = InAsset->GetPathName(); Path.StartsWith(RuleSet->Dir.Path))
-            {
-                UE_LOG(RuleRanger,
-                       VeryVerbose,
-                       TEXT("CanValidateAsset(%s) processing Rule Set %s"),
-                       *InAsset->GetName(),
-                       *RuleSet->GetName());
-                for (const auto RulePtr : RuleSet->Rules)
-                {
-                    // ReSharper disable once CppTooWideScopeInitStatement
-                    const auto Rule = RulePtr.Get();
-                    if (!IsSave && Rule->bApplyOnValidate)
-                    {
-                        UE_LOG(RuleRanger,
-                               VeryVerbose,
-                               TEXT("CanValidateAsset(%s) detected applicable rule %s in usecase %s."),
-                               *InAsset->GetName(),
-                               *Rule->GetName(),
-                               *DescribeDataValidationUsecase(DataValidationUsecase));
-                        return true;
-                    }
-                    else if (IsSave && Rule->bApplyOnSave)
-                    {
-                        UE_LOG(RuleRanger,
-                               VeryVerbose,
-                               TEXT("CanValidateAsset(%s) detected applicable rule %s in usecase %s."),
-                               *InAsset->GetName(),
-                               *Rule->GetName(),
-                               *DescribeDataValidationUsecase(DataValidationUsecase));
-                        return true;
-                    }
-                }
-            }
-        }
-        else
-        {
-            UE_LOG(RuleRanger,
-                   Error,
-                   TEXT("CanValidateAsset(%s) failed to load rule set %s."),
-                   *InAsset->GetName(),
-                   *RuleSetIt->GetAssetName());
-        }
-    }
-    // If we get here there is no rules that apply to the asset
-    return false;
+
+    URuleRangerEditorSubsystem* SubSystem = GEditor
+        ? GEditor->GetEditorSubsystem<URuleRangerEditorSubsystem>()
+        : nullptr;
+    return SubSystem
+        ? SubSystem->IsMatchingRulePresent(InAsset,
+                                           [this](URuleRangerRule* Rule, UObject* InObject) {
+                                               return WillRuleRun(Rule, InObject);
+                                           })
+        : false;
 }
 
-EDataValidationResult URuleRangerEditorValidator::ValidateLoadedAsset_Implementation(UObject* InAsset,
-                                                                                     TArray<FText>& ValidationErrors)
+EDataValidationResult URuleRangerEditorValidator::ValidateLoadedAsset_Implementation(
+    UObject* InAsset,
+    TArray<FText>& ValidationErrors)
 {
-    if (IsValid(InAsset))
+    if (!ActionContext)
     {
-        if (!ActionContext)
-        {
-            UE_LOG(RuleRanger, VeryVerbose, TEXT("RuleRangerEditorSubsystem: Creating the initial ActionContext"));
-            ActionContext = NewObject<UActionContextImpl>(this, UActionContextImpl::StaticClass());
-        }
+        UE_LOG(RuleRanger, VeryVerbose, TEXT("RuleRangerEditorSubsystem: Creating the initial ActionContext"));
+        ActionContext = NewObject<UActionContextImpl>(this, UActionContextImpl::StaticClass());
+    }
 
-        const bool IsSave = EDataValidationUsecase::Save == DataValidationUsecase;
-        const auto DeveloperSettings = GetMutableDefault<URuleRangerDeveloperSettings>();
-        check(IsValid(DeveloperSettings));
-        UE_LOG(RuleRanger,
-               VeryVerbose,
-               TEXT("OnAssetValidate(%s) discovered %d Rule Set(s)"),
-               *InAsset->GetName(),
-               DeveloperSettings->Rules.Num());
-        int RuleSetIndex = 0;
-        for (auto RuleSetIt = DeveloperSettings->Rules.CreateIterator(); RuleSetIt; ++RuleSetIt)
-        {
-            RuleSetIndex++;
-            const auto RuleSet = RuleSetIt->LoadSynchronous();
-            if (!IsValid(RuleSet))
-            {
-                UE_LOG(RuleRanger,
-                       Error,
-                       TEXT("OnAssetValidate(%s) detected invalid RuleSet at index %d."),
-                       *InAsset->GetName(),
-                       RuleSetIndex);
-            }
-            if (const auto Path = InAsset->GetPathName(); Path.StartsWith(RuleSet->Dir.Path))
-            {
-                UE_LOG(RuleRanger,
-                       VeryVerbose,
-                       TEXT("OnAssetValidate(%s) processing Rule Set %s"),
-                       *InAsset->GetName(),
-                       *RuleSet->GetName());
-                int RuleIndex = 0;
-                for (const auto RulePtr : RuleSet->Rules)
-                {
-                    RuleIndex++;
-                    // ReSharper disable once CppTooWideScopeInitStatement
-                    const auto Rule = RulePtr.Get();
-                    if (!IsValid(Rule))
-                    {
-                        UE_LOG(RuleRanger,
-                               Error,
-                               TEXT("OnAssetValidate(%s) detected invalid rule at index %d in RuleSet %s."),
-                               *InAsset->GetName(),
-                               RuleIndex,
-                               *RuleSet->GetName());
-                    }
-                    else if ((!IsSave && Rule->bApplyOnValidate) || (IsSave && Rule->bApplyOnSave))
-                    {
-                        UE_LOG(RuleRanger,
-                               VeryVerbose,
-                               TEXT("OnAssetValidate(%s) detected applicable rule %s."),
-                               *InAsset->GetName(),
-                               *Rule->GetName());
-
-                        ActionContext->ResetContext(InAsset,
-                                                    IsSave ? ERuleRangerActionTrigger::AT_Save
-                                                           : ERuleRangerActionTrigger::AT_Validate);
-
-                        TScriptInterface<IRuleRangerActionContext> ScriptInterfaceActionContext(ActionContext);
-                        Rule->Apply(ScriptInterfaceActionContext, InAsset);
-
-                        ActionContext->EmitMessageLogs();
-
-                        for (int i = 0; i < ActionContext->GetWarningMessages().Num(); i++)
-                        {
-                            AssetWarning(InAsset, ActionContext->GetWarningMessages()[i]);
-                        }
-                        for (int i = 0; i < ActionContext->GetErrorMessages().Num(); i++)
-                        {
-                            AssetFails(InAsset, ActionContext->GetErrorMessages()[i], ValidationErrors);
-                        }
-                        for (int i = 0; i < ActionContext->GetFatalMessages().Num(); i++)
-                        {
-                            AssetFails(InAsset, ActionContext->GetFatalMessages()[i], ValidationErrors);
-                        }
-                        ActionContext->ClearContext();
-                    }
-                }
-            }
-        }
-
-        if (EDataValidationResult::NotValidated == GetValidationResult())
-        {
-            AssetPasses(InAsset);
-        }
-        return GetValidationResult();
+    // ReSharper disable once CppTooWideScope
+    const auto SubSystem = GEditor
+        ? GEditor->GetEditorSubsystem<URuleRangerEditorSubsystem>()
+        : nullptr;
+    if (SubSystem)
+    {
+        TArray<FText>& ValidationErrors2 = ValidationErrors;
+        SubSystem->ProcessRule(InAsset,
+                               [this,ValidationErrors2](URuleRangerRule* Rule, UObject* InObject) mutable {
+                                   return ProcessRule(ValidationErrors2, Rule, InObject);
+                               });
     }
     else
     {
-        return EDataValidationResult::NotValidated;
+        UE_LOG(RuleRanger,
+               Error,
+               TEXT("OnAssetValidate(%s) unable to locate RuleRangerEditorSubsystem."),
+               *InAsset->GetName());
+    }
+
+    if (EDataValidationResult::NotValidated == GetValidationResult())
+    {
+        AssetPasses(InAsset);
+    }
+    return GetValidationResult();
+}
+
+bool URuleRangerEditorValidator::ProcessRule(TArray<FText>& ValidationErrors, URuleRangerRule* Rule, UObject* InObject)
+{
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const bool bIsSave = EDataValidationUsecase::Save == DataValidationUsecase;
+    if ((!bIsSave && Rule->bApplyOnValidate) || (bIsSave && Rule->bApplyOnSave))
+    {
+        UE_LOG(RuleRanger,
+               Verbose,
+               TEXT("OnAssetValidate(%s) detected applicable rule %s."),
+               *InObject->GetName(),
+               *Rule->GetName());
+
+        ActionContext->ResetContext(InObject,
+                                    bIsSave
+                                    ? ERuleRangerActionTrigger::AT_Save
+                                    : ERuleRangerActionTrigger::AT_Validate);
+
+        TScriptInterface<IRuleRangerActionContext> ScriptInterfaceActionContext(ActionContext);
+        Rule->Apply(ScriptInterfaceActionContext, InObject);
+
+        ActionContext->EmitMessageLogs();
+
+        for (int i = 0; i < ActionContext->GetWarningMessages().Num(); i++)
+        {
+            AssetWarning(InObject, ActionContext->GetWarningMessages()[i]);
+        }
+        for (int i = 0; i < ActionContext->GetErrorMessages().Num(); i++)
+        {
+            AssetFails(InObject, ActionContext->GetErrorMessages()[i], ValidationErrors);
+        }
+        for (int i = 0; i < ActionContext->GetFatalMessages().Num(); i++)
+        {
+            AssetFails(InObject, ActionContext->GetFatalMessages()[i], ValidationErrors);
+        }
+        return ActionContext->GetFatalMessages().Num() > 0 ? false : true;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
+// ReSharper disable 2 CppParameterMayBeConstPtrOrRef
+bool URuleRangerEditorValidator::WillRuleRun(URuleRangerRule* Rule, UObject* InObject) const
+{
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const bool bIsSave = EDataValidationUsecase::Save == DataValidationUsecase;
+    if (!bIsSave && Rule->bApplyOnValidate)
+    {
+        UE_LOG(RuleRanger,
+               VeryVerbose,
+               TEXT("CanValidateAsset(%s) detected applicable rule %s in usecase %s."),
+               *InObject->GetName(),
+               *Rule->GetName(),
+               *DescribeDataValidationUsecase(DataValidationUsecase));
+        return true;
+    }
+    else if (bIsSave && Rule->bApplyOnSave)
+    {
+        UE_LOG(RuleRanger,
+               VeryVerbose,
+               TEXT("CanValidateAsset(%s) detected applicable rule %s in usecase %s."),
+               *InObject->GetName(),
+               *Rule->GetName(),
+               *DescribeDataValidationUsecase(DataValidationUsecase));
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
