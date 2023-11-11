@@ -13,12 +13,12 @@
  */
 #pragma once
 #include "CoreMinimal.h"
-#include "SourcePathMatcherBase.h"
+#include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "SourceFilenameEndsWithMatcher.generated.h"
+#include "NameRegexMatcher.generated.h"
 
 /**
- * Match the filename that the asset was imported from if it ends with the specified text.
+ * Matcher that returns true if object has a name with the specified regex pattern.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,15 +26,17 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API USourceFilenameEndsWithMatcher : public USourcePathMatcherBase
+class RULERANGER_API UNameRegexMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
-protected:
-    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
-
-private:
-    /** The text to match. */
+public:
+    /** The regex pattern to match. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString Text;
+    FString RegexPattern{ TEXT("") };
+    /** A flag controlling whether matching is Case Sensitive or not. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    bool bCaseSensitive{ true };
+
+    virtual bool Test_Implementation(UObject* Object) override;
 };

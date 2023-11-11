@@ -27,6 +27,16 @@ public:
     static void CollectTypeHierarchy(const UObject* Object, TArray<UClass*>& Classes);
 
     /**
+     * Return true if the specified Object is an instance of the specified Class. This also traverses alternate
+     * type hierarchies such as Blueprint type system.
+     *
+     * @param Object The Object to Test
+     * @param Class The Class To Test For
+     * @return true if the specified object is instance of the specified class.
+     */
+    static bool IsA(const UObject* Object, const UClass* Class);
+
+    /**
      * Collect the "parent" instances of an object into an objects array, starting with the passed in class and moving
      * to parent objects at the end of the list. This is to support the scenario where a MaterialInstance may have a
      * chain of parent Material instances before being parented by a Material.

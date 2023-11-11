@@ -40,8 +40,8 @@ void URemoveMetadataTagsAction::Apply_Implementation(TScriptInterface<IRuleRange
                     if (ExistingValue.Equals(TEXT("")))
                     {
                         UE_LOG(RuleRanger,
-                               Verbose,
-                               TEXT("RemoveMetadataTagsAction: MetaData with key %s does not exits on %s. "
+                               VeryVerbose,
+                               TEXT("RemoveMetadataTagsAction: MetaData with key %s does not exist on %s. "
                                     "No action required"),
                                *MetadataKey.ToString(),
                                *Object->GetName());

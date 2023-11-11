@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,15 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #pragma once
+
 #include "CoreMinimal.h"
-#include "RuleRangerMatcher.h"
-#include "UObject/Object.h"
-#include "AndMatcher.generated.h"
+#include "Engine/DataTable.h"
+#include "RuleRangerAction.h"
+#include "RemoveMetadataTagsAction.generated.h"
 
 /**
- * Matcher that performs a boolean And operation on contained matchers and only returns true if one of the child
- * matchers returns true and stops evaluating at that point.
+ * Action to remove metadata tags with one of the specified keys.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -27,14 +28,19 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UAndMatcher : public URuleRangerMatcher
+class RULERANGER_API URemoveMetadataTagsAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
 public:
-    /** The matchers to perform logical And operation on. */
-    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
-    TArray<TObjectPtr<URuleRangerMatcher>> Matchers;
+    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
+                                      UObject* Object) override;
 
-    virtual bool Test_Implementation(UObject* Object) override;
+private:
+    /** The metadata keys to remove */
+    UPROPERTY(EditAnywhere,
+              BlueprintReadWrite,
+              Category = "Rule Ranger",
+              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
+    TArray<FName> Keys;
 };

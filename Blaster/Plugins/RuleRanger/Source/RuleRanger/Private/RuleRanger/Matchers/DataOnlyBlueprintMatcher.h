@@ -15,10 +15,10 @@
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "NameWildcardMatcher.generated.h"
+#include "DataOnlyBlueprintMatcher.generated.h"
 
 /**
- * Matcher that returns true if object has a name with the specified wildcard pattern.
+ * Matcher that matches if the object is a DataOnly Blueprint.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,17 +26,10 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UNameWildcardMatcher : public URuleRangerMatcher
+class RULERANGER_API UDataOnlyBlueprintMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
 public:
-    /** The wildcard pattern to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString WildcardPattern;
-    /** A flag controlling whether matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    bool bCaseSensitive{ true };
-
     virtual bool Test_Implementation(UObject* Object) override;
 };

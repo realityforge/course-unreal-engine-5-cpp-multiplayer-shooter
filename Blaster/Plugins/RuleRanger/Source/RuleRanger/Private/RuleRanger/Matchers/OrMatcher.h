@@ -15,11 +15,11 @@
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "NotMatcher.generated.h"
+#include "OrMatcher.generated.h"
 
 /**
- * Matcher that performs a boolean NOT operation on contained matchers and only returns true if one of the child
- * matchers returns true and stops evaluating at that point.
+ * Matcher that performs a boolean Or operation on contained matchers and only returns true if one of the child matchers
+ * returns true and stops evaluating at that point.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -27,14 +27,14 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UNotMatcher : public URuleRangerMatcher
+class RULERANGER_API UOrMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
 public:
-    /** The matchers to perform logical NOT operation on. */
+    /** The matchers to perform logical or operation on. */
     UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
-    TObjectPtr<URuleRangerMatcher> Matcher;
+    TArray<TObjectPtr<URuleRangerMatcher>> Matchers;
 
     virtual bool Test_Implementation(UObject* Object) override;
 };

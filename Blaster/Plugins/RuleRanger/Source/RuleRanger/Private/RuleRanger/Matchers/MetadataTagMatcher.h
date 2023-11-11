@@ -15,10 +15,10 @@
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "EditorPropertyMatcher.generated.h"
+#include "MetadataTagMatcher.generated.h"
 
 /**
- * Matcher that returns true if object has and editor property specified name and value
+ * Matcher that returns true if object has metadata tag with the specified key and value
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,7 +26,7 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UEditorPropertyMatcher : public URuleRangerMatcher
+class RULERANGER_API UMetadataTagMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
@@ -34,15 +34,11 @@ public:
     virtual bool Test_Implementation(UObject* Object) override;
 
 private:
-    /** The name of the editor property to match. */
+    /** The key used to access the metadata tag to match. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FName Name{ TEXT("") };
+    FName Key{ TEXT("") };
 
-    /** The value of the editor property to match. */
+    /** The value of metadata tag to match. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
     FString Value{ TEXT("") };
-
-    /** Flag indicating whether the property matcher should look at parent instances. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    bool bTraverseInstanceHierarchy{ true };
 };

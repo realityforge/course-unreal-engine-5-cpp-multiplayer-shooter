@@ -11,11 +11,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/ObjectTypeMatcher.h"
-#include "Editor.h"
-#include "RuleRanger/RuleRangerUtilities.h"
+#pragma once
 
-bool UObjectTypeMatcher::Test_Implementation(UObject* Object)
+#include "CoreMinimal.h"
+
+/** The class responsible for managing MessageLog categories used in RuleRanger plugin. */
+class FRuleRangerMessageLog final
 {
-    return RuleRangerUtilities::IsA(Object, ObjectType);
-}
+public:
+    static void Initialize();
+
+    static void Shutdown();
+
+private:
+    const static FName MessageLogName;
+
+public:
+    FORCEINLINE static const FName& GetMessageLogName() { return MessageLogName; }
+};

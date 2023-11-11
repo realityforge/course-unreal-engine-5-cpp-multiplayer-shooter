@@ -47,7 +47,7 @@ void USetMetadataTagsAction::Apply_Implementation(TScriptInterface<IRuleRangerAc
                     if (ExistingValue.Equals(MetadataTag.Value))
                     {
                         UE_LOG(RuleRanger,
-                               Verbose,
+                               VeryVerbose,
                                TEXT("SetMetadataTagsAction: MetaDataTag %s=%s already exists on %s. "
                                     "No action required"),
                                *MetadataTag.Key.ToString(),

@@ -13,12 +13,12 @@
  */
 #pragma once
 #include "CoreMinimal.h"
-#include "RuleRangerMatcher.h"
+#include "SourcePathMatcherBase.h"
 #include "UObject/Object.h"
-#include "ContentDirMatcher.generated.h"
+#include "SourceFilenameContainsMatcher.generated.h"
 
 /**
- * Matcher that returns true if object has metadata tag with the specified key and value
+ * Match the filename that the asset was imported from if it contains the specified text.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,14 +26,15 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UContentDirMatcher : public URuleRangerMatcher
+class RULERANGER_API USourceFilenameContainsMatcher final : public USourcePathMatcherBase
 {
     GENERATED_BODY()
 
-public:
-    /** The Content directory to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, ContentDir))
-    FDirectoryPath Dir{ TEXT("") };
+protected:
+    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
 
-    virtual bool Test_Implementation(UObject* Object) override;
+private:
+    /** The text to match. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    FString Text;
 };

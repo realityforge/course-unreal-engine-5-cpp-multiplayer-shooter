@@ -15,11 +15,10 @@
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "OrMatcher.generated.h"
+#include "EditorPropertyMatcher.generated.h"
 
 /**
- * Matcher that performs a boolean Or operation on contained matchers and only returns true if one of the child matchers
- * returns true and stops evaluating at that point.
+ * Matcher that returns true if object has and editor property specified name and value
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -27,14 +26,23 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UOrMatcher : public URuleRangerMatcher
+class RULERANGER_API UEditorPropertyMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
 public:
-    /** The matchers to perform logical or operation on. */
-    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
-    TArray<TObjectPtr<URuleRangerMatcher>> Matchers;
-
     virtual bool Test_Implementation(UObject* Object) override;
+
+private:
+    /** The name of the editor property to match. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    FName Name{ TEXT("") };
+
+    /** The value of the editor property to match. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    FString Value{ TEXT("") };
+
+    /** Flag indicating whether the property matcher should look at parent instances. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    bool bTraverseInstanceHierarchy{ true };
 };

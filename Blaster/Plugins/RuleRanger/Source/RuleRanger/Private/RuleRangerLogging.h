@@ -11,11 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/ObjectTypeMatcher.h"
-#include "Editor.h"
-#include "RuleRanger/RuleRangerUtilities.h"
+#pragma once
 
-bool UObjectTypeMatcher::Test_Implementation(UObject* Object)
-{
-    return RuleRangerUtilities::IsA(Object, ObjectType);
-}
+#include "Logging/LogCategory.h"
+
+// Log category to use within the RuleRanger plugin
+DECLARE_LOG_CATEGORY_EXTERN(RuleRanger, Verbose, All);

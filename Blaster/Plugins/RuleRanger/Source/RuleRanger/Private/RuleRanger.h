@@ -13,9 +13,17 @@
  */
 #pragma once
 
-#include "Logging/LogCategory.h"
+#include "Modules/ModuleManager.h"
 
-// Log category to use within the RuleRanger plugin
-DECLARE_LOG_CATEGORY_EXTERN(RuleRanger, Verbose, All);
+class FRuleRangerModule final : public IModuleInterface
+{
+public:
+    virtual void StartupModule() override;
+    virtual void ShutdownModule() override;
 
-extern const FName RuleRangerMessageLogName;
+private:
+    static const FName ModuleName;
+
+public:
+    FORCEINLINE static const FName& GetModuleName() { return ModuleName; }
+};

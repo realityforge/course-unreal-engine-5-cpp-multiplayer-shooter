@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,16 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
 #include "CoreMinimal.h"
-#include "Engine/DataTable.h"
-#include "RuleRangerAction.h"
-#include "RemoveMetadataTagsAction.generated.h"
+#include "SourcePathMatcherBase.h"
+#include "UObject/Object.h"
+#include "SourceFilenameEndsWithMatcher.generated.h"
 
 /**
- * Action to remove metadata tags with one of the specified keys.
+ * Match the filename that the asset was imported from if it ends with the specified text.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -28,19 +26,15 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API URemoveMetadataTagsAction : public URuleRangerAction
+class RULERANGER_API USourceFilenameEndsWithMatcher final : public USourcePathMatcherBase
 {
     GENERATED_BODY()
 
-public:
-    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                      UObject* Object) override;
+protected:
+    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
 
 private:
-    /** The metadata keys to remove */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
-    TArray<FName> Keys;
+    /** The text to match. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    FString Text;
 };

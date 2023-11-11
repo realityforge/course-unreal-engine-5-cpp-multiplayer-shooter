@@ -39,7 +39,7 @@ void UCheckTexturePowerOfTwoAction::Apply_Implementation(TScriptInterface<IRuleR
             const auto TextureGroupEnum = StaticEnum<TextureGroup>();
             const auto TextureGroup = TextureGroupEnum->GetMetaData(TEXT("DisplayName"), Texture->LODGroup);
             UE_LOG(RuleRanger,
-                   Verbose,
+                   VeryVerbose,
                    TEXT("CheckTexture2DPowerOfTwoAction: Skipping object %s as it's "
                         "TextureGroup %s is in the skip list"),
                    *Object->GetName(),
@@ -113,7 +113,7 @@ void UCheckTexturePowerOfTwoAction::Apply_Implementation(TScriptInterface<IRuleR
             else
             {
                 UE_LOG(RuleRanger,
-                       Verbose,
+                       VeryVerbose,
                        TEXT("CheckTexture2DPowerOfTwoAction: Texture dimensions are a power of two %s. "
                             "No action required"),
                        *Object->GetName());

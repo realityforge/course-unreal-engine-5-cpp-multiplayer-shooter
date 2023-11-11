@@ -13,10 +13,10 @@
  */
 #include "RuleRanger/RuleRangerEditorValidator.h"
 #include "ActionContextImpl.h"
+#include "RuleRanger/RuleRangerEditorSubsystem.h"
 #include "RuleRangerActionContext.h"
 #include "RuleRangerLogging.h"
 #include "RuleRangerRule.h"
-#include "RuleRanger/RuleRangerEditorSubsystem.h"
 
 URuleRangerEditorValidator::URuleRangerEditorValidator()
 {
@@ -49,7 +49,7 @@ static FString DescribeDataValidationUsecase(const EDataValidationUsecase InData
 
 bool URuleRangerEditorValidator::CanValidate_Implementation(const EDataValidationUsecase InUsecase) const
 {
-    UE_LOG(RuleRanger, Verbose, TEXT("CanValidate(%s)"), *DescribeDataValidationUsecase(InUsecase));
+    UE_LOG(RuleRanger, VeryVerbose, TEXT("CanValidate(%s)"), *DescribeDataValidationUsecase(InUsecase));
     DataValidationUsecase = InUsecase;
     return true;
 }
@@ -57,20 +57,16 @@ bool URuleRangerEditorValidator::CanValidate_Implementation(const EDataValidatio
 bool URuleRangerEditorValidator::CanValidateAsset_Implementation(UObject* InAsset) const
 {
 
-    URuleRangerEditorSubsystem* SubSystem = GEditor
-        ? GEditor->GetEditorSubsystem<URuleRangerEditorSubsystem>()
-        : nullptr;
-    return SubSystem
-        ? SubSystem->IsMatchingRulePresent(InAsset,
-                                           [this](URuleRangerRule* Rule, UObject* InObject) {
-                                               return WillRuleRun(Rule, InObject);
-                                           })
-        : false;
+    URuleRangerEditorSubsystem* SubSystem =
+        GEditor ? GEditor->GetEditorSubsystem<URuleRangerEditorSubsystem>() : nullptr;
+    return SubSystem ? SubSystem->IsMatchingRulePresent(
+               InAsset,
+               [this](URuleRangerRule* Rule, UObject* InObject) { return WillRuleRun(Rule, InObject); })
+                     : false;
 }
 
-EDataValidationResult URuleRangerEditorValidator::ValidateLoadedAsset_Implementation(
-    UObject* InAsset,
-    TArray<FText>& ValidationErrors)
+EDataValidationResult URuleRangerEditorValidator::ValidateLoadedAsset_Implementation(UObject* InAsset,
+                                                                                     TArray<FText>& ValidationErrors)
 {
     if (!ActionContext)
     {
@@ -79,16 +75,13 @@ EDataValidationResult URuleRangerEditorValidator::ValidateLoadedAsset_Implementa
     }
 
     // ReSharper disable once CppTooWideScope
-    const auto SubSystem = GEditor
-        ? GEditor->GetEditorSubsystem<URuleRangerEditorSubsystem>()
-        : nullptr;
+    const auto SubSystem = GEditor ? GEditor->GetEditorSubsystem<URuleRangerEditorSubsystem>() : nullptr;
     if (SubSystem)
     {
         TArray<FText>& ValidationErrors2 = ValidationErrors;
-        SubSystem->ProcessRule(InAsset,
-                               [this,ValidationErrors2](URuleRangerRule* Rule, UObject* InObject) mutable {
-                                   return ProcessRule(ValidationErrors2, Rule, InObject);
-                               });
+        SubSystem->ProcessRule(InAsset, [this, ValidationErrors2](URuleRangerRule* Rule, UObject* InObject) mutable {
+            return ProcessRule(ValidationErrors2, Rule, InObject);
+        });
     }
     else
     {
@@ -112,15 +105,14 @@ bool URuleRangerEditorValidator::ProcessRule(TArray<FText>& ValidationErrors, UR
     if ((!bIsSave && Rule->bApplyOnValidate) || (bIsSave && Rule->bApplyOnSave))
     {
         UE_LOG(RuleRanger,
-               Verbose,
+               VeryVerbose,
                TEXT("OnAssetValidate(%s) detected applicable rule %s."),
                *InObject->GetName(),
                *Rule->GetName());
 
         ActionContext->ResetContext(InObject,
-                                    bIsSave
-                                    ? ERuleRangerActionTrigger::AT_Save
-                                    : ERuleRangerActionTrigger::AT_Validate);
+                                    bIsSave ? ERuleRangerActionTrigger::AT_Save
+                                            : ERuleRangerActionTrigger::AT_Validate);
 
         TScriptInterface<IRuleRangerActionContext> ScriptInterfaceActionContext(ActionContext);
         Rule->Apply(ScriptInterfaceActionContext, InObject);

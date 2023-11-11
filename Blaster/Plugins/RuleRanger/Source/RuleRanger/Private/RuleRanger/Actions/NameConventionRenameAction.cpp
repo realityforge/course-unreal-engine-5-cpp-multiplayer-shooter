@@ -17,6 +17,7 @@
 #include "Misc/UObjectToken.h"
 #include "RuleRanger/RuleRangerUtilities.h"
 #include "RuleRangerLogging.h"
+#include "RuleRangerMessageLog.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
 void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
@@ -77,7 +78,7 @@ void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRan
                                 if (NewName.Equals(OriginalName))
                                 {
                                     UE_LOG(RuleRanger,
-                                           Verbose,
+                                           VeryVerbose,
                                            TEXT("NameConventionRenameAction: Object %s matches naming convention. "
                                                 "No action required."),
                                            *Object->GetName());
@@ -131,7 +132,7 @@ void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRan
                 }
                 if (bNotifyIfNameConventionMissing)
                 {
-                    FMessageLog(RuleRangerMessageLogName)
+                    FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
                         .Warning()
                         ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger",
                                                                 "MissingNamingConvention",
@@ -145,7 +146,7 @@ void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRan
                 else
                 {
                     UE_LOG(RuleRanger,
-                           Verbose,
+                           VeryVerbose,
                            TEXT("NameConventionRenameAction: Unable to locate Naming Convention for "
                                 "object '%s' of type '%s' in '%s'."),
                            *OriginalName,
@@ -167,6 +168,7 @@ void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRan
 void UNameConventionRenameAction::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
     const FName PropertyName = PropertyChangedEvent.Property ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+    // ReSharper disable once CppTooWideScopeInitStatement
     const FName TableName = GET_MEMBER_NAME_CHECKED(UNameConventionRenameAction, NameConventionsTable);
     if (TableName == PropertyName)
     {
@@ -187,7 +189,7 @@ void UNameConventionRenameAction::ResetCacheIfTableModified(UObject* Object)
 
 void UNameConventionRenameAction::ResetNameConventionsCache()
 {
-    UE_LOG(RuleRanger, Verbose, TEXT("NameConventionRenameAction: Resetting the Name Conventions Cache"));
+    UE_LOG(RuleRanger, VeryVerbose, TEXT("NameConventionRenameAction: Resetting the Name Conventions Cache"));
 
     NameConventionsMap.Empty();
     FCoreUObjectDelegates::OnObjectModified.Remove(OnObjectModifiedDelegateHandle);
@@ -206,6 +208,7 @@ void UNameConventionRenameAction::RebuildNameConventionsCacheIfNecessary()
         for (const auto RowName : NameConventionsTable->GetRowNames())
         {
             const auto NameConvention = NameConventionsTable->FindRow<FNameConvention>(RowName, TEXT(""));
+            // ReSharper disable once CppTooWideScopeInitStatement
             const auto ObjectType = NameConvention->ObjectType.Get();
             if (NameConvention && IsValid(ObjectType))
             {

@@ -11,11 +11,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/ObjectTypeMatcher.h"
-#include "Editor.h"
-#include "RuleRanger/RuleRangerUtilities.h"
 
-bool UObjectTypeMatcher::Test_Implementation(UObject* Object)
+#include "FailAction.h"
+
+void UFailAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext, UObject* Object)
 {
-    return RuleRangerUtilities::IsA(Object, ObjectType);
+    if (bFatal)
+    {
+        ActionContext->Fatal(FText::FromString(Message));
+    }
+    else
+    {
+        ActionContext->Error(FText::FromString(Message));
+    }
 }

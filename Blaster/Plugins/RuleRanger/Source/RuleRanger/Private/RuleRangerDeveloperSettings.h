@@ -15,7 +15,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DeveloperSettings.h"
-#include "RuleRangerRuleSet.h"
 #include "UObject/Object.h"
 #include "RuleRangerDeveloperSettings.generated.h"
 
@@ -25,7 +24,7 @@ class URuleRangerRuleSetScope;
  * RuleRanger Project Settings in the Editor category.
  */
 UCLASS(Config = "Editor", DefaultConfig, DisplayName = "Rule Ranger")
-class RULERANGER_API URuleRangerDeveloperSettings : public UDeveloperSettings
+class RULERANGER_API URuleRangerDeveloperSettings final : public UDeveloperSettings
 {
     GENERATED_BODY()
 

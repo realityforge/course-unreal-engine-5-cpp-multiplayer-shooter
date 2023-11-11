@@ -15,10 +15,11 @@
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "NamePrefixMatcher.generated.h"
+#include "NotMatcher.generated.h"
 
 /**
- * Matcher that returns true if object has a name with the specified prefix.
+ * Matcher that performs a boolean NOT operation on contained matchers and only returns true if one of the child
+ * matchers returns true and stops evaluating at that point.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,17 +27,14 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UNamePrefixMatcher : public URuleRangerMatcher
+class RULERANGER_API UNotMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
 public:
-    /** The prefix to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString Prefix;
-    /** A flag controlling whether matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    bool bCaseSensitive{ true };
+    /** The matchers to perform logical NOT operation on. */
+    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
+    TObjectPtr<URuleRangerMatcher> Matcher;
 
     virtual bool Test_Implementation(UObject* Object) override;
 };

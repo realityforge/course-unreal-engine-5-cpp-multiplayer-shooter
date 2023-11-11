@@ -41,7 +41,7 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UCheckTextureResolutionCompressibleAction : public URuleRangerAction
+class RULERANGER_API UCheckTextureResolutionCompressibleAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 

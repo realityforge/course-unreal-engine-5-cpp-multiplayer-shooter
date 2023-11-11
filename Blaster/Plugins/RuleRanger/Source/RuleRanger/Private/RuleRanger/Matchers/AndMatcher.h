@@ -15,10 +15,11 @@
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "NameRegexMatcher.generated.h"
+#include "AndMatcher.generated.h"
 
 /**
- * Matcher that returns true if object has a name with the specified regex pattern.
+ * Matcher that performs a boolean And operation on contained matchers and only returns true if one of the child
+ * matchers returns true and stops evaluating at that point.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,17 +27,14 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UNameRegexMatcher : public URuleRangerMatcher
+class RULERANGER_API UAndMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
 public:
-    /** The regex pattern to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString RegexPattern{ TEXT("") };
-    /** A flag controlling whether matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    bool bCaseSensitive{ true };
+    /** The matchers to perform logical And operation on. */
+    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
+    TArray<TObjectPtr<URuleRangerMatcher>> Matchers;
 
     virtual bool Test_Implementation(UObject* Object) override;
 };

@@ -11,11 +11,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/ObjectTypeMatcher.h"
-#include "Editor.h"
-#include "RuleRanger/RuleRangerUtilities.h"
+#pragma once
 
-bool UObjectTypeMatcher::Test_Implementation(UObject* Object)
+#include "CoreMinimal.h"
+#include "Framework/Commands/Commands.h"
+
+class URuleRangerRule;
+
+class FRuleRangerCommands final : public TCommands<FRuleRangerCommands>
 {
-    return RuleRangerUtilities::IsA(Object, ObjectType);
-}
+public:
+    FRuleRangerCommands();
+
+    virtual void RegisterCommands() override;
+
+    TSharedPtr<FUICommandInfo> ScanSelectedPaths;
+    TSharedPtr<FUICommandInfo> FixSelectedPaths;
+    TSharedPtr<FUICommandInfo> ScanSelectedAssets;
+    TSharedPtr<FUICommandInfo> FixSelectedAssets;
+};

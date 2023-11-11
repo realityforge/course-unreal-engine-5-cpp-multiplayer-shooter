@@ -17,10 +17,10 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
-#include "SetMetadataTagsAction.generated.h"
+#include "CheckTexturePowerOfTwoAction.generated.h"
 
 /**
- * Action to set one or more metadata tags.
+ * Action to check that a Texture has power of 2 Dimensions.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -28,19 +28,17 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API USetMetadataTagsAction : public URuleRangerAction
+class RULERANGER_API UCheckTexturePowerOfTwoAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
 public:
+    UCheckTexturePowerOfTwoAction();
     virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
                                       UObject* Object) override;
 
 private:
-    /** The metadata tags to set */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
-    TMap<FName, FString> MetadataTags;
+    /** The TextureGroups to (silently) skip this action on. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess, ExposeOnSpawn))
+    TSet<TEnumAsByte<TextureGroup>> TextureGroupsToSkip;
 };

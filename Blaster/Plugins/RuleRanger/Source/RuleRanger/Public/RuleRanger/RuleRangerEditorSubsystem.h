@@ -22,18 +22,22 @@
 
 class URuleRangerRule;
 class UActionContextImpl;
+class URuleRangerRuleSetScope;
+class URuleRangerContentBrowserExtensions;
 
 // Shape of function called to check whether rule will run or actually execute rule.
 // The actual function is determined by where it is used.
-using RuleRangerRuleFn = std::function<bool(URuleRangerRule* Rule, UObject* InObject)>;
+using FRuleRangerRuleFn = std::function<bool(URuleRangerRule* Rule, UObject* InObject)>;
 
 /**
  * The subsystem responsible for managing callbacks to other subsystems such as ImportSubsystem callbacks.
  */
 UCLASS(BlueprintType, CollapseCategories)
-class RULERANGER_API URuleRangerEditorSubsystem : public UEditorSubsystem
+class RULERANGER_API URuleRangerEditorSubsystem final : public UEditorSubsystem
 {
     GENERATED_BODY()
+
+    friend URuleRangerContentBrowserExtensions;
 
 public:
     /** Implement this for initialization of instances of the system */
@@ -42,11 +46,17 @@ public:
     /** Implement this for deinitialization of instances of the system */
     virtual void Deinitialize() override;
 
-    void ProcessRule(UObject* Object, const RuleRangerRuleFn& ProcessRuleFunction);
-    bool IsMatchingRulePresent(UObject* Object, const RuleRangerRuleFn& ProcessRuleFunction);
+    void ScanObject(UObject* InObject);
+    void ScanAndFixObject(UObject* InObject);
+
+    void ProcessRule(UObject* Object, const FRuleRangerRuleFn& ProcessRuleFunction);
+    bool IsMatchingRulePresent(UObject* InObject, const FRuleRangerRuleFn& ProcessRuleFunction);
+
+    /** Return the set of ActiveRuleSetScopes that are active for the current project. */
+    TArray<TSoftObjectPtr<URuleRangerRuleSetScope>> GetActiveRuleSetScopes();
 
 private:
-    UPROPERTY(VisibleAnywhere)
+    UPROPERTY(Transient)
     UActionContextImpl* ActionContext{ nullptr };
 
     // Handle for delegate that has been registered.
@@ -62,5 +72,23 @@ private:
      * @param InObject the object to apply rule to.
      * @return true to keep processing, false if no more rules should be applied to object.
      */
-    bool ProcessOnAssetPostImportRule(const bool bIsReimport, URuleRangerRule*  Rule, UObject* InObject);
+    bool ProcessOnAssetPostImportRule(const bool bIsReimport, URuleRangerRule* Rule, UObject* InObject);
+
+    /**
+     * Function invoked when each rule is applied to an object when user requested an explicit scan.
+     *
+     * @param Rule The rule to apply.
+     * @param InObject the object to apply rule to.
+     * @return true to keep processing, false if no more rules should be applied to object.
+     */
+    bool ProcessDemandScan(URuleRangerRule* Rule, UObject* InObject);
+
+    /**
+     * Function invoked when each rule is applied to an object when user requested an explicit scan and autofix.
+     *
+     * @param Rule The rule to apply.
+     * @param InObject the object to apply rule to.
+     * @return true to keep processing, false if no more rules should be applied to object.
+     */
+    bool ProcessDemandScanAndFix(URuleRangerRule* Rule, UObject* InObject);
 };

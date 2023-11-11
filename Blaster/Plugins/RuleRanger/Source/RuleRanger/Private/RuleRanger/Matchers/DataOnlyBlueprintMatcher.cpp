@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,11 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/ObjectTypeMatcher.h"
-#include "Editor.h"
-#include "RuleRanger/RuleRangerUtilities.h"
+#include "DataOnlyBlueprintMatcher.h"
+#include "Kismet2/BlueprintEditorUtils.h"
 
-bool UObjectTypeMatcher::Test_Implementation(UObject* Object)
+bool UDataOnlyBlueprintMatcher::Test_Implementation(UObject* Object)
 {
-    return RuleRangerUtilities::IsA(Object, ObjectType);
+    const UBlueprint* Blueprint = Cast<UBlueprint>(Object);
+    return Blueprint && FBlueprintEditorUtils::IsDataOnlyBlueprint(Blueprint);
 }

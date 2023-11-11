@@ -25,7 +25,7 @@ inline static FString NameConvention_DefaultVariant{ TEXT("") };
  * The structure defining naming conventions for different asset types.
  */
 USTRUCT(BlueprintType)
-struct FNameConvention : public FTableRowBase
+struct FNameConvention final : public FTableRowBase
 {
     GENERATED_USTRUCT_BODY();
 

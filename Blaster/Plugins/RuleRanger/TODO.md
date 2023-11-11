@@ -2,8 +2,7 @@
 
 Shorthand notes of where to go next with this experiment:
 
-* Add a mechanism for adding an exclude `DataTable` that will will list assets that will ignore either particular rules or all rules?
-* Enhance NameConventionRename action so that it can optionally warn on unknown assets (IsAsset=> true)
+* Add a mechanism for adding an exclude `DataTable` that will will list assets that will ignore specific rules or all rules for specific assets or all assets or all assets that matchers match?
 * Material functions that are Material Layers are prefixed with ML not MF!
 * Retargeters should be named as RTG_\[Source\]_To_\[Target\]
 * Make a rule for handling texture extensions
@@ -21,8 +20,6 @@ Shorthand notes of where to go next with this experiment:
   * Alpha/Opacity: _A
   * Packed: Use texture type in RGBA order. e.g., ARMH (Ambient Occlusion, Roughness, Metallic, Height)
 * Add rules for "Level (World Partition)" => prefix: `L_`, suffix: `_WP`
-* Add ability to add skip rules for assets in a user friendly way without changing RuleSet assets.
-* Add a log of every action that resulted in change applied in a run
 * Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
 * Add check to ensure every parameter in a Material has a group/description specified.
 * Add check to unreal that verifies every Niagara system has an "Effect Type" associated with it.
@@ -30,7 +27,6 @@ Shorthand notes of where to go next with this experiment:
 * Add check to unreal that verifies that "Normalmap" compression setting set for textures of the _N or similar textures
 * Add check to ensure sRGB set only BaseColor textures where expected?
 * Add metadata to assets to track origin. (i.e. What license and where was it sourced from)
-
 
 Add Action that applies a layout for textures based on metadata and types? Maybe something like:
 Possible Directory layout:

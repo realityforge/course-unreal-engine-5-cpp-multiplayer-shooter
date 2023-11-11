@@ -25,7 +25,7 @@ class URuleRangerMatcher;
  * The object that binds one or more matchers with one or more actions.
  */
 UCLASS(AutoExpandCategories = ("Default", "Rule Ranger"), Blueprintable, BlueprintType, EditInlineNew)
-class RULERANGER_API URuleRangerRule : public UDataAsset
+class RULERANGER_API URuleRangerRule final : public UDataAsset
 {
     GENERATED_BODY()
 

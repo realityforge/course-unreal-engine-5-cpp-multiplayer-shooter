@@ -23,6 +23,12 @@ void URuleRangerRule::Apply_Implementation(TScriptInterface<IRuleRangerActionCon
     {
         if (!Matcher->Test(Object))
         {
+            UE_LOG(RuleRanger,
+                   Verbose,
+                   TEXT("ApplyRule(%s) on rule %s exited early as matcher %s did not match"),
+                   *Object->GetName(),
+                   *GetName(),
+                   *Matcher->GetName());
             return;
         }
     }

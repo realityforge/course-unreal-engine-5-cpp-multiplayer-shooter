@@ -80,7 +80,7 @@ void UCheckTextureResolutionCompressibleAction::Apply_Implementation(
             else
             {
                 UE_LOG(RuleRanger,
-                       Verbose,
+                       VeryVerbose,
                        TEXT("CheckTextureResolutionCompressibleAction(%s): Texture dimensions are divisible by %d. "
                             "No action required"),
                        *Object->GetName(),

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,14 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #pragma once
+
 #include "CoreMinimal.h"
-#include "SourcePathMatcherBase.h"
-#include "UObject/Object.h"
-#include "SourceFilenameContainsMatcher.generated.h"
+#include "Engine/DataTable.h"
+#include "RuleRangerAction.h"
+#include "RemoveNamePrefixAction.generated.h"
 
 /**
- * Match the filename that the asset was imported from if it contains the specified text.
+ * Action to remove a prefix from a name.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,15 +28,19 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API USourceFilenameContainsMatcher : public USourcePathMatcherBase
+class RULERANGER_API URemoveNamePrefixAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
-protected:
-    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
+public:
+    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
+                                      UObject* Object) override;
 
 private:
-    /** The text to match. */
+    /** The prefix to remove. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString Text;
+    FString Prefix;
+    /** A flag controlling whether matching is Case Sensitive or not. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    bool bCaseSensitive{ true };
 };

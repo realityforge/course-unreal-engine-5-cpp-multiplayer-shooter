@@ -15,6 +15,7 @@
 #include "ActionContextImpl.h"
 #include "Misc/UObjectToken.h"
 #include "RuleRangerLogging.h"
+#include "RuleRangerMessageLog.h"
 
 ERuleRangerActionState UActionContextImpl::GetState()
 {
@@ -60,28 +61,28 @@ void UActionContextImpl::EmitMessageLogs()
 {
     for (int i = 0; i < InfoMessages.Num(); i++)
     {
-        FMessageLog(RuleRangerMessageLogName)
+        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
             .Info()
             ->AddToken(FUObjectToken::Create(Object))
             ->AddToken(FTextToken::Create(InfoMessages[i]));
     }
     for (int i = 0; i < WarningMessages.Num(); i++)
     {
-        FMessageLog(RuleRangerMessageLogName)
+        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
             .Warning()
             ->AddToken(FUObjectToken::Create(Object))
             ->AddToken(FTextToken::Create(WarningMessages[i]));
     }
     for (int i = 0; i < ErrorMessages.Num(); i++)
     {
-        FMessageLog(RuleRangerMessageLogName)
+        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
             .Error()
             ->AddToken(FUObjectToken::Create(Object))
             ->AddToken(FTextToken::Create(ErrorMessages[i]));
     }
     for (int i = 0; i < FatalMessages.Num(); i++)
     {
-        FMessageLog(RuleRangerMessageLogName)
+        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
             .Error()
             ->AddToken(FUObjectToken::Create(Object))
             ->AddToken(FTextToken::Create(FatalMessages[i]));

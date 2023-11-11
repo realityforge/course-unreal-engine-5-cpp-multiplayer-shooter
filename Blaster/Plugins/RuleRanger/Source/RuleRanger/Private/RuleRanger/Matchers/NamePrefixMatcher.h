@@ -15,10 +15,10 @@
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "ObjectTypeMatcher.generated.h"
+#include "NamePrefixMatcher.generated.h"
 
 /**
- * Matcher that checks whether object matches specified type.
+ * Matcher that returns true if object has a name with the specified prefix.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,15 +26,17 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UObjectTypeMatcher : public URuleRangerMatcher
+class RULERANGER_API UNamePrefixMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
 public:
-    virtual bool Test_Implementation(UObject* Object) override;
-
-private:
-    /** The type to match. */
+    /** The prefix to match. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    TSubclassOf<UObject> ObjectType;
+    FString Prefix;
+    /** A flag controlling whether matching is Case Sensitive or not. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    bool bCaseSensitive{ true };
+
+    virtual bool Test_Implementation(UObject* Object) override;
 };

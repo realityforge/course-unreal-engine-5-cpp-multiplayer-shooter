@@ -13,12 +13,12 @@
  */
 #pragma once
 #include "CoreMinimal.h"
-#include "RuleRangerMatcher.h"
+#include "SourcePathMatcherBase.h"
 #include "UObject/Object.h"
-#include "MetadataTagMatcher.generated.h"
+#include "SourceFilenameStartsWithMatcher.generated.h"
 
 /**
- * Matcher that returns true if object has metadata tag with the specified key and value
+ * Match the filename that the asset was imported from if it starts with the specified text.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -26,19 +26,15 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UMetadataTagMatcher : public URuleRangerMatcher
+class RULERANGER_API USourceFilenameStartsWithMatcher final : public USourcePathMatcherBase
 {
     GENERATED_BODY()
 
-public:
-    virtual bool Test_Implementation(UObject* Object) override;
+protected:
+    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
 
 private:
-    /** The key used to access the metadata tag to match. */
+    /** The text to match. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FName Key{ TEXT("") };
-
-    /** The value of metadata tag to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString Value{ TEXT("") };
+    FString Text;
 };

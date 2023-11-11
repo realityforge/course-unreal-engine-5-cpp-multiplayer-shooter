@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,16 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
 #include "CoreMinimal.h"
-#include "Engine/DataTable.h"
-#include "RuleRangerAction.h"
-#include "CheckTexturePowerOfTwoAction.generated.h"
+#include "RuleRangerMatcher.h"
+#include "UObject/Object.h"
+#include "NameSuffixMatcher.generated.h"
 
 /**
- * Action to check that a Texture has power of 2 Dimensions.
+ * Matcher that returns true if object has a name with the specified suffix.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -28,17 +26,17 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UCheckTexturePowerOfTwoAction : public URuleRangerAction
+class RULERANGER_API UNameSuffixMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
 public:
-    UCheckTexturePowerOfTwoAction();
-    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                      UObject* Object) override;
+    /** The suffix to match. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    FString Suffix;
+    /** A flag controlling whether matching is Case Sensitive or not. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    bool bCaseSensitive{ true };
 
-private:
-    /** The TextureGroups to (silently) skip this action on. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess, ExposeOnSpawn))
-    TSet<TEnumAsByte<TextureGroup>> TextureGroupsToSkip;
+    virtual bool Test_Implementation(UObject* Object) override;
 };
