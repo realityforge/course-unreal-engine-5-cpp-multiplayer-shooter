@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/MetadataTagMatcher.h"
+#include "MetadataTagMatcher.h"
 #include "Editor.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 

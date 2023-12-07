@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/SourceFilenameStartsWithMatcher.h"
+#include "SourceFilenameStartsWithMatcher.h"
 
 bool USourceFilenameStartsWithMatcher::Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive)
 {

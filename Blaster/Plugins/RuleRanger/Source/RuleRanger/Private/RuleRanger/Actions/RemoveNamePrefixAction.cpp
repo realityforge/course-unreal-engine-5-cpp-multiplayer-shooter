@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-#include "RuleRanger/Actions/RemoveNamePrefixAction.h"
+#include "RemoveNamePrefixAction.h"
 #include "Editor.h"
 #include "RuleRanger/RuleRangerUtilities.h"
 #include "RuleRangerLogging.h"
@@ -61,7 +61,7 @@ void URemoveNamePrefixAction::Apply_Implementation(TScriptInterface<IRuleRangerA
 
                     ActionContext->Info(Message);
 
-                    if (!RuleRangerUtilities::RenameAsset(Object, NewName))
+                    if (!FRuleRangerUtilities::RenameAsset(Object, NewName))
                     {
                         const auto InMessage =
                             FText::Format(NSLOCTEXT("RuleRanger",

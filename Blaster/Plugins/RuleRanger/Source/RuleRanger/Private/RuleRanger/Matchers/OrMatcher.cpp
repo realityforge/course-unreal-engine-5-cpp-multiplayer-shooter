@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/OrMatcher.h"
+#include "OrMatcher.h"
 
 bool UOrMatcher::Test_Implementation(UObject* Object)
 {

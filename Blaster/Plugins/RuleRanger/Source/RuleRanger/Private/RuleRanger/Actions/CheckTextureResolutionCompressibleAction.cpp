@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-#include "RuleRanger/Actions/CheckTextureResolutionCompressibleAction.h"
+#include "CheckTextureResolutionCompressibleAction.h"
 #include "Editor.h"
 #include "RuleRangerLogging.h"
 

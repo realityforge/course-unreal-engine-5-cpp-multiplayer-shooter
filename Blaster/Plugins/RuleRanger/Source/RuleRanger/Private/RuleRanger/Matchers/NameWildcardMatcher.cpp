@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/NameWildcardMatcher.h"
+#include "NameWildcardMatcher.h"
 #include "Editor.h"
 
 bool UNameWildcardMatcher::Test_Implementation(UObject* Object)

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/NameRegexMatcher.h"
+#include "NameRegexMatcher.h"
 #include "Editor.h"
 
 bool UNameRegexMatcher::Test_Implementation(UObject* Object)

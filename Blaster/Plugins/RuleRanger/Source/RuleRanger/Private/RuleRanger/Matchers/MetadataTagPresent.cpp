@@ -11,10 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "ContentDirMatcher.h"
+#include "MetadataTagPresent.h"
 #include "Editor.h"
 
-bool UContentDirMatcher::Test_Implementation(UObject* Object)
+bool UMetadataTagPresent::Test_Implementation(UObject* Object)
 {
-    return Object->GetPathName().StartsWith(Dir.Path);
+    return Key != NAME_None && IsValid(Object) ? Object->GetPackage()->GetMetaData()->HasValue(Object, Key) : false;
 }

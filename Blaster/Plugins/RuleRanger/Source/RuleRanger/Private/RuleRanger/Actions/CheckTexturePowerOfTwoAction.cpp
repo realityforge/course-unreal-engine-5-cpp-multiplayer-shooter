@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-#include "RuleRanger/Actions/CheckTexturePowerOfTwoAction.h"
+#include "CheckTexturePowerOfTwoAction.h"
 #include "Editor.h"
 #include "RuleRangerLogging.h"
 

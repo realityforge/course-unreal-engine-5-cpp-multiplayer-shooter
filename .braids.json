@@ -4,7 +4,7 @@
     "Blaster/Plugins/RuleRanger": {
       "url": "https://github.com/realityforge/RuleRanger.git",
       "branch": "main",
-      "revision": "fda99cfe9a6c21e6c2e77ae9f59456da7abcf308"
+      "revision": "071cdf91e671f9c2c4d3d9ffe1b4637f47933a8e"
     },
     "vendor/MultiplayerCourseBlasterGame": {
       "url": "https://github.com/DruidMech/MultiplayerCourseBlasterGame.git",

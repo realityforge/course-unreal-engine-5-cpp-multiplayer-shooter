@@ -19,7 +19,7 @@
 
 static const FName AssetToolsModuleName("AssetTools");
 
-bool RuleRangerUtilities::RenameAsset(UObject* Object, const FString& NewName)
+bool FRuleRangerUtilities::RenameAsset(UObject* Object, const FString& NewName)
 {
     const auto PathName = Object->GetPathName();
     const auto PackagePath = FPackageName::GetLongPackagePath(Object->GetOutermost()->GetName());
@@ -39,7 +39,7 @@ bool RuleRangerUtilities::RenameAsset(UObject* Object, const FString& NewName)
     return bSuccess;
 }
 
-void RuleRangerUtilities::CollectTypeHierarchy(const UObject* Object, TArray<UClass*>& Classes)
+void FRuleRangerUtilities::CollectTypeHierarchy(const UObject* Object, TArray<UClass*>& Classes)
 {
     bool bProcessedBlueprintHierarchy{ false };
     UClass* Class = Object->GetClass();
@@ -62,7 +62,7 @@ void RuleRangerUtilities::CollectTypeHierarchy(const UObject* Object, TArray<UCl
     }
 }
 
-bool RuleRangerUtilities::IsA(const UObject* Object, const UClass* Class)
+bool FRuleRangerUtilities::IsA(const UObject* Object, const UClass* Class)
 {
     if (Object->IsA(Class))
     {
@@ -88,20 +88,21 @@ bool RuleRangerUtilities::IsA(const UObject* Object, const UClass* Class)
     }
 }
 
-void RuleRangerUtilities::CollectInstanceHierarchy(UObject* Object, TArray<UObject*>& Instances)
+void FRuleRangerUtilities::CollectInstanceHierarchy(UObject* Object, TArray<UObject*>& Instances)
 {
     Instances.Add(Object);
 
     if (Object->IsA<UMaterialInstance>())
     {
-        UMaterialInstance* Instance = Cast<UMaterialInstance>(Object);
+        const UMaterialInstance* Instance = Cast<UMaterialInstance>(Object);
         while (Instance)
         {
             if (Instance->Parent)
             {
                 Instances.Add(Instance->Parent);
-            } // This will be null if we traverse from MaterialInstance parent to Material which will terminate this
-              // loop
+            }
+            // This will be null if we traverse from MaterialInstance parent to Material
+            // which will terminate this loop
             Instance = Cast<UMaterialInstance>(Instance->Parent);
         }
     }

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/NameSuffixMatcher.h"
+#include "NameSuffixMatcher.h"
 #include "Editor.h"
 
 bool UNameSuffixMatcher::Test_Implementation(UObject* Object)

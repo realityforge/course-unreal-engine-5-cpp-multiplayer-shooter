@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-#include "RuleRanger/Actions/NameConventionRenameAction.h"
+#include "NameConventionRenameAction.h"
 #include "Editor.h"
 #include "Misc/UObjectToken.h"
 #include "RuleRanger/RuleRangerUtilities.h"
@@ -29,7 +29,7 @@ void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRan
         {
             RebuildNameConventionsCacheIfNecessary();
 
-            if (!NameConventionsMap.IsEmpty())
+            if (!NameConventionsCache.IsEmpty())
             {
                 const auto Subsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>();
                 const auto Variant =
@@ -38,14 +38,14 @@ void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRan
                 const FString OriginalName{ Object->GetName() };
 
                 TArray<UClass*> Classes;
-                RuleRangerUtilities::CollectTypeHierarchy(Object, Classes);
+                FRuleRangerUtilities::CollectTypeHierarchy(Object, Classes);
                 for (auto Class : Classes)
                 {
                     UE_LOG(RuleRanger,
                            VeryVerbose,
                            TEXT("NameConventionRenameAction: Looking for NamingConvention rules for class %s"),
                            *Class->GetName());
-                    if (TArray<FNameConvention>* NameConventions = NameConventionsMap.Find(Class))
+                    if (TArray<FNameConvention>* NameConventions = NameConventionsCache.Find(Class))
                     {
                         UE_LOG(RuleRanger,
                                VeryVerbose,
@@ -113,7 +113,7 @@ void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRan
 
                                         ActionContext->Info(Message);
 
-                                        if (!RuleRangerUtilities::RenameAsset(Object, NewName))
+                                        if (!FRuleRangerUtilities::RenameAsset(Object, NewName))
                                         {
                                             const auto InMessage = FText::Format(
                                                 NSLOCTEXT("RuleRanger",
@@ -130,28 +130,33 @@ void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRan
                         }
                     }
                 }
-                if (bNotifyIfNameConventionMissing)
+
+                // Only attempt to apply naming conventions to outermost packages
+                if (const UObject* OutermostObject = Object->GetOutermostObject(); OutermostObject == Object)
                 {
-                    FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
-                        .Warning()
-                        ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger",
-                                                                "MissingNamingConvention",
-                                                                "Unable to locate Naming Convention for ")))
-                        ->AddToken(FUObjectToken::Create(Object))
-                        ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger", "OfType", " of type ")))
-                        ->AddToken(FUObjectToken::Create(Object->GetClass()))
-                        ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger", "In", " in ")))
-                        ->AddToken(FUObjectToken::Create(NameConventionsTable));
-                }
-                else
-                {
-                    UE_LOG(RuleRanger,
-                           VeryVerbose,
-                           TEXT("NameConventionRenameAction: Unable to locate Naming Convention for "
-                                "object '%s' of type '%s' in '%s'."),
-                           *OriginalName,
-                           *Object->GetClass()->GetName(),
-                           *NameConventionsTable->GetName());
+                    if (bNotifyIfNameConventionMissing)
+                    {
+                        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
+                            .Warning()
+                            ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger",
+                                                                    "MissingNamingConvention",
+                                                                    "Unable to locate Naming Convention for")))
+                            ->AddToken(FUObjectToken::Create(Object))
+                            ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger", "OfType", "of type")))
+                            ->AddToken(FUObjectToken::Create(Object->GetClass()))
+                            ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger", "In", " in ")))
+                            ->AddToken(FUObjectToken::Create(NameConventionsTable));
+                    }
+                    else
+                    {
+                        UE_LOG(RuleRanger,
+                               VeryVerbose,
+                               TEXT("NameConventionRenameAction: Unable to locate Naming Convention for "
+                                    "asset '%s' of type '%s' in '%s'."),
+                               *OriginalName,
+                               *Object->GetClass()->GetName(),
+                               *NameConventionsTable->GetName());
+                    }
                 }
             }
         }
@@ -191,14 +196,14 @@ void UNameConventionRenameAction::ResetNameConventionsCache()
 {
     UE_LOG(RuleRanger, VeryVerbose, TEXT("NameConventionRenameAction: Resetting the Name Conventions Cache"));
 
-    NameConventionsMap.Empty();
+    NameConventionsCache.Empty();
     FCoreUObjectDelegates::OnObjectModified.Remove(OnObjectModifiedDelegateHandle);
     OnObjectModifiedDelegateHandle.Reset();
 }
 
 void UNameConventionRenameAction::RebuildNameConventionsCacheIfNecessary()
 {
-    if (NameConventionsMap.IsEmpty() && 0 != NameConventionsTable->GetTableData().Num())
+    if (NameConventionsCache.IsEmpty() && 0 != NameConventionsTable->GetTableData().Num())
     {
         ResetNameConventionsCache();
         // Add a callback for when ANY object is modified in the editor so that we can bust the cache
@@ -212,12 +217,12 @@ void UNameConventionRenameAction::RebuildNameConventionsCacheIfNecessary()
             const auto ObjectType = NameConvention->ObjectType.Get();
             if (NameConvention && IsValid(ObjectType))
             {
-                TArray<FNameConvention>& TypeConventions = NameConventionsMap.FindOrAdd(ObjectType);
+                TArray<FNameConvention>& TypeConventions = NameConventionsCache.FindOrAdd(ObjectType);
                 TypeConventions.Add(*NameConvention);
                 TypeConventions.Sort();
             }
         }
-        for (auto NameConventionEntry : NameConventionsMap)
+        for (auto NameConventionEntry : NameConventionsCache)
         {
             UE_LOG(RuleRanger,
                    VeryVerbose,

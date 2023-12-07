@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/NotMatcher.h"
+#include "NotMatcher.h"
 
 bool UNotMatcher::Test_Implementation(UObject* Object)
 {

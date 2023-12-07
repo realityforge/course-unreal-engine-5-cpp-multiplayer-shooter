@@ -13,7 +13,7 @@
  */
 #pragma once
 
-class RuleRangerUtilities
+class FRuleRangerUtilities
 {
 public:
     /** Method to perform the rename of an asset. */

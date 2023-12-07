@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/NamePrefixMatcher.h"
+#include "NamePrefixMatcher.h"
 #include "Editor.h"
 
 bool UNamePrefixMatcher::Test_Implementation(UObject* Object)

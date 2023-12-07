@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRanger/Matchers/AndMatcher.h"
+#include "AndMatcher.h"
 
 bool UAndMatcher::Test_Implementation(UObject* Object)
 {

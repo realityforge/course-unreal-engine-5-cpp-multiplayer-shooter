@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-#include "RuleRanger/Actions/RemoveMetadataTagsAction.h"
+#include "RemoveMetadataTagsAction.h"
 #include "Editor.h"
 #include "RuleRangerLogging.h"
 #include "Subsystems/EditorAssetSubsystem.h"

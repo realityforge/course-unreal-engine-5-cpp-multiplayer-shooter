@@ -17,49 +17,38 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
-#include "NameConventionRenameAction.generated.h"
-
-inline static FString NameConvention_DefaultVariant{ TEXT("") };
+#include "TextureSubType.h"
+#include "EnsureTextureSubTypePresentAction.generated.h"
 
 /**
- * The structure defining naming conventions for different asset types.
+ * The structure defining naming conventions for Texture extensions.
  */
 USTRUCT(BlueprintType)
-struct FNameConvention final : public FTableRowBase
+struct FTextureSubTypeNameConvention final : public FTableRowBase
 {
-    GENERATED_BODY();
-
-    /** The object type that this name convention applied to. */
-    UPROPERTY(EditAnywhere, meta = (AllowAbstract))
-    TSoftClassPtr<UObject> ObjectType{ nullptr };
+    GENERATED_BODY()
 
     /**
-     * The variant/subtype to add to the name (if any).
-     * This is expected to be derived before applying this rule.
+     * The variant/subtype that this rule applies to.
      */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString Variant{ NameConvention_DefaultVariant };
+    ETextureSubType SubType{ ETextureSubType::AT_BaseColor };
 
     /** The prefix to add to the name (if any). */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString Prefix{ TEXT("") };
+    FString Text{ TEXT("") };
 
-    /** The suffix to add to the name (if any). */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString Suffix{ TEXT("") };
+    bool DoesTextMatchAtIndex(const FString& InText, const int32 Index) const;
 
-    FORCEINLINE bool operator<(const FNameConvention& Other) const
+    FORCEINLINE bool operator<(const FTextureSubTypeNameConvention& Other) const
     {
-        return Variant.Equals(NameConvention_DefaultVariant)      ? false
-            : Other.Variant.Equals(NameConvention_DefaultVariant) ? true
-            : Prefix != Other.Prefix                              ? Prefix < Other.Prefix
-                                                                  : Suffix < Other.Suffix;
+        const int LengthDifference = Text.Len() - Other.Text.Len();
+        return 0 == LengthDifference ? Text < Other.Text : LengthDifference > 0;
     }
 };
 
 /**
- * Action to rename assets according to naming convention specified in a DataTable.
- * The action may optionally issue warnings if applied to an asset that has no NamingConvention specified.
+ * Action to check that a Texture confirms to desired naming conventions.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -67,14 +56,21 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UNameConventionRenameAction : public URuleRangerAction
+class RULERANGER_API UEnsureTextureSubTypePresentAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
 public:
     virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
                                       UObject* Object) override;
+
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+protected:
+    void ApplyRuleToTexture(TScriptInterface<IRuleRangerActionContext>& ActionContext, UTexture2D* Texture);
+    void ApplyRuleToTextureWithSubTypes(TScriptInterface<IRuleRangerActionContext>& ActionContext,
+                                        UTexture2D* Texture,
+                                        const TArray<ETextureSubType>& SubTypes);
 
 private:
     /** The table that contains the object naming rules */
@@ -83,15 +79,15 @@ private:
               Category = "Rule Ranger",
               meta = (ExposeOnSpawn,
                       AllowPrivateAccess,
-                      RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.NameConvention"))
+                      RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.TextureSubTypeNameConvention"))
     UDataTable* NameConventionsTable{ nullptr };
 
-    /** Should the action issue a message log when it attempts to process an object that has no naming convention? */
+    /** Should the action issue a message log when it attempts to process a Texture that has no naming convention? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
     bool bNotifyIfNameConventionMissing;
 
     /** Cache for looking up rules. */
-    TMap<TObjectPtr<UClass>, TArray<FNameConvention>> NameConventionsCache;
+    TArray<FTextureSubTypeNameConvention> NameConventionsCache;
 
     /** Handle for delegate called when any object modified in editor. */
     FDelegateHandle OnObjectModifiedDelegateHandle;
@@ -104,4 +100,6 @@ private:
 
     /** Method to build cache if necessary. */
     void RebuildNameConventionsCacheIfNecessary();
+
+    TArray<ETextureSubType> ExtractSubTypes(const FString& Name);
 };
