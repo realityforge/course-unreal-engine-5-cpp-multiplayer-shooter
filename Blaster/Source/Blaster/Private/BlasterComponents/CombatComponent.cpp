@@ -26,17 +26,17 @@ void UCombatComponent::setAiming(bool bInAiming)
     ServerSetAiming(bInAiming);
 }
 
+void UCombatComponent::ServerSetAiming_Implementation(bool bInAiming)
+{
+    bAiming = bInAiming;
+}
+
 void UCombatComponent::OnRep_EquippedWeapon()
 {
     if (IsValid(EquippedWeapon) && IsValid(Character))
     {
         StopOrientingRotationToMovement();
     }
-}
-
-void UCombatComponent::ServerSetAiming_Implementation(bool bInAiming)
-{
-    bAiming = bInAiming;
 }
 
 void UCombatComponent::TickComponent(float DeltaTime,
