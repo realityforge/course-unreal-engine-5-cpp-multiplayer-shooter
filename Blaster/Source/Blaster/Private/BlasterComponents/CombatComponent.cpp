@@ -15,6 +15,15 @@ UCombatComponent::UCombatComponent()
 void UCombatComponent::BeginPlay()
 {
     Super::BeginPlay();
+    MirrorWalkSpeedBasedOnState();
+}
+
+void UCombatComponent::MirrorWalkSpeedBasedOnState() const
+{
+    if (Character)
+    {
+        Character->GetCharacterMovement()->MaxWalkSpeed = bAiming ? AimWalkSpeed : BaseWalkSpeed;
+    }
 }
 
 void UCombatComponent::setAiming(bool bInAiming)
@@ -22,13 +31,16 @@ void UCombatComponent::setAiming(bool bInAiming)
     // bAiming is set here because if this is called on client then we will locally set var before calling server
     // not needed on server as ServerSetAiming falls directly through to the server implementation
     bAiming = bInAiming;
-    // Note: This is not needed  as Server calls on Server flow through"if (!Character->HasAuthority())"
+    // Set the Aiming flag on the server
     ServerSetAiming(bInAiming);
+    MirrorWalkSpeedBasedOnState();
 }
 
 void UCombatComponent::ServerSetAiming_Implementation(bool bInAiming)
 {
     bAiming = bInAiming;
+    // Make sure we set the WalkSpeed set on the server and replicated to other clients
+    MirrorWalkSpeedBasedOnState();
 }
 
 void UCombatComponent::OnRep_EquippedWeapon()

@@ -29,6 +29,7 @@ public:
 
 protected:
     virtual void BeginPlay() override;
+    void MirrorWalkSpeedBasedOnState() const;
 
     void setAiming(bool bInAiming);
 
@@ -49,6 +50,14 @@ private:
     /** Is the character currently aiming. */
     UPROPERTY(Replicated)
     bool bAiming{ false };
+
+    /** The speed at which the character moves when walking but not aiming. */
+    UPROPERTY(EditAnywhere)
+    float BaseWalkSpeed{ 600.f };
+
+    /** The speed at which the character moves when walking and aiming. */
+    UPROPERTY(EditAnywhere)
+    float AimWalkSpeed{ 450.f };
 
     void StopOrientingRotationToMovement() const;
 
