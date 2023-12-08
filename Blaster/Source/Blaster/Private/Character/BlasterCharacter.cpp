@@ -1,6 +1,7 @@
 #include "Character/BlasterCharacter.h"
 #include "BlasterComponents/CombatComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -40,6 +41,11 @@ ABlasterCharacter::ABlasterCharacter()
 
     // The CharacterMovement component already supports crouching - we just need to enable it.
     GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
+
+    // Make sure when another character moves between our camera and our character, the camera boom
+    // does not move in. We do this by making sure we do not block camera
+    GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+    GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
 void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
