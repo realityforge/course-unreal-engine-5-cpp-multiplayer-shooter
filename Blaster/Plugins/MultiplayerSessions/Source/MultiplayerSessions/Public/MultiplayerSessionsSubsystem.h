@@ -154,6 +154,9 @@ private:
 
     IOnlineSessionPtr OnlineSessionInterface;
 
+    // TODO: This should be the following so that the editor can release OnlineSession in PIE mode
+    // TWeakPtr<IOnlineSession, ESPMode::ThreadSafe> OnlineSessionInterface;
+
     TSharedPtr<FOnlineSessionSettings> LastSessionSettings;
 
     TSharedPtr<FOnlineSessionSearch> LastSessionSearch;
