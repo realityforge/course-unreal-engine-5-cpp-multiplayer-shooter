@@ -19,14 +19,23 @@ UMultiplayerSessionsSubsystem::UMultiplayerSessionsSubsystem()
     , StartSessionCompleteDelegate(
           FOnStartSessionCompleteDelegate::CreateUObject(this, &UMultiplayerSessionsSubsystem::OnStartSessionComplete))
 {
-    const auto Subsystem = IOnlineSubsystem::Get();
-    OnlineSessionInterface = Subsystem ? Subsystem->GetSessionInterface() : nullptr;
 }
 
 bool UMultiplayerSessionsSubsystem::IsNullOnlineSubsystem() const
 {
     const auto OnlineSubsystem = Online::GetSubsystem(GetWorld());
     return "NULL" == OnlineSubsystem->GetSubsystemName();
+}
+
+IOnlineSubsystem* UMultiplayerSessionsSubsystem::GetOnlineSubsystem() const
+{
+    return Online::GetSubsystem(GetWorld());
+}
+
+IOnlineSessionPtr UMultiplayerSessionsSubsystem::GetOnlineSessionInterface() const
+{
+    const auto Subsystem = GetOnlineSubsystem();
+    return Subsystem ? Subsystem->GetSessionInterface() : nullptr;
 }
 
 // -----------------------------------------------------------------------------------------------------------
@@ -39,7 +48,7 @@ void UMultiplayerSessionsSubsystem::CreateSession(const int32 NumPublicConnectio
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("CreateSession")));
     }
-    if (ensure(OnlineSessionInterface))
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); ensure(OnlineSessionInterface))
     {
         if (OnlineSessionInterface->GetNamedSession(NAME_GameSession))
         {
@@ -93,7 +102,7 @@ void UMultiplayerSessionsSubsystem::OnCreateSessionComplete(FName SessionName, b
 
 void UMultiplayerSessionsSubsystem::CompleteSessionCreate(const bool bWasSuccessful)
 {
-    if (OnlineSessionInterface.IsValid())
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
     {
         // Remove the delegate  on session interface
         OnlineSessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
@@ -118,7 +127,7 @@ void UMultiplayerSessionsSubsystem::FindSessions(const int32 MaxSearchResults)
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("FindSessions")));
     }
-    if (OnlineSessionInterface.IsValid())
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
     {
         FindSessionsCompleteDelegateHandle =
             OnlineSessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
@@ -155,7 +164,7 @@ void UMultiplayerSessionsSubsystem::OnFindSessionsComplete(bool bWasSuccessful)
 void UMultiplayerSessionsSubsystem::CompleteFindSessions(const TArray<FOnlineSessionSearchResult>& Results,
                                                          const bool bWasSuccessful)
 {
-    if (OnlineSessionInterface.IsValid())
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
     {
         OnlineSessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
     }
@@ -179,7 +188,7 @@ void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("JoinSession")));
     }
-    if (OnlineSessionInterface.IsValid())
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
     {
         JoinSessionCompleteDelegateHandle =
             OnlineSessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate);
@@ -209,7 +218,7 @@ void UMultiplayerSessionsSubsystem::OnJoinSessionComplete(FName SessionName, EOn
 
 void UMultiplayerSessionsSubsystem::CompleteJoinSession(const EOnJoinSessionCompleteResult::Type ResultType)
 {
-    if (OnlineSessionInterface.IsValid())
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
     {
         OnlineSessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
     }
@@ -230,7 +239,7 @@ void UMultiplayerSessionsSubsystem::DestroySession()
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("DestroySession")));
     }
-    if (OnlineSessionInterface.IsValid())
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
     {
         DestroySessionCompleteDelegateHandle =
             OnlineSessionInterface->AddOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegate);
@@ -278,7 +287,7 @@ void UMultiplayerSessionsSubsystem::DestroySessionComplete(bool bWasSuccessful)
 {
     if (DestroySessionCompleteDelegateHandle.IsValid())
     {
-        if (OnlineSessionInterface.IsValid())
+        if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
         {
             OnlineSessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
         }
@@ -300,7 +309,7 @@ void UMultiplayerSessionsSubsystem::StartSession()
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Emerald, FString(TEXT("StartSession")));
     }
-    if (OnlineSessionInterface.IsValid())
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
     {
         StartSessionCompleteDelegateHandle =
             OnlineSessionInterface->AddOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegate);
@@ -318,7 +327,7 @@ void UMultiplayerSessionsSubsystem::StartSession()
 
 void UMultiplayerSessionsSubsystem::CompleteStartSession(const bool bWasSuccessful)
 {
-    if (OnlineSessionInterface.IsValid())
+    if (const auto OnlineSessionInterface = GetOnlineSessionInterface(); OnlineSessionInterface.IsValid())
     {
         OnlineSessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
     }

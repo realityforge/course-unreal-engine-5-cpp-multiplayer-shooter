@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "OnlineSubsystem.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MultiplayerSessionsSubsystem.generated.h"
 
@@ -152,10 +153,9 @@ private:
      */
     bool IsNullOnlineSubsystem() const;
 
-    IOnlineSessionPtr OnlineSessionInterface;
+    IOnlineSubsystem* GetOnlineSubsystem() const;
 
-    // TODO: This should be the following so that the editor can release OnlineSession in PIE mode
-    // TWeakPtr<IOnlineSession, ESPMode::ThreadSafe> OnlineSessionInterface;
+    IOnlineSessionPtr GetOnlineSessionInterface() const;
 
     TSharedPtr<FOnlineSessionSettings> LastSessionSettings;
 
