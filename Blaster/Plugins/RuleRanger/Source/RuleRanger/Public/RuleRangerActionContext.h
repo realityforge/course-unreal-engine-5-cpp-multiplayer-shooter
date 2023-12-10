@@ -51,7 +51,7 @@ enum class ERuleRangerActionState : uint8
     AS_Max UMETA(Hidden)
 };
 
-UINTERFACE(MinimalAPI, NotBlueprintable)
+UINTERFACE(BlueprintType, MinimalAPI, meta = (CannotImplementInterfaceInBlueprint))
 class URuleRangerActionContext : public UInterface
 {
     GENERATED_BODY()
