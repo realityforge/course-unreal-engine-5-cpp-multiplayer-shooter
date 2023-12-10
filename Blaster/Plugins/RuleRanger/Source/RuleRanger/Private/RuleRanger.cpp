@@ -38,8 +38,6 @@ void FRuleRangerModule::StartupModule()
         FRuleRangerCommands::Register();
         FRuleRangerContentBrowserExtensions::Initialize();
         FRuleRangerDefaultEvents::Initialize(this);
-
-        //Paper2DAssetCategoryBit = AssetTools.RegisterAdvancedAssetCategory(FName(TEXT("Paper2D")), LOCTEXT("Paper2DAssetCategory", "Paper2D"));
     }
     else
     {
