@@ -52,7 +52,7 @@ protected:
                                         int32 OtherBodyIndex);
 
 private:
-    UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<USkeletalMeshComponent> WeaponMesh;
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
