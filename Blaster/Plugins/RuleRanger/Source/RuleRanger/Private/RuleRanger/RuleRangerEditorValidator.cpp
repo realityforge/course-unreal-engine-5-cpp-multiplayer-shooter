@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 #include "RuleRanger/RuleRangerEditorValidator.h"
-#include "ActionContextImpl.h"
 #include "RuleRanger/RuleRangerEditorSubsystem.h"
 #include "RuleRangerActionContext.h"
 #include "RuleRangerLogging.h"
@@ -71,7 +70,7 @@ EDataValidationResult URuleRangerEditorValidator::ValidateLoadedAsset_Implementa
     if (!ActionContext)
     {
         UE_LOG(RuleRanger, VeryVerbose, TEXT("RuleRangerEditorSubsystem: Creating the initial ActionContext"));
-        ActionContext = NewObject<UActionContextImpl>(this, UActionContextImpl::StaticClass());
+        ActionContext = NewObject<URuleRangerActionContext>(this, URuleRangerActionContext::StaticClass());
     }
 
     // ReSharper disable once CppTooWideScope
@@ -114,8 +113,7 @@ bool URuleRangerEditorValidator::ProcessRule(TArray<FText>& ValidationErrors, UR
                                     bIsSave ? ERuleRangerActionTrigger::AT_Save
                                             : ERuleRangerActionTrigger::AT_Validate);
 
-        TScriptInterface<IRuleRangerActionContext> ScriptInterfaceActionContext(ActionContext);
-        Rule->Apply(ScriptInterfaceActionContext, InObject);
+        Rule->Apply(ActionContext, InObject);
 
         ActionContext->EmitMessageLogs();
 

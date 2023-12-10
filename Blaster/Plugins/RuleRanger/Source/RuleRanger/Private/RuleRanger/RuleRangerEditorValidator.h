@@ -18,8 +18,8 @@
 #include "EditorValidatorBase.h"
 #include "RuleRangerEditorValidator.generated.h"
 
+class URuleRangerActionContext;
 class URuleRangerRule;
-class UActionContextImpl;
 
 /**
  * Validator extension that applies the RuleRanger rules in a validation mode.
@@ -38,7 +38,7 @@ public:
 
 private:
     UPROPERTY(VisibleAnywhere)
-    UActionContextImpl* ActionContext{ nullptr };
+    URuleRangerActionContext* ActionContext{ nullptr };
 
     /**
      * Function invoked when each rules is applied to an object.
@@ -50,5 +50,5 @@ private:
      */
     bool ProcessRule(TArray<FText>& ValidationErrors, URuleRangerRule* Rule, UObject* InObject);
 
-    bool WillRuleRun(URuleRangerRule* Rule, UObject* InObject)const;
+    bool WillRuleRun(URuleRangerRule* Rule, UObject* InObject) const;
 };

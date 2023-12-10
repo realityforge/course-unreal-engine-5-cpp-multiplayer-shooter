@@ -51,16 +51,11 @@ enum class ERuleRangerActionState : uint8
     AS_Max UMETA(Hidden)
 };
 
-UINTERFACE(BlueprintType, MinimalAPI, meta = (CannotImplementInterfaceInBlueprint))
-class URuleRangerActionContext : public UInterface
-{
-    GENERATED_BODY()
-};
-
 /**
  * Context object passed to an action so that the action can be provided context.
  */
-class RULERANGER_API IRuleRangerActionContext
+UCLASS(BlueprintType, Transient)
+class RULERANGER_API URuleRangerActionContext : public UObject
 {
     GENERATED_BODY()
 
@@ -70,16 +65,16 @@ public:
      *
      * @return the current state of the action.
      */
-    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
-    virtual ERuleRangerActionState GetState() = 0;
+    UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
+    virtual ERuleRangerActionState GetState();
 
     /**
      * Return the trigger for the current action. i.e. Why was this action invoked.
      *
      * @return the trigger for the current action
      */
-    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
-    virtual ERuleRangerActionTrigger GetActionTrigger() = 0;
+    UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
+    virtual ERuleRangerActionTrigger GetActionTrigger();
 
     /**
      * Return true if this action is a "Dry" run and should just issue warnings on non-compliance
@@ -87,38 +82,78 @@ public:
      *
      * @return true if the action should be a dry run.
      */
-    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
-    virtual bool IsDryRun() = 0;
+    UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
+    virtual bool IsDryRun();
 
     /**
      * Generate an informational message from action.
      *
      * @param InMessage the message.
      */
-    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
-    virtual void Info(const FText& InMessage) = 0;
+    UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
+    virtual void Info(const FText& InMessage);
 
     /**
      * Generate a warning message from the action.
      *
      * @param InMessage the message.
      */
-    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
-    virtual void Warning(const FText& InMessage) = 0;
+    UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
+    virtual void Warning(const FText& InMessage);
 
     /**
      * Generate an error message from the action.
      *
      * @param InMessage the message.
      */
-    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
-    virtual void Error(const FText& InMessage) = 0;
+    UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
+    virtual void Error(const FText& InMessage);
 
     /**
      * Generate an error message from the action.
      *
      * @param InMessage the message.
      */
-    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
-    virtual void Fatal(const FText& InMessage) = 0;
+    UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
+    virtual void Fatal(const FText& InMessage);
+
+    void ResetContext(UObject* InObject, ERuleRangerActionTrigger InActionTrigger);
+    void ClearContext();
+
+    void EmitMessageLogs();
+
+private:
+    /** The object that the associated action is acting upon. */
+    UPROPERTY(VisibleAnywhere)
+    UObject* Object;
+
+    /** The reason that the associated action was triggered. */
+    UPROPERTY(VisibleAnywhere)
+    ERuleRangerActionTrigger ActionTrigger{ ERuleRangerActionTrigger::AT_Max };
+
+    /** Current state of the action. */
+    UPROPERTY(VisibleAnywhere)
+    ERuleRangerActionState ActionState{ ERuleRangerActionState::AS_Max };
+
+    /** The array of info messages. */
+    UPROPERTY(VisibleAnywhere)
+    TArray<FText> InfoMessages;
+
+    /** The array of warning messages. */
+    UPROPERTY(VisibleAnywhere)
+    TArray<FText> WarningMessages;
+
+    /** The array of error messages. */
+    UPROPERTY(VisibleAnywhere)
+    TArray<FText> ErrorMessages;
+
+    /** The array of fatal messages. */
+    UPROPERTY(VisibleAnywhere)
+    TArray<FText> FatalMessages;
+
+public:
+    FORCEINLINE TArray<FText>& GetInfoMessages() { return InfoMessages; }
+    FORCEINLINE TArray<FText>& GetWarningMessages() { return WarningMessages; }
+    FORCEINLINE TArray<FText>& GetErrorMessages() { return ErrorMessages; }
+    FORCEINLINE TArray<FText>& GetFatalMessages() { return FatalMessages; }
 };

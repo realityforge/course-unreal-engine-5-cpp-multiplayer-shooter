@@ -17,7 +17,7 @@
 #include "Engine/DataAsset.h"
 #include "RuleRangerRule.generated.h"
 
-class IRuleRangerActionContext;
+class URuleRangerActionContext;
 class URuleRangerAction;
 class URuleRangerMatcher;
 
@@ -94,5 +94,5 @@ public:
      * @param Object the object to apply the actions to.
      */
     UFUNCTION(BlueprintNativeEvent, Category = "Rule Ranger")
-    void Apply(UPARAM(ref) TScriptInterface<IRuleRangerActionContext>& ActionContext, UObject* Object);
+    void Apply(URuleRangerActionContext* ActionContext, UObject* Object);
 };

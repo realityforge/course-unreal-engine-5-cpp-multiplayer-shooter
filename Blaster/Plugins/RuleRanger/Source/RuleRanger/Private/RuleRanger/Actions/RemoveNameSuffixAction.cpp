@@ -17,8 +17,7 @@
 #include "RuleRanger/RuleRangerUtilities.h"
 #include "RuleRangerLogging.h"
 
-void URemoveNameSuffixAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                                   UObject* Object)
+void URemoveNameSuffixAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object) && !Suffix.IsEmpty())
     {

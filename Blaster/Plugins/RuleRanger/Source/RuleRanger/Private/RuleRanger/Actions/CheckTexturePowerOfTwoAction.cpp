@@ -21,8 +21,7 @@ UCheckTexturePowerOfTwoAction::UCheckTexturePowerOfTwoAction()
     TextureGroupsToSkip.Add(TEXTUREGROUP_UI);
 }
 
-void UCheckTexturePowerOfTwoAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                                         UObject* Object)
+void UCheckTexturePowerOfTwoAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object))
     {

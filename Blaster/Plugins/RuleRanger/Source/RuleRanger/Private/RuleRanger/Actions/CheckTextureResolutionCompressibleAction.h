@@ -46,8 +46,7 @@ class RULERANGER_API UCheckTextureResolutionCompressibleAction final : public UR
     GENERATED_BODY()
 
 public:
-    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                      UObject* Object) override;
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
 private:
     /** The value by which texture should be divisible. */

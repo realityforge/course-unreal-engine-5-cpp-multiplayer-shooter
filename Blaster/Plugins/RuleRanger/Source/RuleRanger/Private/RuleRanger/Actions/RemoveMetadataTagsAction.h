@@ -33,8 +33,7 @@ class RULERANGER_API URemoveMetadataTagsAction final : public URuleRangerAction
     GENERATED_BODY()
 
 public:
-    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                      UObject* Object) override;
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
 private:
     /** The metadata keys to remove */

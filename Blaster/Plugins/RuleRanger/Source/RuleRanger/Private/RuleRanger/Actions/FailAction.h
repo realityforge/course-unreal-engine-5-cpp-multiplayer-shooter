@@ -35,8 +35,7 @@ class RULERANGER_API UFailAction final : public URuleRangerAction
     GENERATED_BODY()
 
 public:
-    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                      UObject* Object) override;
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
 private:
     /** The error message to emit */

@@ -61,14 +61,13 @@ class RULERANGER_API UEnsureTextureSubTypePresentAction final : public URuleRang
     GENERATED_BODY()
 
 public:
-    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                      UObject* Object) override;
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 protected:
-    void ApplyRuleToTexture(TScriptInterface<IRuleRangerActionContext>& ActionContext, UTexture2D* Texture);
-    void ApplyRuleToTextureWithSubTypes(TScriptInterface<IRuleRangerActionContext>& ActionContext,
+    void ApplyRuleToTexture(URuleRangerActionContext* ActionContext, UTexture2D* Texture);
+    void ApplyRuleToTextureWithSubTypes(URuleRangerActionContext* ActionContext,
                                         UTexture2D* Texture,
                                         const TArray<ETextureSubType>& SubTypes);
 

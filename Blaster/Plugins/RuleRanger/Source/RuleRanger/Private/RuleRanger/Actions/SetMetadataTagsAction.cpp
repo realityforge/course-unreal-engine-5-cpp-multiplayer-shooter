@@ -17,8 +17,7 @@
 #include "RuleRangerLogging.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
-void USetMetadataTagsAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                                  UObject* Object)
+void USetMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object))
     {

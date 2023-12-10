@@ -14,6 +14,4 @@
 #include "RuleRangerAction.h"
 #include "RuleRangerActionContext.h"
 
-void URuleRangerAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext, UObject* Object)
-{
-}
+void URuleRangerAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) {}

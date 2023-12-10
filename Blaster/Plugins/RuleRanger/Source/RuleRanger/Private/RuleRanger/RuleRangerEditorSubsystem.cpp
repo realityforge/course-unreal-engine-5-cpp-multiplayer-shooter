@@ -12,8 +12,8 @@
  * limitations under the License.
  */
 #include "RuleRanger/RuleRangerEditorSubsystem.h"
-#include "ActionContextImpl.h"
 #include "Editor.h"
+#include "RuleRangerActionContext.h"
 #include "RuleRangerDeveloperSettings.h"
 #include "RuleRangerLogging.h"
 #include "RuleRangerRule.h"
@@ -83,7 +83,7 @@ void URuleRangerEditorSubsystem::ProcessRule(UObject* Object, const FRuleRangerR
         if (!ActionContext)
         {
             UE_LOG(RuleRanger, VeryVerbose, TEXT("RuleRangerEditorSubsystem: Creating the initial ActionContext"));
-            ActionContext = NewObject<UActionContextImpl>(this, UActionContextImpl::StaticClass());
+            ActionContext = NewObject<URuleRangerActionContext>(this, URuleRangerActionContext::StaticClass());
 
             // TODO: This will not have correct type when first created
         }
@@ -267,8 +267,7 @@ bool URuleRangerEditorSubsystem::ProcessOnAssetPostImportRule(const bool bIsReim
             bIsReimport ? ERuleRangerActionTrigger::AT_Reimport : ERuleRangerActionTrigger::AT_Import;
         ActionContext->ResetContext(InObject, Trigger);
 
-        TScriptInterface<IRuleRangerActionContext> ScriptInterfaceActionContext(ActionContext);
-        Rule->Apply(ScriptInterfaceActionContext, InObject);
+        Rule->Apply(ActionContext, InObject);
 
         ActionContext->EmitMessageLogs();
         const auto State = ActionContext->GetState();
@@ -321,8 +320,7 @@ bool URuleRangerEditorSubsystem::ProcessDemandScan(URuleRangerRule* Rule, UObjec
                *Rule->GetName());
         ActionContext->ResetContext(InObject, ERuleRangerActionTrigger::AT_Validate);
 
-        TScriptInterface<IRuleRangerActionContext> ScriptInterfaceActionContext(ActionContext);
-        Rule->Apply(ScriptInterfaceActionContext, InObject);
+        Rule->Apply(ActionContext, InObject);
 
         ActionContext->EmitMessageLogs();
         const auto State = ActionContext->GetState();
@@ -374,8 +372,7 @@ bool URuleRangerEditorSubsystem::ProcessDemandScanAndFix(URuleRangerRule* Rule, 
                *Rule->GetName());
         ActionContext->ResetContext(InObject, ERuleRangerActionTrigger::AT_Fix);
 
-        TScriptInterface<IRuleRangerActionContext> ScriptInterfaceActionContext(ActionContext);
-        Rule->Apply(ScriptInterfaceActionContext, InObject);
+        Rule->Apply(ActionContext, InObject);
 
         ActionContext->EmitMessageLogs();
         const auto State = ActionContext->GetState();

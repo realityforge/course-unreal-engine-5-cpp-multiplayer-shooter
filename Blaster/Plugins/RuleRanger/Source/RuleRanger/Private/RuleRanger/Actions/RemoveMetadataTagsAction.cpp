@@ -17,8 +17,7 @@
 #include "RuleRangerLogging.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
-void URemoveMetadataTagsAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                                     UObject* Object)
+void URemoveMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object))
     {

@@ -34,8 +34,7 @@ class RULERANGER_API UEnsureMatchersAction final : public URuleRangerAction
     GENERATED_BODY()
 
 public:
-    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                      UObject* Object) override;
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
 private:
     /** The custom message to emit if a check fails. */

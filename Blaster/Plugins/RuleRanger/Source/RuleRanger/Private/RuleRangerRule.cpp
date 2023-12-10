@@ -17,7 +17,7 @@
 #include "RuleRangerLogging.h"
 #include "RuleRangerMatcher.h"
 
-void URuleRangerRule::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext, UObject* Object)
+void URuleRangerRule::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     for (const TObjectPtr<URuleRangerMatcher> Matcher : Matchers)
     {

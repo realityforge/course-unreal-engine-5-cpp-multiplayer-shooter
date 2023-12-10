@@ -40,5 +40,5 @@ public:
      * @param Object the object to apply the action to.
      */
     UFUNCTION(BlueprintNativeEvent, Category = "Rule Ranger")
-    void Apply(UPARAM(ref) TScriptInterface<IRuleRangerActionContext>& ActionContext, UObject* Object);
+    void Apply(URuleRangerActionContext* ActionContext, UObject* Object);
 };

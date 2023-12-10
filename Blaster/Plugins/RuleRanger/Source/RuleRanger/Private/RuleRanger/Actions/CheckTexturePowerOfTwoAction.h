@@ -34,8 +34,7 @@ class RULERANGER_API UCheckTexturePowerOfTwoAction final : public URuleRangerAct
 
 public:
     UCheckTexturePowerOfTwoAction();
-    virtual void Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                      UObject* Object) override;
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
 private:
     /** The TextureGroups to (silently) skip this action on. */

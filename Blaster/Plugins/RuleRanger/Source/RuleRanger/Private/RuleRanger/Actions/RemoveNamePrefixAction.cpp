@@ -17,8 +17,7 @@
 #include "RuleRanger/RuleRangerUtilities.h"
 #include "RuleRangerLogging.h"
 
-void URemoveNamePrefixAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                                   UObject* Object)
+void URemoveNamePrefixAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object))
     {

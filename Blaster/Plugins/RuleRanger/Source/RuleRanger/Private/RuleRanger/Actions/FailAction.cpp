@@ -14,7 +14,7 @@
 
 #include "FailAction.h"
 
-void UFailAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext, UObject* Object)
+void UFailAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (bFatal)
     {

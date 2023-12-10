@@ -21,7 +21,7 @@ class FRuleRangerModule;
 class FRuleRangerDefaultEvents final
 {
 public:
-    static void Initialize(FRuleRangerModule *Module);
+    static void Initialize(FRuleRangerModule* Module);
 
-    static void Shutdown(FRuleRangerModule *Module);
+    static void Shutdown(FRuleRangerModule* Module);
 };

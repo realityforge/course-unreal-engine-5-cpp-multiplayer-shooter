@@ -16,9 +16,8 @@
 #include "Editor.h"
 #include "RuleRangerLogging.h"
 
-void UCheckTextureResolutionCompressibleAction::Apply_Implementation(
-    TScriptInterface<IRuleRangerActionContext>& ActionContext,
-    UObject* Object)
+void UCheckTextureResolutionCompressibleAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
+                                                                     UObject* Object)
 {
     if (IsValid(Object))
     {

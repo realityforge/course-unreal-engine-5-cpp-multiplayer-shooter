@@ -21,7 +21,7 @@
 #include "RuleRangerEditorSubsystem.generated.h"
 
 class URuleRangerRule;
-class UActionContextImpl;
+class URuleRangerActionContext;
 class URuleRangerRuleSetScope;
 class URuleRangerContentBrowserExtensions;
 
@@ -57,7 +57,7 @@ public:
 
 private:
     UPROPERTY(Transient)
-    UActionContextImpl* ActionContext{ nullptr };
+    URuleRangerActionContext* ActionContext{ nullptr };
 
     // Handle for delegate that has been registered.
     FDelegateHandle OnAssetPostImportDelegateHandle;

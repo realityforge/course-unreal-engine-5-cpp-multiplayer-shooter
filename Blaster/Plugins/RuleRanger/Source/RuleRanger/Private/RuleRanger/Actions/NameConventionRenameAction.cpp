@@ -20,8 +20,7 @@
 #include "RuleRangerMessageLog.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
-void UNameConventionRenameAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                                       UObject* Object)
+void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object))
     {

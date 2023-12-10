@@ -15,8 +15,7 @@
 #include "EnsureMatchersAction.h"
 #include "RuleRangerLogging.h"
 
-void UEnsureMatchersAction::Apply_Implementation(TScriptInterface<IRuleRangerActionContext>& ActionContext,
-                                                 UObject* Object)
+void UEnsureMatchersAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object))
     {

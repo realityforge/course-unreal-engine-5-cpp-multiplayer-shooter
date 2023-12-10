@@ -12,3 +12,97 @@
  * limitations under the License.
  */
 #include "RuleRangerActionContext.h"
+#include "Misc/UObjectToken.h"
+#include "RuleRangerMessageLog.h"
+
+ERuleRangerActionState URuleRangerActionContext::GetState()
+{
+    return ActionState;
+}
+
+ERuleRangerActionTrigger URuleRangerActionContext::GetActionTrigger()
+{
+    return ActionTrigger;
+}
+
+bool URuleRangerActionContext::IsDryRun()
+{
+    return !(ERuleRangerActionTrigger::AT_Save == ActionTrigger || ERuleRangerActionTrigger::AT_Import == ActionTrigger
+             || ERuleRangerActionTrigger::AT_Reimport == ActionTrigger
+             || ERuleRangerActionTrigger::AT_Fix == ActionTrigger);
+}
+
+void URuleRangerActionContext::ResetContext(UObject* InObject, const ERuleRangerActionTrigger InActionTrigger)
+{
+    check(nullptr != InObject);
+    Object = InObject;
+    ActionTrigger = InActionTrigger;
+    ActionState = ERuleRangerActionState::AS_Success;
+    InfoMessages.Reset();
+    WarningMessages.Reset();
+    ErrorMessages.Reset();
+    FatalMessages.Reset();
+}
+
+void URuleRangerActionContext::ClearContext()
+{
+    Object = nullptr;
+    ActionTrigger = ERuleRangerActionTrigger::AT_Report;
+    ActionState = ERuleRangerActionState::AS_Success;
+    InfoMessages.Reset();
+    WarningMessages.Reset();
+    ErrorMessages.Reset();
+    FatalMessages.Reset();
+}
+
+void URuleRangerActionContext::EmitMessageLogs()
+{
+    for (int i = 0; i < InfoMessages.Num(); i++)
+    {
+        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
+            .Info()
+            ->AddToken(FUObjectToken::Create(Object))
+            ->AddToken(FTextToken::Create(InfoMessages[i]));
+    }
+    for (int i = 0; i < WarningMessages.Num(); i++)
+    {
+        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
+            .Warning()
+            ->AddToken(FUObjectToken::Create(Object))
+            ->AddToken(FTextToken::Create(WarningMessages[i]));
+    }
+    for (int i = 0; i < ErrorMessages.Num(); i++)
+    {
+        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
+            .Error()
+            ->AddToken(FUObjectToken::Create(Object))
+            ->AddToken(FTextToken::Create(ErrorMessages[i]));
+    }
+    for (int i = 0; i < FatalMessages.Num(); i++)
+    {
+        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
+            .Error()
+            ->AddToken(FUObjectToken::Create(Object))
+            ->AddToken(FTextToken::Create(FatalMessages[i]));
+    }
+}
+
+void URuleRangerActionContext::Info(const FText& InMessage)
+{
+    InfoMessages.Add(InMessage);
+}
+void URuleRangerActionContext::Warning(const FText& InMessage)
+{
+    WarningMessages.Add(InMessage);
+    ActionState = ActionState < ERuleRangerActionState::AS_Warning ? ERuleRangerActionState::AS_Warning : ActionState;
+}
+void URuleRangerActionContext::Error(const FText& InMessage)
+{
+    ErrorMessages.Add(InMessage);
+    ActionState = ActionState < ERuleRangerActionState::AS_Error ? ERuleRangerActionState::AS_Error : ActionState;
+}
+void URuleRangerActionContext::Fatal(const FText& InMessage)
+{
+    FatalMessages.Add(InMessage);
+    ActionState = ActionState < ERuleRangerActionState::AS_Fatal ? ERuleRangerActionState::AS_Fatal : ActionState;
+}
