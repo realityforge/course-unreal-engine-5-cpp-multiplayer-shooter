@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "BlasterAnimInstance.generated.h"
 
+class AWeapon;
 class ABlasterCharacter;
 
 UCLASS()
@@ -36,6 +37,10 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     bool bWeaponEquipped{ false };
 
+    /** Reference to the weapon currently equipped. */
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<AWeapon> EquippedWeapon{ nullptr };
+
     /** True if the character is currently crouching. */
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     bool bIsCrouched{ false };
@@ -55,6 +60,10 @@ private:
 
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     float AimOffsetPitch{ 0.f };
+
+    // This is the target for IK. It is effectively where we put the hand on the weapon
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    FTransform LeftHandTransform;
 
     // Lean is derived from current rotation and last frames rotation
     FRotator CharacterRotationLastFrame;

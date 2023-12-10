@@ -2,6 +2,13 @@
 #include "BlasterCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Weapon/Weapon.h"
+
+// The name of the socket that must be on every weapon so that they have IK and LH links up
+static const FName LeftHandSocketName("LeftHandSocket");
+
+// The name of the bone that holds the weapon
+static const FName RightHandBoneName("hand_r");
 
 void UBlasterAnimInstance::NativeInitializeAnimation()
 {
@@ -31,6 +38,7 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
         bAccelerating = BlasterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.f;
 
         bWeaponEquipped = BlasterCharacter->IsWeaponEquipped();
+        EquippedWeapon = BlasterCharacter->GetEquippedWeapon();
         bIsCrouched = BlasterCharacter->bIsCrouched;
         bAiming = BlasterCharacter->IsAiming();
         AimOffsetYaw = BlasterCharacter->GetAimOffsetYaw();
@@ -71,5 +79,29 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
 
         // Clamp it to a reasonable range
         Lean = FMath::Clamp(TargetYawDeltaInterp, -90.f, 90.f);
+
+        const auto CharacterMesh = BlasterCharacter->GetMesh();
+        // ReSharper disable once CppTooWideScopeInitStatement
+        const auto WeaponMesh = EquippedWeapon ? EquippedWeapon->GetWeaponMesh() : nullptr;
+        if (CharacterMesh && WeaponMesh)
+        {
+            // get the location of the LeftHandSocket sock in world space
+            LeftHandTransform = WeaponMesh->GetSocketTransform(LeftHandSocketName, RTS_World);
+
+            FVector OutPosition;
+            FRotator OutRotation;
+
+            // Using right hand bone as reference (to accidentally avoid moving the weapon relative to right hand)
+            // Transform the location/rotation from world space to bone relative space.
+            CharacterMesh->TransformToBoneSpace(
+                RightHandBoneName,
+                LeftHandTransform.GetLocation(),
+                // NOTE: Coursework used FRotator::ZeroRotator but this means we could not setup orientation correctly
+                LeftHandTransform.GetRotation().Rotator(),
+                OutPosition,
+                OutRotation);
+            LeftHandTransform.SetLocation(OutPosition);
+            LeftHandTransform.SetRotation(FQuat(OutRotation));
+        }
     }
 }
