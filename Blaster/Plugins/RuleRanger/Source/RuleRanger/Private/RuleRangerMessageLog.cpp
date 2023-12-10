@@ -17,7 +17,7 @@
 #include "MessageLogModule.h"
 #include "RuleRangerLogging.h"
 
-const FName FRuleRangerMessageLog::MessageLogName{TEXT("RuleRanger")};
+const FName FRuleRangerMessageLog::MessageLogName{ TEXT("RuleRanger") };
 static const FName MessageLogModuleName = FName(TEXT("MessageLog"));
 
 void FRuleRangerMessageLog::Initialize()
@@ -47,8 +47,9 @@ void FRuleRangerMessageLog::Shutdown()
         }
         else
         {
-            UE_LOG(RuleRanger, Verbose, TEXT("FRuleRangerMessageLog::Shutdown(): Skipping deregister of MessageLog as not registered."));
+            UE_LOG(RuleRanger,
+                   Verbose,
+                   TEXT("FRuleRangerMessageLog::Shutdown(): Skipping deregister of MessageLog as not registered."));
         }
     }
-
 }
