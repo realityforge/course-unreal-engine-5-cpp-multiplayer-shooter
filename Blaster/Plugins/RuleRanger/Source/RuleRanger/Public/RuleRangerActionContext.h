@@ -70,7 +70,7 @@ public:
      *
      * @return the current state of the action.
      */
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
     virtual ERuleRangerActionState GetState() = 0;
 
     /**
@@ -78,7 +78,7 @@ public:
      *
      * @return the trigger for the current action
      */
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
     virtual ERuleRangerActionTrigger GetActionTrigger() = 0;
 
     /**
@@ -87,7 +87,7 @@ public:
      *
      * @return true if the action should be a dry run.
      */
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
     virtual bool IsDryRun() = 0;
 
     /**
@@ -95,7 +95,7 @@ public:
      *
      * @param InMessage the message.
      */
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
     virtual void Info(const FText& InMessage) = 0;
 
     /**
@@ -103,7 +103,7 @@ public:
      *
      * @param InMessage the message.
      */
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
     virtual void Warning(const FText& InMessage) = 0;
 
     /**
@@ -111,7 +111,7 @@ public:
      *
      * @param InMessage the message.
      */
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
     virtual void Error(const FText& InMessage) = 0;
 
     /**
@@ -119,6 +119,6 @@ public:
      *
      * @param InMessage the message.
      */
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Rule Ranger")
     virtual void Fatal(const FText& InMessage) = 0;
 };
