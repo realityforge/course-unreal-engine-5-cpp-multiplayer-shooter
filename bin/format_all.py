@@ -15,7 +15,7 @@
 import subprocess
 
 projects_to_process = ["Blaster", "MenuSystem"]
-plugins_to_process = ["MultiplayerSessions"]
+plugins_to_process = ["RuleRanger", "MultiplayerSessions"]
 
 try:
     files = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "HEAD"],

@@ -17,7 +17,7 @@ import sys
 import os
 
 projects_to_process = ["Blaster", "MenuSystem"]
-plugins_to_process = ["MultiplayerSessions"]
+plugins_to_process = ["RuleRanger", "MultiplayerSessions"]
 
 # If files are passed in then restrict formatting to those
 direct_matches = []
