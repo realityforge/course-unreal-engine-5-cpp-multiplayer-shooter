@@ -172,6 +172,19 @@ void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTim
 
     // Simply grab the pitch from where the character is aiming
     AimOffsetPitch = BaseAimRotation.Pitch;
+    if (AimOffsetPitch > 180.f && !IsLocallyControlled())
+    {
+        // If BaseAimRotation is replicated across the network it is compressed into the
+        // range 0-360 while if it is locally derived it can be outside that range and below zero
+        // The AnimInstance uses a range -90 to 90 and thus a value of 270 (which is equivalent to -90)
+        // will produce different values unless we perform this fixup below
+        AimOffsetPitch -= 360.f;
+
+        // This is the code from the course ... can't understand why the above is not used
+        // const FVector2D InRange(270.f, 360.f);
+        // const FVector2D OutRange(-90.f, 0.f);
+        // AimOffsetPitch = FMath::GetMappedRangeValueClamped(InRange, OutRange, AimOffsetPitch);
+    }
 
     // To calculate the yaw we need more complexity as when
     // we are moving it is the direction in which we are moving
