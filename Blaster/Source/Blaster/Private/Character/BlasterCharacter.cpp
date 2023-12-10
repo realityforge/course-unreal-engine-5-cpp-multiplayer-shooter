@@ -255,6 +255,11 @@ void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
     }
 }
 
+AWeapon* ABlasterCharacter::GetEquippedWeapon() const
+{
+    return IsWeaponEquipped() ? Combat->EquippedWeapon : nullptr;
+}
+
 bool ABlasterCharacter::IsWeaponEquipped() const
 {
     return IsValid(Combat) && IsValid(Combat->EquippedWeapon);

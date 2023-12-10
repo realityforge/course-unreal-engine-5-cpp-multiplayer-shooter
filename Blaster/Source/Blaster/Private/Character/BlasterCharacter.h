@@ -177,6 +177,9 @@ public:
 
     void SetOverlappingWeapon(AWeapon* Weapon);
 
+    /** Return the EquippedWeapon if any. **/
+    AWeapon* GetEquippedWeapon() const;
+
     bool IsWeaponEquipped() const;
     bool IsAiming() const;
 };
