@@ -59,6 +59,14 @@ protected:
 
     //---------------------------------------------------------------------------
 
+    //---------------------------------------------------------------------------
+    // Animation State Section
+    //---------------------------------------------------------------------------
+
+    void CalculateAimOffset(float DeltaTime);
+
+    //---------------------------------------------------------------------------
+
 private:
     //---------------------------------------------------------------------------
     // User Inputs Section
@@ -115,6 +123,18 @@ private:
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
+    // Animation State Section
+    //---------------------------------------------------------------------------
+
+    float AimOffsetYaw{ 0.f };
+    float AimOffsetPitch{ 0.f };
+    // This is the rotation when the character last stopped moving or turned in place and is
+    // used when calculating aim offset yaw/pitch of character when standing still
+    FRotator AimOffsetBaseAimRotation;
+
+    //---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
     // Weapon Management
     //---------------------------------------------------------------------------
 
@@ -151,6 +171,9 @@ public:
     FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
     /** Return the FollowCamera SubObject **/
     FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+    FORCEINLINE float GetAimOffsetYaw() const { return AimOffsetYaw; }
+    FORCEINLINE float GetAimOffsetPitch() const { return AimOffsetPitch; }
 
     void SetOverlappingWeapon(AWeapon* Weapon);
 

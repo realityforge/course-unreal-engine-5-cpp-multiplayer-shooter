@@ -50,6 +50,12 @@ private:
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     float Lean{ 0.f };
 
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    float AimOffsetYaw{ 0.f };
+
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    float AimOffsetPitch{ 0.f };
+
     // Lean is derived from current rotation and last frames rotation
     FRotator CharacterRotationLastFrame;
     FRotator CharacterRotation;

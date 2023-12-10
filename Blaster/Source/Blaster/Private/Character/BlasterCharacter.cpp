@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "InputMappingContext.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "Weapon/Weapon.h"
 
@@ -153,6 +154,53 @@ void ABlasterCharacter::OnAimInputActionCompleted()
     }
 }
 
+void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTime)
+{
+    if (!IsValid(Combat) || !IsValid(Combat->EquippedWeapon))
+    {
+        // If we have no weapon then we do not need to calculate aiming
+        return;
+    }
+    FVector Velocity = GetVelocity();
+    // We are only looking for lateral Velocity so we zero out height
+    Velocity.Z = 0.f;
+    const float Speed = Velocity.Size();
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const bool bInAir = GetCharacterMovement()->IsFalling();
+
+    const FRotator BaseAimRotation = GetBaseAimRotation();
+
+    // Simply grab the pitch from where the character is aiming
+    AimOffsetPitch = BaseAimRotation.Pitch;
+
+    // To calculate the yaw we need more complexity as when
+    // we are moving it is the direction in which we are moving
+    // otherwise when we are stopped it is where our controller is facing
+    if (0.f == Speed && !bInAir)
+    {
+        // Standing still, not jumping
+
+        const FRotator CurrentAimRotation = FRotator(0.f, BaseAimRotation.Yaw, 0.f);
+        const FRotator DeltaAimRotation =
+            UKismetMathLibrary::NormalizedDeltaRotator(CurrentAimRotation, AimOffsetBaseAimRotation);
+
+        AimOffsetYaw = DeltaAimRotation.Yaw;
+
+        // We start using controller yaw for aiming and not character rotation
+        bUseControllerRotationYaw = false;
+    }
+    else
+    {
+        // Moving or jumping
+
+        AimOffsetBaseAimRotation = FRotator(0.f, BaseAimRotation.Yaw, 0.f);
+        AimOffsetYaw = 0;
+
+        // We revert to using the controller yaw for character rotation
+        bUseControllerRotationYaw = true;
+    }
+}
+
 void ABlasterCharacter::ServerEquip_Implementation()
 {
     if (IsValid(Combat))
@@ -207,6 +255,8 @@ bool ABlasterCharacter::IsAiming() const
 void ABlasterCharacter::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    CalculateAimOffset(DeltaTime);
 }
 
 void ABlasterCharacter::SafeBindAction(UEnhancedInputComponent* const Input,

@@ -33,6 +33,8 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
         bWeaponEquipped = BlasterCharacter->IsWeaponEquipped();
         bIsCrouched = BlasterCharacter->bIsCrouched;
         bAiming = BlasterCharacter->IsAiming();
+        AimOffsetYaw = BlasterCharacter->GetAimOffsetYaw();
+        AimOffsetPitch = BlasterCharacter->GetAimOffsetPitch();
 
         // AimRotation is in world space
         const FRotator AimRotation = BlasterCharacter->GetBaseAimRotation();
