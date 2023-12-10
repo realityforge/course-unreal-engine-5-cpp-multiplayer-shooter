@@ -73,4 +73,7 @@ private:
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<UWidgetComponent> PickupWidget;
+
+public:
+    FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
 };
