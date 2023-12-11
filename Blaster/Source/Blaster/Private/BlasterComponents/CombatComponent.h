@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "CombatComponent.generated.h"
 
+class ABlasterCharacter;
 class AWeapon;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
