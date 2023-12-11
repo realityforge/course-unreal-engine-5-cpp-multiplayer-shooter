@@ -142,7 +142,7 @@ void ABlasterCharacter::OnAimInputActionStarted()
 {
     if (IsValid(Combat))
     {
-        Combat->setAiming(true);
+        Combat->SetAiming(true);
     }
 }
 
@@ -150,7 +150,7 @@ void ABlasterCharacter::OnAimInputActionCompleted()
 {
     if (IsValid(Combat))
     {
-        Combat->setAiming(false);
+        Combat->SetAiming(false);
     }
 }
 

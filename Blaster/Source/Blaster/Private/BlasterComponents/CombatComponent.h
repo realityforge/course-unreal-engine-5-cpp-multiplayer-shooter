@@ -32,7 +32,7 @@ protected:
     virtual void BeginPlay() override;
     void MirrorWalkSpeedBasedOnState() const;
 
-    void setAiming(bool bInAiming);
+    void SetAiming(bool bInAiming);
 
     UFUNCTION(Server, Reliable)
     void ServerSetAiming(bool bInAiming);

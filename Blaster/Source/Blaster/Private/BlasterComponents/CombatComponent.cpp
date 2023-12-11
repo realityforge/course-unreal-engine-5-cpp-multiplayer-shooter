@@ -26,7 +26,7 @@ void UCombatComponent::MirrorWalkSpeedBasedOnState() const
     }
 }
 
-void UCombatComponent::setAiming(bool bInAiming)
+void UCombatComponent::SetAiming(bool bInAiming)
 {
     // bAiming is set here because if this is called on client then we will locally set var before calling server
     // not needed on server as ServerSetAiming falls directly through to the server implementation
