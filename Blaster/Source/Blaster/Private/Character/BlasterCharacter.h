@@ -131,6 +131,8 @@ private:
 
     float AimOffsetYaw{ 0.f };
     float AimOffsetPitch{ 0.f };
+    float AimOffsetYawInterp{ 0.f };
+
     // This is the rotation when the character last stopped moving or turned in place and is
     // used when calculating aim offset yaw/pitch of character when standing still
     FRotator AimOffsetBaseAimRotation;
