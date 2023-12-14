@@ -201,6 +201,8 @@ void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTim
 
         // We start using controller yaw for aiming and not character rotation
         bUseControllerRotationYaw = false;
+
+        CalculateTurnInPlace(DeltaTime);
     }
     else
     {
@@ -211,6 +213,19 @@ void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTim
 
         // We revert to using the controller yaw for character rotation
         bUseControllerRotationYaw = true;
+        TurningInPlace = ETurningInPlace::TIP_NotTurning;
+    }
+}
+
+void ABlasterCharacter::CalculateTurnInPlace(const float DeltaTime)
+{
+    if (AimOffsetYaw > 90)
+    {
+        TurningInPlace = ETurningInPlace::TIP_TurningRight;
+    }
+    else if (AimOffsetYaw < -90)
+    {
+        TurningInPlace = ETurningInPlace::TIP_TurningLeft;
     }
 }
 

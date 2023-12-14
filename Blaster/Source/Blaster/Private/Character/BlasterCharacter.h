@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/Character.h"
+#include "TurningInPlace.h"
 #include "BlasterCharacter.generated.h"
 
 class UCombatComponent;
@@ -64,6 +65,8 @@ protected:
     //---------------------------------------------------------------------------
 
     void CalculateAimOffset(float DeltaTime);
+
+    void CalculateTurnInPlace(float DeltaTime);
 
     //---------------------------------------------------------------------------
 
@@ -132,6 +135,8 @@ private:
     // used when calculating aim offset yaw/pitch of character when standing still
     FRotator AimOffsetBaseAimRotation;
 
+    ETurningInPlace TurningInPlace{ ETurningInPlace::TIP_NotTurning };
+
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
@@ -174,6 +179,7 @@ public:
 
     FORCEINLINE float GetAimOffsetYaw() const { return AimOffsetYaw; }
     FORCEINLINE float GetAimOffsetPitch() const { return AimOffsetPitch; }
+    FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
 
     void SetOverlappingWeapon(AWeapon* Weapon);
 

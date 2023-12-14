@@ -2,6 +2,7 @@
 
 #include "Animation/AnimInstance.h"
 #include "CoreMinimal.h"
+#include "TurningInPlace.h"
 #include "BlasterAnimInstance.generated.h"
 
 class AWeapon;
@@ -69,4 +70,7 @@ private:
     FRotator CharacterRotationLastFrame;
     FRotator CharacterRotation;
     FRotator DeltaRotation;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+    ETurningInPlace TurningInPlace{ ETurningInPlace::TIP_NotTurning };
 };
