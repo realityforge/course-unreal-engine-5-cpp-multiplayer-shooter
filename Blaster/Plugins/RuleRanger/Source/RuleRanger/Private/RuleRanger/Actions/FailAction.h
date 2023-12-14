@@ -44,7 +44,7 @@ private:
               Category = "Rule Ranger",
               meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
     FString Message{ "The object was not expected to match" };
-    /** SHould the error be a fatal error or a regular error */
+    /** Should the error be a fatal error or a regular error */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess, ExposeOnSpawn))
     bool bFatal{ false };
 };
