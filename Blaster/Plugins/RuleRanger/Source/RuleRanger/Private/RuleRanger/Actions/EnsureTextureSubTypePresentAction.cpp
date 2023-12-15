@@ -206,8 +206,10 @@ void UEnsureTextureSubTypePresentAction::ApplyRuleToTextureWithSubTypes(URuleRan
         }
     }
     const float NumComponents = GPixelFormats[Texture->GetPixelFormat()].NumComponents;
-    if (NumComponents != NumComponentsDeclared)
+    if (NumComponents != NumComponentsDeclared && NumComponents < NumComponentsDeclared)
     {
+        // If NumComponents > NumComponentsDeclared then that is probably ok as most compression schemes
+        // require a certain number of components per pixel to compress and Unreal just 0 fills other components
         ActionContext->Error(FText::FormatNamed(NSLOCTEXT("RuleRanger",
                                                           "MismatchingComponent",
                                                           "Pixel format specifies "
