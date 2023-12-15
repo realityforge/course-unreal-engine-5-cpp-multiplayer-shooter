@@ -13,7 +13,7 @@
  */
 #pragma once
 
-class FRuleRangerUtilities
+class RULERANGER_API FRuleRangerUtilities
 {
 public:
     /** Method to perform the rename of an asset. */
