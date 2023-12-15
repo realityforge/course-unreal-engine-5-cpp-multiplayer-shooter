@@ -190,6 +190,7 @@ void UEnsureTextureSubTypePresentAction::ApplyRuleToTextureWithSubTypes(URuleRan
             case ETextureSubType::AT_BaseColor:
             case ETextureSubType::AT_Emissive:
             case ETextureSubType::AT_LightMap:
+            case ETextureSubType::AT_Mask:
                 NumComponentsDeclared += 3;
                 break;
             default:
