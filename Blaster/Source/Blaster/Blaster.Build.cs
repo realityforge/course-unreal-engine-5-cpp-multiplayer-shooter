@@ -6,6 +6,6 @@ public class Blaster : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		PublicDependencyModuleNames.AddRange(new[] { "Core", "CoreUObject", "Engine", "InputCore" });
-		PrivateDependencyModuleNames.AddRange(new[] { "EnhancedInput" });
+		PrivateDependencyModuleNames.AddRange(new[] { "EnhancedInput", "RuleRanger" });
 	}
 }
