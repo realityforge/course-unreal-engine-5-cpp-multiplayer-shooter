@@ -19,11 +19,6 @@
 #include "RuleRangerAction.h"
 #include "EnsureWeaponMeshHasSocket.generated.h"
 
-/**
- * Action that always fails with specified message.
- *
- * Useful when using matchers to identify scenarios that you do not want in your codebase.
- */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
        BlueprintType,
@@ -36,15 +31,4 @@ class UEnsureWeaponMeshHasSocket final : public URuleRangerAction
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-private:
-    /** The error message to emit */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
-    FString Message{ "The object was not expected to match" };
-    /** Should the error be a fatal error or a regular error */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess, ExposeOnSpawn))
-    bool bFatal{ false };
 };
