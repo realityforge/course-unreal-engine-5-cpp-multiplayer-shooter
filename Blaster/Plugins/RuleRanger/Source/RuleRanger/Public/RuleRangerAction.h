@@ -41,4 +41,24 @@ public:
      */
     UFUNCTION(BlueprintNativeEvent, Category = "Rule Ranger")
     void Apply(URuleRangerActionContext* ActionContext, UObject* Object);
+
+protected:
+    /**
+     * Log an informational message for debugging purposes.
+     * (By default this logs to the RuleRanger category using VeryVerbose level.)
+     *
+     * @param Object the Object that was being processed (if any).
+     * @param Message the message.
+     */
+    void LogInfo(const UObject* const Object, const FString& Message) const;
+
+    /**
+     * Log an error message for debugging purposes.
+     * This usually indicates a misconfigured Action object.
+     * (By default this logs to the RuleRanger category using Error level.)
+     *
+     * @param Object the Object that was being processed (if any).
+     * @param Message the message.
+     */
+    void LogError(const UObject* const Object, const FString& Message) const;
 };

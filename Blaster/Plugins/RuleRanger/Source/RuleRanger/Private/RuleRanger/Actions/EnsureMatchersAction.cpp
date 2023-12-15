@@ -13,7 +13,6 @@
  */
 
 #include "EnsureMatchersAction.h"
-#include "RuleRangerLogging.h"
 
 void UEnsureMatchersAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
@@ -47,12 +46,7 @@ void UEnsureMatchersAction::Apply_Implementation(URuleRangerActionContext* Actio
             }
             else
             {
-                UE_LOG(RuleRanger,
-                       VeryVerbose,
-                       TEXT("%s(%s): Invaliid matcher detected at index %d"),
-                       *GetClass()->GetName(),
-                       *Object->GetName(),
-                       Index);
+                LogInfo(Object, FString::Printf(TEXT("Invaliid matcher detected at index %d"), Index));
             }
         }
     }

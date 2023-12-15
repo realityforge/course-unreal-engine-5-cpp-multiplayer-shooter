@@ -14,7 +14,6 @@
 
 #include "CheckTexturePowerOfTwoAction.h"
 #include "Editor.h"
-#include "RuleRangerLogging.h"
 
 UCheckTexturePowerOfTwoAction::UCheckTexturePowerOfTwoAction()
 {
@@ -27,22 +26,15 @@ void UCheckTexturePowerOfTwoAction::Apply_Implementation(URuleRangerActionContex
     {
         if (const auto Texture = Cast<UTexture2D>(Object); !Texture)
         {
-            UE_LOG(RuleRanger,
-                   Error,
-                   TEXT("CheckTexture2DPowerOfTwoAction: Attempt to run on Object %s "
-                        "that is not a Texture2D instance."),
-                   *Object->GetName());
+            LogError(Object, TEXT("Attempt to run on Object that is not a Texture2D instance."));
         }
         else if (TextureGroupsToSkip.Contains(Texture->LODGroup))
         {
             const auto TextureGroupEnum = StaticEnum<TextureGroup>();
             const auto TextureGroup = TextureGroupEnum->GetMetaData(TEXT("DisplayName"), Texture->LODGroup);
-            UE_LOG(RuleRanger,
-                   VeryVerbose,
-                   TEXT("CheckTexture2DPowerOfTwoAction: Skipping object %s as it's "
-                        "TextureGroup %s is in the skip list"),
-                   *Object->GetName(),
-                   *TextureGroup);
+            LogInfo(
+                Object,
+                FString::Printf(TEXT("Skipping object as it's TextureGroup %s is in the skip list"), *TextureGroup));
         }
         else
         {
@@ -111,11 +103,7 @@ void UCheckTexturePowerOfTwoAction::Apply_Implementation(URuleRangerActionContex
             }
             else
             {
-                UE_LOG(RuleRanger,
-                       VeryVerbose,
-                       TEXT("CheckTexture2DPowerOfTwoAction: Texture dimensions are a power of two %s. "
-                            "No action required"),
-                       *Object->GetName());
+                LogInfo(Object, TEXT(" Texture dimensions are a power of two. No Aciton required."));
             }
         }
     }

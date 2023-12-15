@@ -16,7 +16,6 @@
 #include "Editor.h"
 #include "Misc/UObjectToken.h"
 #include "RuleRanger/RuleRangerUtilities.h"
-#include "RuleRangerLogging.h"
 #include "RuleRangerMessageLog.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
@@ -40,28 +39,26 @@ void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext*
                 FRuleRangerUtilities::CollectTypeHierarchy(Object, Classes);
                 for (auto Class : Classes)
                 {
-                    UE_LOG(RuleRanger,
-                           VeryVerbose,
-                           TEXT("NameConventionRenameAction: Looking for NamingConvention rules for class %s"),
-                           *Class->GetName());
+                    LogInfo(
+                        Object,
+                        FString::Printf(TEXT("Looking for NamingConvention rules for class %s"), *Class->GetName()));
                     if (TArray<FNameConvention>* NameConventions = NameConventionsCache.Find(Class))
                     {
-                        UE_LOG(RuleRanger,
-                               VeryVerbose,
-                               TEXT("NameConventionRenameAction: Found NamingConvention %d rules for %s"),
-                               NameConventions->Num(),
-                               *Class->GetName());
+                        LogInfo(Object,
+                                FString::Printf(TEXT("Found %d NamingConvention rules for %s"),
+                                                NameConventions->Num(),
+                                                *Class->GetName()));
                         for (int i = 0; i < NameConventions->Num(); i++)
                         {
                             const FNameConvention& NameConvention = (*NameConventions)[i];
-                            UE_LOG(RuleRanger,
-                                   VeryVerbose,
-                                   TEXT("NameConventionRenameAction: Attempting to match NameConvention "
-                                        "Prefix=%s, Suffix=%s, Variant=%s against asset with Variant=%s"),
-                                   *NameConvention.Prefix,
-                                   *NameConvention.Suffix,
-                                   *NameConvention.Variant,
-                                   *Variant);
+                            LogInfo(
+                                Object,
+                                FString::Printf(TEXT("Attempting to match NameConvention "
+                                                     "Prefix=%s, Suffix=%s, Variant=%s against asset with Variant=%s"),
+                                                *NameConvention.Prefix,
+                                                *NameConvention.Suffix,
+                                                *NameConvention.Variant,
+                                                *Variant));
                             if (NameConvention.Variant.Equals(Variant)
                                 || NameConvention.Variant.Equals(NameConvention_DefaultVariant))
                             {
@@ -76,11 +73,7 @@ void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext*
                                 }
                                 if (NewName.Equals(OriginalName))
                                 {
-                                    UE_LOG(RuleRanger,
-                                           VeryVerbose,
-                                           TEXT("NameConventionRenameAction: Object %s matches naming convention. "
-                                                "No action required."),
-                                           *Object->GetName());
+                                    LogInfo(Object, TEXT("Object matches naming convention. No action required."));
                                 }
                                 else
                                 {
@@ -148,23 +141,18 @@ void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext*
                     }
                     else
                     {
-                        UE_LOG(RuleRanger,
-                               VeryVerbose,
-                               TEXT("NameConventionRenameAction: Unable to locate Naming Convention for "
-                                    "asset '%s' of type '%s' in '%s'."),
-                               *OriginalName,
-                               *Object->GetClass()->GetName(),
-                               *NameConventionsTable->GetName());
+                        LogInfo(Object,
+                                FString::Printf(TEXT("Unable to locate Naming Convention for "
+                                                     "asset of type '%s' in '%s'."),
+                                                *Object->GetClass()->GetName(),
+                                                *NameConventionsTable->GetName()));
                     }
                 }
             }
         }
         else
         {
-            UE_LOG(RuleRanger,
-                   Error,
-                   TEXT("NameConventionRenameAction: Action has not specified "
-                        "NameConventionsTable property and will not be applied as a result."));
+            LogError(Object, TEXT("Action can not run as has not specified NameConventionsTable property."));
         }
     }
 }
@@ -193,7 +181,7 @@ void UNameConventionRenameAction::ResetCacheIfTableModified(UObject* Object)
 
 void UNameConventionRenameAction::ResetNameConventionsCache()
 {
-    UE_LOG(RuleRanger, VeryVerbose, TEXT("NameConventionRenameAction: Resetting the Name Conventions Cache"));
+    LogInfo(nullptr, TEXT("Resetting the Name Conventions Cache"));
 
     NameConventionsCache.Empty();
     FCoreUObjectDelegates::OnObjectModified.Remove(OnObjectModifiedDelegateHandle);
@@ -223,11 +211,10 @@ void UNameConventionRenameAction::RebuildNameConventionsCacheIfNecessary()
         }
         for (auto NameConventionEntry : NameConventionsCache)
         {
-            UE_LOG(RuleRanger,
-                   VeryVerbose,
-                   TEXT("NameConventionRenameAction: Object %s contains %d conventions in cache"),
-                   *NameConventionEntry.Key->GetName(),
-                   NameConventionEntry.Value.Num());
+            LogInfo(nullptr,
+                    FString::Printf(TEXT("Type %s contains %d conventions in cache"),
+                                    *NameConventionEntry.Key->GetName(),
+                                    NameConventionEntry.Value.Num()));
         }
     }
 }

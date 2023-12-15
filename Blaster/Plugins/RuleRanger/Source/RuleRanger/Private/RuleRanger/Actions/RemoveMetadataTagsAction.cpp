@@ -14,7 +14,6 @@
 
 #include "RemoveMetadataTagsAction.h"
 #include "Editor.h"
-#include "RuleRangerLogging.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
 void URemoveMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
@@ -27,23 +26,17 @@ void URemoveMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* A
             {
                 if (NAME_None == MetadataKey)
                 {
-                    UE_LOG(RuleRanger,
-                           Error,
-                           TEXT("RemoveMetadataTagsAction: Empty key specified when attempting to "
-                                "remove MetadataTag from %s"),
-                           *Object->GetName());
+                    LogError(Object, TEXT("Empty key specified when attempting to remove MetadataTag."));
                 }
                 else
                 {
                     FString ExistingValue = Subsystem->GetMetadataTag(Object, MetadataKey);
                     if (ExistingValue.Equals(TEXT("")))
                     {
-                        UE_LOG(RuleRanger,
-                               VeryVerbose,
-                               TEXT("RemoveMetadataTagsAction: MetaData with key %s does not exist on %s. "
-                                    "No action required"),
-                               *MetadataKey.ToString(),
-                               *Object->GetName());
+                        LogInfo(
+                            Object,
+                            FString::Printf(TEXT("MetaData with key %s does not exist on object. No action required"),
+                                            *MetadataKey.ToString()));
                     }
                     else
                     {

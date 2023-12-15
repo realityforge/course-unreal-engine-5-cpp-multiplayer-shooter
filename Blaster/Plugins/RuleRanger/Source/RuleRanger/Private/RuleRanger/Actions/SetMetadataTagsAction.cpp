@@ -14,7 +14,6 @@
 
 #include "SetMetadataTagsAction.h"
 #include "Editor.h"
-#include "RuleRangerLogging.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
 void USetMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
@@ -27,31 +26,21 @@ void USetMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* Acti
             {
                 if (NAME_None == MetadataTag.Key)
                 {
-                    UE_LOG(RuleRanger,
-                           Error,
-                           TEXT("SetMetadataTagsAction: Empty key specified when attempting to add MetadataTag to %s"),
-                           *Object->GetName());
+                    LogError(Object, TEXT("Empty key specified when attempting to add MetadataTag"));
                 }
                 else if (MetadataTag.Value.IsEmpty())
                 {
-                    UE_LOG(RuleRanger,
-                           Error,
-                           TEXT("SetMetadataTagsAction: Empty value specified when attempting to "
-                                "add MetadataTag to %s"),
-                           *Object->GetName());
+                    LogError(Object, TEXT("Empty Value specified when attempting to add MetadataTag"));
                 }
                 else
                 {
                     FString ExistingValue = Subsystem->GetMetadataTag(Object, MetadataTag.Key);
                     if (ExistingValue.Equals(MetadataTag.Value))
                     {
-                        UE_LOG(RuleRanger,
-                               VeryVerbose,
-                               TEXT("SetMetadataTagsAction: MetaDataTag %s=%s already exists on %s. "
-                                    "No action required"),
-                               *MetadataTag.Key.ToString(),
-                               *MetadataTag.Value,
-                               *Object->GetName());
+                        LogInfo(Object,
+                                FString::Printf(TEXT("MetaDataTag %s=%s already exists on Object. No action required"),
+                                                *MetadataTag.Key.ToString(),
+                                                *MetadataTag.Value));
                     }
                     else
                     {

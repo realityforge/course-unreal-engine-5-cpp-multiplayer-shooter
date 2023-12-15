@@ -13,5 +13,26 @@
  */
 #include "RuleRangerAction.h"
 #include "RuleRangerActionContext.h"
+#include "RuleRangerLogging.h"
 
 void URuleRangerAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) {}
+
+void URuleRangerAction::LogInfo(const UObject* const Object, const FString& Message) const
+{
+    UE_LOG(RuleRanger,
+           VeryVerbose,
+           TEXT("%s:%s: %s"),
+           *GetClass()->GetName(),
+           Object ? *Object->GetName() : TEXT("-"),
+           *Message);
+}
+
+void URuleRangerAction::LogError(const UObject* const Object, const FString& Message) const
+{
+    UE_LOG(RuleRanger,
+           Error,
+           TEXT("%s:%s: %s"),
+           *GetClass()->GetName(),
+           Object ? *Object->GetName() : TEXT("-"),
+           *Message);
+}
