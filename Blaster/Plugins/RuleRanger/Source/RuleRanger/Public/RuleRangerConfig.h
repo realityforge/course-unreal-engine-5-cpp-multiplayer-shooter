@@ -15,15 +15,15 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "RuleRangerRuleSetScope.generated.h"
+#include "RuleRangerConfig.generated.h"
 
 class URuleRangerRuleSet;
 
 /**
- * A scope which applies a RuleSet.
+ * A configuration which applies RuleSets to a set of Content Directories.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"), Blueprintable, BlueprintType, CollapseCategories, EditInlineNew)
-class RULERANGER_API URuleRangerRuleSetScope : public UDataAsset
+class RULERANGER_API URuleRangerConfig : public UDataAsset
 {
     GENERATED_BODY()
 
@@ -36,5 +36,5 @@ public:
     UPROPERTY(EditDefaultsOnly, Category = "Rule Sets", meta = (AllowAbstract = "false", DisplayThumbnail = "false"))
     TArray<TObjectPtr<URuleRangerRuleSet>> RuleSets;
 
-    bool ScopeMatches(const FString& Path);
+    bool ConfigMatches(const FString& Path);
 };

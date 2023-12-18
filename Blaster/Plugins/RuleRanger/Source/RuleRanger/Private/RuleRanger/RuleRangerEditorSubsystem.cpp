@@ -14,11 +14,11 @@
 #include "RuleRanger/RuleRangerEditorSubsystem.h"
 #include "Editor.h"
 #include "RuleRangerActionContext.h"
+#include "RuleRangerConfig.h"
 #include "RuleRangerDeveloperSettings.h"
 #include "RuleRangerLogging.h"
 #include "RuleRangerRule.h"
 #include "RuleRangerRuleSet.h"
-#include "RuleRangerRuleSetScope.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 #include "Subsystems/ImportSubsystem.h"
 
@@ -88,19 +88,19 @@ void URuleRangerEditorSubsystem::ProcessRule(UObject* Object, const FRuleRangerR
             // TODO: This will not have correct type when first created
         }
 
-        auto RuleRangerRuleSetScopes = GetActiveRuleSetScopes();
+        auto Configs = GetCurrentRuleSetConfigs();
         UE_LOG(RuleRanger,
                VeryVerbose,
                TEXT("ProcessRule: Located %d Rule Set Scope(s) when discovering rules for object %s"),
-               RuleRangerRuleSetScopes.Num(),
+               Configs.Num(),
                *Object->GetName());
-        for (auto RuleSetScopeIt = RuleRangerRuleSetScopes.CreateIterator(); RuleSetScopeIt; ++RuleSetScopeIt)
+        for (auto ConfigIt = Configs.CreateIterator(); ConfigIt; ++ConfigIt)
         {
-            if (const auto RuleSetScope = RuleSetScopeIt->LoadSynchronous())
+            if (const auto Config = ConfigIt->LoadSynchronous())
             {
-                if (const auto Path = Object->GetPathName(); RuleSetScope->ScopeMatches(Path))
+                if (const auto Path = Object->GetPathName(); Config->ConfigMatches(Path))
                 {
-                    for (auto RuleSetIt = RuleSetScope->RuleSets.CreateIterator(); RuleSetIt; ++RuleSetIt)
+                    for (auto RuleSetIt = Config->RuleSets.CreateIterator(); RuleSetIt; ++RuleSetIt)
                     {
                         if (const auto RuleSet = RuleSetIt->Get())
                         {
@@ -136,7 +136,7 @@ void URuleRangerEditorSubsystem::ProcessRule(UObject* Object, const FRuleRangerR
                                                 "from scope '%s' when analyzing object '%s'"),
                                            RuleIndex,
                                            *RuleSet->GetName(),
-                                           *RuleSetScope->GetName(),
+                                           *Config->GetName(),
                                            *Object->GetName());
                                 }
                                 RuleIndex++;
@@ -149,7 +149,7 @@ void URuleRangerEditorSubsystem::ProcessRule(UObject* Object, const FRuleRangerR
                                 Error,
                                 TEXT("ProcessRule: Invalid RuleSet skipped when processing rules for %s in scope %s"),
                                 *Object->GetName(),
-                                *RuleSetScope->GetName());
+                                *Config->GetName());
                         }
                     }
                 }
@@ -158,7 +158,7 @@ void URuleRangerEditorSubsystem::ProcessRule(UObject* Object, const FRuleRangerR
             {
                 UE_LOG(RuleRanger,
                        Error,
-                       TEXT("Invalid RuleSetScope skipped when processing rules for %s"),
+                       TEXT("Invalid RuleSetConfig skipped when processing rules for %s"),
                        *Object->GetName());
             }
         }
@@ -170,19 +170,19 @@ bool URuleRangerEditorSubsystem::IsMatchingRulePresent(UObject* InObject, const 
 {
     if (IsValid(InObject))
     {
-        auto RuleRangerRuleSetScopes = GetActiveRuleSetScopes();
+        auto Configs = GetCurrentRuleSetConfigs();
         UE_LOG(RuleRanger,
                VeryVerbose,
                TEXT("IsMatchingRulePresent: Located %d Rule Set Scope(s) when discovering rules for object %s"),
-               RuleRangerRuleSetScopes.Num(),
+               Configs.Num(),
                *InObject->GetName());
-        for (auto RuleSetScopeIt = RuleRangerRuleSetScopes.CreateIterator(); RuleSetScopeIt; ++RuleSetScopeIt)
+        for (auto ConfigIt = Configs.CreateIterator(); ConfigIt; ++ConfigIt)
         {
-            if (const auto RuleSetScope = RuleSetScopeIt->LoadSynchronous())
+            if (const auto Config = ConfigIt->LoadSynchronous())
             {
-                if (const auto Path = InObject->GetPathName(); RuleSetScope->ScopeMatches(Path))
+                if (const auto Path = InObject->GetPathName(); Config->ConfigMatches(Path))
                 {
-                    for (auto RuleSetIt = RuleSetScope->RuleSets.CreateIterator(); RuleSetIt; ++RuleSetIt)
+                    for (auto RuleSetIt = Config->RuleSets.CreateIterator(); RuleSetIt; ++RuleSetIt)
                     {
                         if (const auto RuleSet = RuleSetIt->Get())
                         {
@@ -211,7 +211,7 @@ bool URuleRangerEditorSubsystem::IsMatchingRulePresent(UObject* InObject, const 
                                                 "from scope '%s' when analyzing object '%s'"),
                                            RuleIndex,
                                            *RuleSet->GetName(),
-                                           *RuleSetScope->GetName(),
+                                           *Config->GetName(),
                                            *InObject->GetName());
                                 }
                                 RuleIndex++;
@@ -224,7 +224,7 @@ bool URuleRangerEditorSubsystem::IsMatchingRulePresent(UObject* InObject, const 
                                    TEXT("IsMatchingRulePresent: Invalid RuleSet skipped when processing "
                                         "rules for %s in scope %s"),
                                    *InObject->GetName(),
-                                   *RuleSetScope->GetName());
+                                   *Config->GetName());
                         }
                     }
                 }
@@ -233,7 +233,7 @@ bool URuleRangerEditorSubsystem::IsMatchingRulePresent(UObject* InObject, const 
             {
                 UE_LOG(RuleRanger,
                        Error,
-                       TEXT("IsMatchingRulePresent: Invalid RuleSetScope skipped when processing rules for %s"),
+                       TEXT("IsMatchingRulePresent: Invalid RuleSetConfig skipped when processing rules for %s"),
                        *InObject->GetName());
             }
         }
@@ -242,11 +242,11 @@ bool URuleRangerEditorSubsystem::IsMatchingRulePresent(UObject* InObject, const 
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
-TArray<TSoftObjectPtr<URuleRangerRuleSetScope>> URuleRangerEditorSubsystem::GetActiveRuleSetScopes()
+TArray<TSoftObjectPtr<URuleRangerConfig>> URuleRangerEditorSubsystem::GetCurrentRuleSetConfigs()
 {
     const auto DeveloperSettings = GetMutableDefault<URuleRangerDeveloperSettings>();
     check(IsValid(DeveloperSettings));
-    return DeveloperSettings->RuleSetScopes;
+    return DeveloperSettings->Configs;
 }
 
 bool URuleRangerEditorSubsystem::ProcessOnAssetPostImportRule(const bool bIsReimport,

@@ -22,7 +22,7 @@
 
 class URuleRangerRule;
 class URuleRangerActionContext;
-class URuleRangerRuleSetScope;
+class URuleRangerConfig;
 class URuleRangerContentBrowserExtensions;
 
 // Shape of function called to check whether rule will run or actually execute rule.
@@ -52,8 +52,8 @@ public:
     void ProcessRule(UObject* Object, const FRuleRangerRuleFn& ProcessRuleFunction);
     bool IsMatchingRulePresent(UObject* InObject, const FRuleRangerRuleFn& ProcessRuleFunction);
 
-    /** Return the set of ActiveRuleSetScopes that are active for the current project. */
-    TArray<TSoftObjectPtr<URuleRangerRuleSetScope>> GetActiveRuleSetScopes();
+    /** Return the set of RuleSetConfig objects configured for the current project. */
+    TArray<TSoftObjectPtr<URuleRangerConfig>> GetCurrentRuleSetConfigs();
 
 private:
     UPROPERTY(Transient)

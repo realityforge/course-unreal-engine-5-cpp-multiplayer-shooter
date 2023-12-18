@@ -11,9 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "RuleRangerRuleSetScope.h"
+#include "RuleRangerConfig.h"
 
-bool URuleRangerRuleSetScope::ScopeMatches(const FString& Path)
+bool URuleRangerConfig::ConfigMatches(const FString& Path)
 {
     for (auto Dir = Dirs.CreateIterator(); Dir; ++Dir)
     {

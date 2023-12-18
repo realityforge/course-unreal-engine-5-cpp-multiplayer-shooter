@@ -18,7 +18,7 @@
 #include "UObject/Object.h"
 #include "RuleRangerDeveloperSettings.generated.h"
 
-class URuleRangerRuleSetScope;
+class URuleRangerConfig;
 
 /**
  * RuleRanger Project Settings in the Editor category.
@@ -35,5 +35,5 @@ public:
     virtual FName GetCategoryName() const override { return FName("Editor"); }
 
     UPROPERTY(Config, EditAnywhere, Category = "Rule Ranger", meta = (DisplayThumbnail = "false"))
-    TArray<TSoftObjectPtr<URuleRangerRuleSetScope>> RuleSetScopes;
+    TArray<TSoftObjectPtr<URuleRangerConfig>> Configs;
 };
