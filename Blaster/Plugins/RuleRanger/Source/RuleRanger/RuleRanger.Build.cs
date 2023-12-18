@@ -25,7 +25,9 @@ public class RuleRanger : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new[]
 			{
+				"AnimGraph",
 				"CoreUObject",
+				"BlueprintGraph",
 				"DataValidation",
 				"DeveloperSettings",
 				"EditorSubsystem",
