@@ -14,16 +14,14 @@
 
 #include "NameConventionRenameAction.h"
 #include "Editor.h"
-#include "Misc/UObjectToken.h"
 #include "RuleRanger/RuleRangerUtilities.h"
-#include "RuleRangerMessageLog.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
 void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object))
     {
-        if (IsValid(NameConventionsTable))
+        if (!NameConventionsTables.IsEmpty())
         {
             RebuildNameConventionsCacheIfNecessary();
 
@@ -126,33 +124,24 @@ void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext*
                 // Only attempt to apply naming conventions to outermost packages
                 if (const UObject* OutermostObject = Object->GetOutermostObject(); OutermostObject == Object)
                 {
+                    const auto Message = FString::Printf(TEXT("Unable to locate naming convention for "
+                                                              "object of type '%ls' and variant '%ls'."),
+                                                         *Object->GetClass()->GetName(),
+                                                         *Variant);
                     if (bNotifyIfNameConventionMissing)
                     {
-                        FMessageLog(FRuleRangerMessageLog::GetMessageLogName())
-                            .Warning()
-                            ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger",
-                                                                    "MissingNamingConvention",
-                                                                    "Unable to locate Naming Convention for")))
-                            ->AddToken(FUObjectToken::Create(Object))
-                            ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger", "OfType", "of type")))
-                            ->AddToken(FUObjectToken::Create(Object->GetClass()))
-                            ->AddToken(FTextToken::Create(NSLOCTEXT("RuleRanger", "In", " in ")))
-                            ->AddToken(FUObjectToken::Create(NameConventionsTable));
+                        ActionContext->Warning(FText::FromString(Message));
                     }
                     else
                     {
-                        LogInfo(Object,
-                                FString::Printf(TEXT("Unable to locate Naming Convention for "
-                                                     "asset of type '%s' in '%s'."),
-                                                *Object->GetClass()->GetName(),
-                                                *NameConventionsTable->GetName()));
+                        LogInfo(Object, Message);
                     }
                 }
             }
         }
         else
         {
-            LogError(Object, TEXT("Action can not run as has not specified NameConventionsTable property."));
+            LogError(Object, TEXT("Action can not run as hasNameConventionsTables property is empty."));
         }
     }
 }
@@ -161,7 +150,7 @@ void UNameConventionRenameAction::PostEditChangeProperty(FPropertyChangedEvent& 
 {
     const FName PropertyName = PropertyChangedEvent.Property ? PropertyChangedEvent.Property->GetFName() : NAME_None;
     // ReSharper disable once CppTooWideScopeInitStatement
-    const FName TableName = GET_MEMBER_NAME_CHECKED(UNameConventionRenameAction, NameConventionsTable);
+    const FName TableName = GET_MEMBER_NAME_CHECKED(UNameConventionRenameAction, NameConventionsTables);
     if (TableName == PropertyName)
     {
         ResetNameConventionsCache();
@@ -172,8 +161,8 @@ void UNameConventionRenameAction::PostEditChangeProperty(FPropertyChangedEvent& 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
 void UNameConventionRenameAction::ResetCacheIfTableModified(UObject* Object)
 {
-    // This is called on any object edit in editor so match against conventions table and bust cache as appropriate;
-    if (Object && Object == NameConventionsTable)
+    // This is called on any object edit in editor so match against conventions tables and bust cache as appropriate;
+    if (Object && NameConventionsTables.Contains(Object))
     {
         ResetNameConventionsCache();
     }
@@ -190,23 +179,37 @@ void UNameConventionRenameAction::ResetNameConventionsCache()
 
 void UNameConventionRenameAction::RebuildNameConventionsCacheIfNecessary()
 {
-    if (NameConventionsCache.IsEmpty() && 0 != NameConventionsTable->GetTableData().Num())
+    check(!NameConventionsTables.IsEmpty());
+
+    bool bTableDataPresent = false;
+    for (const auto& NameConventionsTable : NameConventionsTables)
+    {
+        if (0 != NameConventionsTable->GetTableData().Num())
+        {
+            bTableDataPresent = true;
+            break;
+        }
+    }
+    if (NameConventionsCache.IsEmpty() && bTableDataPresent)
     {
         ResetNameConventionsCache();
         // Add a callback for when ANY object is modified in the editor so that we can bust the cache
         OnObjectModifiedDelegateHandle =
             FCoreUObjectDelegates::OnObjectModified.AddUObject(this,
                                                                &UNameConventionRenameAction::ResetCacheIfTableModified);
-        for (const auto RowName : NameConventionsTable->GetRowNames())
+        for (const auto& NameConventionsTable : NameConventionsTables)
         {
-            const auto NameConvention = NameConventionsTable->FindRow<FNameConvention>(RowName, TEXT(""));
-            // ReSharper disable once CppTooWideScopeInitStatement
-            const auto ObjectType = NameConvention->ObjectType.Get();
-            if (NameConvention && IsValid(ObjectType))
+            for (const auto& RowName : NameConventionsTable->GetRowNames())
             {
-                TArray<FNameConvention>& TypeConventions = NameConventionsCache.FindOrAdd(ObjectType);
-                TypeConventions.Add(*NameConvention);
-                TypeConventions.Sort();
+                const auto& NameConvention = NameConventionsTable->FindRow<FNameConvention>(RowName, TEXT(""));
+                // ReSharper disable once CppTooWideScopeInitStatement
+                const auto& ObjectType = NameConvention->ObjectType.Get();
+                if (NameConvention && IsValid(ObjectType))
+                {
+                    TArray<FNameConvention>& TypeConventions = NameConventionsCache.FindOrAdd(ObjectType);
+                    TypeConventions.Add(*NameConvention);
+                    TypeConventions.Sort();
+                }
             }
         }
         for (auto NameConventionEntry : NameConventionsCache)

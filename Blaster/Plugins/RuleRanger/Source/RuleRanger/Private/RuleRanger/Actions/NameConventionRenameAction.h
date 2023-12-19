@@ -76,14 +76,14 @@ public:
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 private:
-    /** The table that contains the object naming rules */
+    /** The array of tables that contains the object naming rules */
     UPROPERTY(EditAnywhere,
               BlueprintReadWrite,
               Category = "Rule Ranger",
               meta = (ExposeOnSpawn,
                       AllowPrivateAccess,
                       RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.NameConvention"))
-    UDataTable* NameConventionsTable{ nullptr };
+    TArray<UDataTable*> NameConventionsTables;
 
     /** Should the action issue a message log when it attempts to process an object that has no naming convention? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
