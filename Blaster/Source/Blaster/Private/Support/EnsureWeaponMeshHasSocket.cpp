@@ -33,6 +33,14 @@ void UEnsureWeaponMeshHasSocket::Apply_Implementation(URuleRangerActionContext* 
                         "Socket LeftHandSocket does not exist on mesh assigned to the WeaponMesh component"));
                 }
             }
+            else if (const auto Weapon = Cast<AWeapon>(Object))
+            {
+                if (Weapon->GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
+                {
+                    ActionContext->Error(FText::FromString(
+                        "Socket LeftHandSocket does not exist on mesh assigned to the WeaponMesh component"));
+                }
+            }
             else
             {
                 LogError(Object, TEXT("Conrete subclasses of Weapon expected to be Blueprints"));
