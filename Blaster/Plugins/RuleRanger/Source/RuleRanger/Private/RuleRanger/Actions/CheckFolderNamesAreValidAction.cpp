@@ -29,21 +29,19 @@ void UCheckFolderNamesAreValidAction::Apply_Implementation(URuleRangerActionCont
             if (InvalidFolderNames.Contains(Folder)
                 || (!InvalidFolderRegexPattern.IsEmpty() && FRegexMatcher(Pattern, Folder).FindNext()))
             {
+                const auto& ErrorMessage = Message.IsEmpty()
+                    ? FString::Printf(TEXT("Asset is contained in a folder '%s' with "
+                                           "an invalid name. Move the asset to a different folder."),
+                                      *Folder)
+                    : Message;
                 if (Message.IsEmpty())
                 {
-                    FFormatNamedArguments Arguments;
-                    Arguments.Add(TEXT("Folder"), FText::FromString(Folder));
-                    ActionContext->Error(
-                        FText::Format(NSLOCTEXT("RuleRanger",
-                                                "CheckFolderNamesAreValidAction_InvalidFolderName",
-                                                "Object is contained in an folder with an invalid name {Folder}. "
-                                                "Move the asset to a different folder."),
-                                      Arguments));
+                    ActionContext->Error(FText::FromString(ErrorMessage));
                 }
-            }
-            else
-            {
-                ActionContext->Error(FText::FromString(Message));
+                else
+                {
+                    ActionContext->Error(FText::FromString(Message));
+                }
             }
         }
     }
