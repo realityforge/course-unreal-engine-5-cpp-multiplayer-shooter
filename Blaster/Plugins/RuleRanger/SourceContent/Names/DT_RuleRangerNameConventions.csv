@@ -1,0 +1,6 @@
+---,ObjectType,Variant,Prefix,Suffix
+RuleRangerAction,"/Script/RuleRanger.RuleRangerAction","","RRA_",""
+RuleRangerMatcher,"/Script/RuleRanger.RuleRangerMatcher","","RRM_",""
+RuleRangerRule,"/Script/RuleRanger.RuleRangerRule","","RRR_",""
+RuleRangerRuleSet,"/Script/RuleRanger.RuleRangerRuleSet","","RR_","_Rules"
+RuleRangerRuleSetScope,"/Script/RuleRanger.RuleRangerConfig","","RR_","_Config"
