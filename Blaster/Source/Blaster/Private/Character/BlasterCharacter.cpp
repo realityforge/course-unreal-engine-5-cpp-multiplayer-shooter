@@ -160,6 +160,20 @@ void ABlasterCharacter::OnAimInputActionCompleted()
     }
 }
 
+void ABlasterCharacter::Jump()
+{
+    // Normally if you attempt to jump while crouched it is a no-op but when
+    // we press "Jump" while crouching we will instead stand up.
+    if (bIsCrouched)
+    {
+        UnCrouch();
+    }
+    else
+    {
+        Super::Jump();
+    }
+}
+
 void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTime)
 {
     if (!IsValid(Combat) || !IsValid(Combat->EquippedWeapon))
@@ -354,7 +368,7 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     if (const auto Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
     {
         // Jumping
-        SafeBindAction(Input, TEXT("JumpAction"), JumpAction, ETriggerEvent::Started, &ACharacter::Jump);
+        SafeBindAction(Input, TEXT("JumpAction"), JumpAction, ETriggerEvent::Started, &ABlasterCharacter::Jump);
         SafeBindAction(Input, TEXT("JumpAction"), JumpAction, ETriggerEvent::Completed, &ACharacter::StopJumping);
 
         // Moving
