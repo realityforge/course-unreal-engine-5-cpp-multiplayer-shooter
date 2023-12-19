@@ -43,6 +43,9 @@ ABlasterCharacter::ABlasterCharacter()
     // The CharacterMovement component already supports crouching - we just need to enable it.
     GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 
+    // Speed up rotation rate to make it feel more responsive while still being smooth (was z=360)
+    GetCharacterMovement()->RotationRate = FRotator(0.f, 0.f, 850.f);
+
     // Make sure when another character moves between our camera and our character, the camera boom
     // does not move in. We do this by making sure we do not block camera
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
