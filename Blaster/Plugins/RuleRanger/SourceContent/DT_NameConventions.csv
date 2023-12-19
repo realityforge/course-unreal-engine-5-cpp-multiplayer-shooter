@@ -114,7 +114,7 @@ AssetDefinitionRedirector,"/Script/EngineAssetDefinitions.AssetDefinition_Redire
 DataAsset,"/Script/Engine.DataAsset","","DA_",""
 SubstanceGraphInstance,"/Script/SubstanceCore.SubstanceGraphInstance","","SGI_",""
 SubstanceInstanceFactory,"/Script/SubstanceCore.SubstanceInstanceFactory","","SIF_",""
-RuleRangerRuleSetScope,"/Script/RuleRanger.RuleRangerRuleSetScope","","RR_","_Config"
+RuleRangerRuleSetScope,"/Script/RuleRanger.RuleRangerConfig","","RR_","_Config"
 RuleRangerRuleSet,"/Script/RuleRanger.RuleRangerRuleSet","","RR_","_Rules"
 RuleRangerRule,"/Script/RuleRanger.RuleRangerRule","","RRR_",""
 RuleRangerMatcher,"/Script/RuleRanger.RuleRangerMatcher","","RRM_",""
