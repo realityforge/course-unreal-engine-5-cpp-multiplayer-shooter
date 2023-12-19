@@ -151,6 +151,8 @@ private:
     UPROPERTY(VisibleAnywhere)
     TArray<FText> FatalMessages;
 
+    FText ToMessage(const FText& InMessage) const;
+
 public:
     FORCEINLINE TArray<FText>& GetInfoMessages() { return InfoMessages; }
     FORCEINLINE TArray<FText>& GetWarningMessages() { return WarningMessages; }
