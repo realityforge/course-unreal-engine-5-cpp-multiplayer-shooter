@@ -2,6 +2,8 @@
 
 Shorthand notes of where to go next with this experiment:
 
+* Ensure Niagara Emitter and Niagara System are compiled without warnings
+* Remove past RuleRanger console pages when starting a new analysis? (Explicitly calling scan/apply rules)
 * Add a mechanism for adding an exclude `DataTable` that will will list assets that will ignore specific rules or all rules for specific assets or all assets or all assets that matchers match?
 * Material functions that are Material Layers are prefixed with ML not MF!
 * Retargeters should be named as RTG_\[Source\]_To_\[Target\]
@@ -10,6 +12,12 @@ Shorthand notes of where to go next with this experiment:
 * Add check to unreal that verifies every Niagara system has an "Effect Type" associated with it.
 * Add validation to ensure every texture is marked with a TextureGroup
 * Add metadata to assets to track origin. (i.e. What license and where was it sourced from)
+* Add tool to record licenses for assets in MetaData
+    * A DataTable that indicates the source (Marketplace project name? Some other project tag), description and license
+    * Add metadata to assets to link to this table
+    * Add report to report on licenses of all assets
+    * Add action to apply license to entire folder or individual assets or selected assets/folders
+    * Add RuleRanger validation to ensure license is set
 * Rather than statically defining `ETextureSubType`, define it in a table
   * Merge `FTextureSubTypeNameConvention` into it
   * Add component count for each SubType
