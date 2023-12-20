@@ -25,20 +25,31 @@ void UEnsureWeaponMeshHasSocket::Apply_Implementation(URuleRangerActionContext* 
             if (const auto Blueprint = Cast<UBlueprint>(Object))
             {
                 // ReSharper disable once CppTooWideScopeInitStatement
-                const AWeapon* DefaultObject =
+                const AWeapon* Weapon =
                     Blueprint->GeneratedClass ? Blueprint->GeneratedClass->GetDefaultObject<AWeapon>() : nullptr;
-                if (!DefaultObject || !DefaultObject->GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
+                if (!Weapon || !Weapon->GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
                 {
+                    const auto& SkeletalMeshAsset = Weapon->GetWeaponMesh()->GetSkeletalMeshAsset();
+                    const auto Message =
+                        FString::Printf(TEXT("Socket named 'LeftHandSocket' does not exist on "
+                                             "the mesh named '%s' which is assigned to the "
+                                             "WeaponMesh component"),
+                                        SkeletalMeshAsset ? *SkeletalMeshAsset->GetFullName() : TEXT("None"));
                     ActionContext->Error(FText::FromString(
                         "Socket LeftHandSocket does not exist on mesh assigned to the WeaponMesh component"));
                 }
             }
             else if (const auto Weapon = Cast<AWeapon>(Object))
             {
-                if (Weapon->GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
+                if (!Weapon->GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
                 {
-                    ActionContext->Error(FText::FromString(
-                        "Socket LeftHandSocket does not exist on mesh assigned to the WeaponMesh component"));
+                    const auto& SkeletalMeshAsset = Weapon->GetWeaponMesh()->GetSkeletalMeshAsset();
+                    const auto Message =
+                        FString::Printf(TEXT("Socket named 'LeftHandSocket' does not exist on "
+                                             "the mesh named '%s' which is assigned to the "
+                                             "WeaponMesh component"),
+                                        SkeletalMeshAsset ? *SkeletalMeshAsset->GetFullName() : TEXT("None"));
+                    ActionContext->Error(FText::FromString(Message));
                 }
             }
             else
