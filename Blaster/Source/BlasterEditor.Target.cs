@@ -9,5 +9,6 @@ public class BlasterEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.Latest;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("Blaster");
+		ExtraModuleNames.Add("BlasterEditor");
 	}
 }

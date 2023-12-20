@@ -19,7 +19,7 @@ enum class EWeaponState : uint8
     EWS_MAX UMETA(Hidden)
 };
 
-UCLASS(Abstract)
+UCLASS(Abstract, MinimalAPI)
 class AWeapon : public AActor
 {
     GENERATED_BODY()

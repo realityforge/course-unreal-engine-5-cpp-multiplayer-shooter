@@ -12,6 +12,11 @@
         "Engine",
         "UMG"
       ]
+    },
+    {
+      "Name": "BlasterEditor",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
     }
   ],
   "Plugins": [
