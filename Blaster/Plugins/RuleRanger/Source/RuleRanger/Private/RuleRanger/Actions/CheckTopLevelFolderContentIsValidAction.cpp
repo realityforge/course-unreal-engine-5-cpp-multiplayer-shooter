@@ -21,6 +21,11 @@ void UCheckTopLevelFolderContentIsValidAction::Apply_Implementation(URuleRangerA
     {
         TArray<FString> Folders;
         Object->GetPathName().ParseIntoArray(Folders, TEXT("/"), true);
+        if (!Folders[0].Equals(TEXT("Game")))
+        {
+            LogError(Object, TEXT("Object is not under /Game. The action does not support this scenario."));
+            return;
+        }
 
         const FRegexPattern ValidAssetPattern(ValidAssetRegexPattern,
                                               bCaseSensitive ? ERegexPatternFlags::None
