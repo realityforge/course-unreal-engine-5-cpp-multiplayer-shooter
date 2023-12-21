@@ -2,7 +2,17 @@
 
 Shorthand notes of where to go next with this experiment:
 
+* Ensure Matchers can be written in Blueprints
+* Add rules so that we can enforce constraints about directories.
+  * Rules stored in DataTable.
+  * Rules can apply to a folder or all sub-folders.
+  * Folders may be explicitly named or declared as named patterns (i.e. `MyGame/Characters/*/Animations`)
+  * Rules about max number of elements in directory
+  * Rules indicate which folders you are allowed to reference
+  * Rules have a priority order
 * Remove past RuleRanger console pages when starting a new analysis? (Explicitly calling scan/apply rules)
+* Experiment rolling back treating rules/matchers/actions as assets and instead allow them as Blueprint classes
+* Support writing rules as blueprints and thus inlining matcher/action functionality into a single call?
 * Add a mechanism for adding an exclude `DataTable` that will will list assets that will ignore specific rules or all rules for specific assets or all assets or all assets that matchers match?
 * Material functions that are Material Layers are prefixed with ML not MF!
 * Retargeters should be named as RTG_\[Source\]_To_\[Target\]
@@ -22,6 +32,7 @@ Shorthand notes of where to go next with this experiment:
   * Add component count for each SubType
   * Add default/allowed modes (Color, Linear Color, Alpha etc)
   * Add default/allowed compressions
+* Look at https://github.com/benui-dev/UE-BUIValidator/blob/main/Source/BUIValidator/Public/BUIValidatorSettings.h and see if it offers anything other than what is already planned.
 
 Add Action that applies a layout for textures based on metadata and types? Maybe something like:
 Possible Directory layout:
