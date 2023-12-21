@@ -16,7 +16,7 @@
 
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
-#include "CheckNiagaraSystemStatusAction.generated.h"
+#include "CheckNiagaraSystemCompileStatusAction.generated.h"
 
 /**
  * Action to check that the compile status of a Niagara System is valid.
@@ -27,7 +27,7 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UCheckNiagaraSystemStatusAction final : public URuleRangerAction
+class RULERANGER_API UCheckNiagaraSystemCompileStatusAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 

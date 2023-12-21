@@ -12,14 +12,14 @@
  * limitations under the License.
  */
 
-#include "CheckNiagaraSystemStatusAction.h"
+#include "CheckNiagaraSystemCompileStatusAction.h"
 #include "NiagaraScript.h"
 #include "NiagaraScriptSource.h"
 #include "NiagaraSystem.h"
 
-void UCheckNiagaraSystemStatusAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UCheckNiagaraSystemCompileStatusAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
+                                                                  UObject* Object)
 {
-
     if (IsValid(Object))
     {
         if (const auto System = Cast<UNiagaraSystem>(Object); !System)
@@ -44,7 +44,6 @@ void UCheckNiagaraSystemStatusAction::Apply_Implementation(URuleRangerActionCont
 
             for (const auto Script : Scripts)
             {
-                LogInfo(Object, FString::Printf(TEXT("Script %s."), Script ? *Script->GetName() : TEXT("-")));
                 if (Script)
                 {
                     switch (Script->GetLastCompileStatus())
