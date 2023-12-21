@@ -26,6 +26,7 @@ public class RuleRanger : ModuleRules
 			new[]
 			{
 				"AnimGraph",
+				"AssetTools",
 				"CoreUObject",
 				"BlueprintGraph",
 				"DataValidation",
