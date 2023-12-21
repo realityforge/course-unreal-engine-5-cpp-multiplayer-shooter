@@ -2,7 +2,7 @@
 
 Shorthand notes of where to go next with this experiment:
 
-* Ensure Niagara Emitter and Niagara System are compiled without warnings
+* Ensure Niagara Emitter are compiled without warnings
 * Remove past RuleRanger console pages when starting a new analysis? (Explicitly calling scan/apply rules)
 * Add a mechanism for adding an exclude `DataTable` that will will list assets that will ignore specific rules or all rules for specific assets or all assets or all assets that matchers match?
 * Material functions that are Material Layers are prefixed with ML not MF!

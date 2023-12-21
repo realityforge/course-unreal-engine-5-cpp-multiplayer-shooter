@@ -34,6 +34,8 @@ public class RuleRanger : ModuleRules
 				"Engine",
 				"Projects", // IPluginManager
 				"MessageLog",
+				"NiagaraEditor",
+				"Niagara",
 				"Slate",
 				"SlateCore",
 				"UnrealEd"
