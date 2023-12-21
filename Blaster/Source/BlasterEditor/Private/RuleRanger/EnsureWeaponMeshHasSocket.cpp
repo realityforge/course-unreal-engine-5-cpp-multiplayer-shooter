@@ -20,41 +20,18 @@ void UEnsureWeaponMeshHasSocket::Apply_Implementation(URuleRangerActionContext* 
 {
     if (IsValid(Object))
     {
-        if (FRuleRangerUtilities::IsA(Object, AWeapon::StaticClass()))
+        if (const AWeapon* Weapon = FRuleRangerUtilities::ToObject<AWeapon>(Object))
         {
-            if (const auto Blueprint = Cast<UBlueprint>(Object))
+            if (!Weapon->GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
             {
-                // ReSharper disable once CppTooWideScopeInitStatement
-                const AWeapon* Weapon =
-                    Blueprint->GeneratedClass ? Blueprint->GeneratedClass->GetDefaultObject<AWeapon>() : nullptr;
-                if (!Weapon || !Weapon->GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
-                {
-                    const auto& SkeletalMeshAsset = Weapon->GetWeaponMesh()->GetSkeletalMeshAsset();
-                    const auto Message =
-                        FString::Printf(TEXT("Socket named 'LeftHandSocket' does not exist on "
-                                             "the mesh named '%s' which is assigned to the "
-                                             "WeaponMesh component"),
-                                        SkeletalMeshAsset ? *SkeletalMeshAsset->GetFullName() : TEXT("None"));
-                    ActionContext->Error(FText::FromString(
-                        "Socket LeftHandSocket does not exist on mesh assigned to the WeaponMesh component"));
-                }
-            }
-            else if (const auto Weapon = Cast<AWeapon>(Object))
-            {
-                if (!Weapon->GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
-                {
-                    const auto& SkeletalMeshAsset = Weapon->GetWeaponMesh()->GetSkeletalMeshAsset();
-                    const auto Message =
-                        FString::Printf(TEXT("Socket named 'LeftHandSocket' does not exist on "
-                                             "the mesh named '%s' which is assigned to the "
-                                             "WeaponMesh component"),
-                                        SkeletalMeshAsset ? *SkeletalMeshAsset->GetFullName() : TEXT("None"));
-                    ActionContext->Error(FText::FromString(Message));
-                }
-            }
-            else
-            {
-                LogError(Object, TEXT("Conrete subclasses of Weapon expected to be Blueprints"));
+                const auto& SkeletalMeshAsset = Weapon->GetWeaponMesh()->GetSkeletalMeshAsset();
+                const auto Message =
+                    FString::Printf(TEXT("Socket named 'LeftHandSocket' does not exist on "
+                                         "the mesh named '%s' which is assigned to the "
+                                         "WeaponMesh component"),
+                                    SkeletalMeshAsset ? *SkeletalMeshAsset->GetFullName() : TEXT("None"));
+                ActionContext->Error(FText::FromString(
+                    "Socket LeftHandSocket does not exist on mesh assigned to the WeaponMesh component"));
             }
         }
         else
