@@ -2,7 +2,6 @@
 
 Shorthand notes of where to go next with this experiment:
 
-* Ensure Matchers can be written in Blueprints
 * Add rules so that we can enforce constraints about directories.
   * Rules stored in DataTable.
   * What color should the folder appear in Content Browser!
