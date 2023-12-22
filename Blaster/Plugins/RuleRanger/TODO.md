@@ -10,7 +10,6 @@ Shorthand notes of where to go next with this experiment:
   * Rules about max number of elements in directory
   * Rules indicate which folders you are allowed to reference
   * Rules have a priority order
-* Remove past RuleRanger console pages when starting a new analysis? (Explicitly calling scan/apply rules)
 * Experiment rolling back treating rules/matchers/actions as assets and instead allow them as Blueprint classes
 * Support writing rules as blueprints and thus inlining matcher/action functionality into a single call?
 * Add a mechanism for adding an exclude `DataTable` that will will list assets that will ignore specific rules or all rules for specific assets or all assets or all assets that matchers match?

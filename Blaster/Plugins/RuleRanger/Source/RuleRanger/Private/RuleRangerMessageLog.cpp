@@ -28,6 +28,7 @@ void FRuleRangerMessageLog::Initialize()
     InitOptions.bShowPages = true;
     InitOptions.bAllowClear = true;
     InitOptions.bShowFilters = true;
+    InitOptions.MaxPageCount = 4;
     MessageLogModule.RegisterLogListing(GetMessageLogName(),
                                         NSLOCTEXT("RuleRanger", "RuleRangerLogLabel", "Rule Ranger"),
                                         InitOptions);
