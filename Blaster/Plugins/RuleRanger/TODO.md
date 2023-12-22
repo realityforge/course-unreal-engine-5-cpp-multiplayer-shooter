@@ -5,6 +5,7 @@ Shorthand notes of where to go next with this experiment:
 * Ensure Matchers can be written in Blueprints
 * Add rules so that we can enforce constraints about directories.
   * Rules stored in DataTable.
+  * What color should the folder appear in Content Browser!
   * Rules can apply to a folder or all sub-folders.
   * Folders may be explicitly named or declared as named patterns (i.e. `MyGame/Characters/*/Animations`)
   * Rules about max number of elements in directory
