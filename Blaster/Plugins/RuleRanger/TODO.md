@@ -20,6 +20,7 @@ Shorthand notes of where to go next with this experiment:
 * Add check to unreal that verifies every Niagara system has an "Effect Type" associated with it.
 * Add validation to ensure every texture is marked with a TextureGroup
 * Add metadata to assets to track origin. (i.e. What license and where was it sourced from)
+* Add ability to add other validators that are invoked on Scan (i.e. no directories without assets)
 * Add tool to record licenses for assets in MetaData
     * A DataTable that indicates the source (Marketplace project name? Some other project tag), description and license
     * Add metadata to assets to link to this table
