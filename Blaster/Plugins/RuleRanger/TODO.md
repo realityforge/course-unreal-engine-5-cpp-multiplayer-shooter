@@ -33,6 +33,7 @@ Shorthand notes of where to go next with this experiment:
   * Add component count for each SubType
   * Add default/allowed modes (Color, Linear Color, Alpha etc)
   * Add default/allowed compressions
+  * MaxTextureSizeX + MaxTextureSizeY
 * Look at https://github.com/benui-dev/UE-BUIValidator/blob/main/Source/BUIValidator/Public/BUIValidatorSettings.h and see if it offers anything other than what is already planned.
 
 Add Action that applies a layout for textures based on metadata and types? Maybe something like:
