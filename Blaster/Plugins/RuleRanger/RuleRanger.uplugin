@@ -18,6 +18,10 @@
     {
       "Name": "DataValidation",
       "Enabled": true
+    },
+    {
+      "Name": "Niagara",
+      "Enabled": true
     }
   ],
   "Modules": [
