@@ -30,6 +30,8 @@ public:
 
     virtual void PostInitializeComponents() override;
 
+    void PlayFireMontage(bool bAiming);
+
 protected:
     virtual void BeginPlay() override;
 
@@ -57,6 +59,12 @@ protected:
 
     /** Called when player releases key to aim */
     void OnAimInputActionCompleted();
+
+    /** Called when player presses the fire button */
+    void OnFireInputActionStarted();
+
+    /** Called when player releases the fire button */
+    void OnFireInputActionCompleted();
 
     //---------------------------------------------------------------------------
 
@@ -110,6 +118,10 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UInputAction> AimAction{ nullptr };
 
+    /** Fire Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<UInputAction> FireAction{ nullptr };
+
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
@@ -146,6 +158,9 @@ private:
     FRotator AimOffsetBaseAimRotation;
 
     ETurningInPlace TurningInPlace{ ETurningInPlace::TIP_NotTurning };
+
+    UPROPERTY(EditAnywhere, Category = Combat)
+    UAnimMontage* FireWeaponMontage{ nullptr };
 
     //---------------------------------------------------------------------------
 

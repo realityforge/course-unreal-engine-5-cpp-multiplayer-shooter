@@ -74,6 +74,21 @@ void ABlasterCharacter::PostInitializeComponents()
     }
 }
 
+void ABlasterCharacter::PlayFireMontage(const bool bAiming)
+{
+    if (IsValid(Combat) && IsValid(Combat->EquippedWeapon) && IsValid(FireWeaponMontage))
+    {
+        check(GetMesh());
+        if (const auto AnimInstance = GetMesh()->GetAnimInstance(); IsValid(AnimInstance))
+        {
+            AnimInstance->Montage_Play(FireWeaponMontage);
+            // Animation montage should be configured based on weapon ...
+            const FName SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
+            AnimInstance->Montage_JumpToSection(SectionName);
+        }
+    }
+}
+
 void ABlasterCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -147,6 +162,7 @@ void ABlasterCharacter::OnCrouchInputActionCompleted()
     UnCrouch();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::OnAimInputActionStarted()
 {
     if (IsValid(Combat))
@@ -155,11 +171,30 @@ void ABlasterCharacter::OnAimInputActionStarted()
     }
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::OnAimInputActionCompleted()
 {
     if (IsValid(Combat))
     {
         Combat->SetAiming(false);
+    }
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ABlasterCharacter::OnFireInputActionStarted()
+{
+    if (IsValid(Combat))
+    {
+        Combat->SetFireButtonPressed(true);
+    }
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ABlasterCharacter::OnFireInputActionCompleted()
+{
+    if (IsValid(Combat))
+    {
+        Combat->SetFireButtonPressed(false);
     }
 }
 
@@ -418,5 +453,17 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
                        AimAction,
                        ETriggerEvent::Completed,
                        &ABlasterCharacter::OnAimInputActionCompleted);
+
+        // Bind Fire actions
+        SafeBindAction(Input,
+                       TEXT("FireAction"),
+                       FireAction,
+                       ETriggerEvent::Started,
+                       &ABlasterCharacter::OnFireInputActionStarted);
+        SafeBindAction(Input,
+                       TEXT("FireAction"),
+                       FireAction,
+                       ETriggerEvent::Completed,
+                       &ABlasterCharacter::OnFireInputActionCompleted);
     }
 }

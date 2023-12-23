@@ -40,6 +40,8 @@ protected:
     UFUNCTION()
     void OnRep_EquippedWeapon();
 
+    void SetFireButtonPressed(bool bInFireButtonPressed);
+
 private:
     UPROPERTY(Transient)
     TObjectPtr<ABlasterCharacter> Character;
@@ -59,6 +61,8 @@ private:
     /** The speed at which the character moves when walking and aiming. */
     UPROPERTY(EditAnywhere)
     float AimWalkSpeed{ 450.f };
+
+    bool bFireButtonPressed;
 
     void StopOrientingRotationToMovement() const;
 
