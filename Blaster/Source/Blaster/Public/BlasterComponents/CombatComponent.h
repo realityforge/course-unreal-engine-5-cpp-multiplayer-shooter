@@ -62,7 +62,7 @@ private:
     UPROPERTY(EditAnywhere)
     float AimWalkSpeed{ 450.f };
 
-    bool bFireButtonPressed;
+    bool bFireButtonPressed{ false };
 
     void StopOrientingRotationToMovement() const;
 
