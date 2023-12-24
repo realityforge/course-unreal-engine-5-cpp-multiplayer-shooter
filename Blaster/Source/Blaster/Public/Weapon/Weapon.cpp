@@ -89,6 +89,14 @@ void AWeapon::SetWeaponState(const EWeaponState InWeaponState)
     OnWeaponStateUpdated();
 }
 
+void AWeapon::Fire()
+{
+    if (IsValid(FireAnimation))
+    {
+        WeaponMesh->PlayAnimation(FireAnimation, false);
+    }
+}
+
 void AWeapon::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);

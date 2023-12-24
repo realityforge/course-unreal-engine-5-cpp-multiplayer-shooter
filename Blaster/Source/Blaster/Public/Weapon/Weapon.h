@@ -34,6 +34,8 @@ public:
 
     void SetWeaponState(const EWeaponState InWeaponState);
 
+    void Fire();
+
 protected:
     virtual void BeginPlay() override;
 
@@ -71,8 +73,11 @@ private:
     /** Called on both server and client to represent actions that must occur on both sides. */
     void OnWeaponStateUpdated() const;
 
-    UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<UWidgetComponent> PickupWidget;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
+    TObjectPtr<UAnimationAsset> FireAnimation;
 
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
