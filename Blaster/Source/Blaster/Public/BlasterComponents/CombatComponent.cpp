@@ -54,7 +54,22 @@ void UCombatComponent::OnRep_EquippedWeapon()
 void UCombatComponent::SetFireButtonPressed(const bool bInFireButtonPressed)
 {
     bFireButtonPressed = bInFireButtonPressed;
-    if (bFireButtonPressed && IsValid(Character) && IsValid(EquippedWeapon))
+    if (bFireButtonPressed)
+    {
+        // Send fire action to the server
+        ServerFire();
+    }
+}
+
+void UCombatComponent::ServerFire_Implementation()
+{
+    // Send the fire action to all of the clients
+    MulticastFire();
+}
+
+void UCombatComponent::MulticastFire_Implementation()
+{
+    if (IsValid(Character) && IsValid(EquippedWeapon))
     {
         Character->PlayFireMontage(bAiming);
         EquippedWeapon->Fire();

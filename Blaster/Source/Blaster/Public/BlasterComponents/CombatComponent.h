@@ -42,6 +42,12 @@ protected:
 
     void SetFireButtonPressed(bool bInFireButtonPressed);
 
+    UFUNCTION(Server, Reliable)
+    void ServerFire();
+
+    UFUNCTION(NetMulticast, Reliable)
+    void MulticastFire();
+
 private:
     UPROPERTY(Transient)
     TObjectPtr<ABlasterCharacter> Character;
