@@ -48,6 +48,8 @@ protected:
     UFUNCTION(NetMulticast, Reliable)
     void MulticastFire();
 
+    void TraceUnderCrossHairs(FHitResult& OutHitResult);
+
 private:
     UPROPERTY(Transient)
     TObjectPtr<ABlasterCharacter> Character;

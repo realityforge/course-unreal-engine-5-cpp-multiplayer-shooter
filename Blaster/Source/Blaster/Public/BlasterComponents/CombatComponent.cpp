@@ -4,12 +4,16 @@
 #include "Character/BlasterCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "Weapon/Weapon.h"
 
+#define TRACE_LENGTH 80000.f
+
 UCombatComponent::UCombatComponent()
 {
-    PrimaryComponentTick.bCanEverTick = false;
+    // Enable tick so we can see the temporary debug trace
+    PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UCombatComponent::BeginPlay()
@@ -61,6 +65,53 @@ void UCombatComponent::SetFireButtonPressed(const bool bInFireButtonPressed)
     }
 }
 
+void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult)
+{
+    if (GEngine && GEngine->GameViewport)
+    {
+        // We really only expect this to be invoked on locally controlled players
+        ensure(Character && Character->IsLocallyControlled());
+
+        FVector2D ViewportSize;
+        GEngine->GameViewport->GetViewportSize(ViewportSize);
+
+        // Crosshair is in the center of our viewport
+        const FVector2D CrosshairViewportPosition(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
+
+        // PlayerController 0 on ANY instance is the player character running the world (assuming multiple players
+        // are NOT playing on one instance)
+        auto const PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
+        // Convert the Viewport space crosshair coordinate into a world space point
+        FVector CrosshairWorldPosition;
+        FVector CrosshairWorldDirection;
+        if (UGameplayStatics::DeprojectScreenToWorld(PlayerController,
+                                                     CrosshairViewportPosition,
+                                                     CrosshairWorldPosition,
+                                                     CrosshairWorldDirection))
+        {
+            const FVector Start{ CrosshairWorldPosition };
+            // Create the end by starting at start and moving along the unit vector direction our TRACE_LENGTH
+            const FVector End{ CrosshairWorldPosition + CrosshairWorldDirection * TRACE_LENGTH };
+
+            GetWorld()->LineTraceSingleByChannel(OutHitResult, Start, End, ECC_Visibility);
+
+            if (!OutHitResult.bBlockingHit)
+            {
+                // If the trace does not hit anything then we set the OutHitResult.ImpactPoint to the end of our trace
+                // As we know our caller is mostly just going to access this. Bad coding practice ... but such is life
+                // when following tutorials
+                OutHitResult.ImpactPoint = End;
+            }
+            else
+            {
+                // Draw a debug sphere at out hit location
+                DrawDebugSphere(GetWorld(), OutHitResult.ImpactPoint, 12.f, 12, FColor::Red);
+            }
+        }
+    }
+}
+
 void UCombatComponent::ServerFire_Implementation()
 {
     // Send the fire action to all of the clients
@@ -81,6 +132,10 @@ void UCombatComponent::TickComponent(const float DeltaTime,
                                      FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+    // A temporary trace used during development
+    FHitResult HitResult;
+    TraceUnderCrossHairs(HitResult);
 }
 
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
