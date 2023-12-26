@@ -47,6 +47,7 @@ void UCombatComponent::ServerSetAiming_Implementation(bool bInAiming)
     MirrorWalkSpeedBasedOnState();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void UCombatComponent::OnRep_EquippedWeapon()
 {
     if (IsValid(EquippedWeapon) && IsValid(Character))
