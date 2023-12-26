@@ -17,17 +17,27 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
-#include "EnsureSkeletalMeshHasRequiredBonesForFabrik.generated.h"
+#include "EnsureSkeletalMeshHasBones.generated.h"
 
+/**
+ * Action to check that the SkeletalMesh assets contain the specified bones.
+ */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
        BlueprintType,
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class UEnsureSkeletalMeshHasRequiredBonesForFabrik final : public URuleRangerAction
+class RULERANGER_API UEnsureSkeletalMeshHasBones final : public URuleRangerAction
 {
     GENERATED_BODY()
+
+    /** The names of the bones that must be present on the SkeletalMesh. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess))
+    TSet<FName> Bones;
+    /** The reason why we must have the bones. Used when emitting an error. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess))
+    FString Reason{ "" };
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
