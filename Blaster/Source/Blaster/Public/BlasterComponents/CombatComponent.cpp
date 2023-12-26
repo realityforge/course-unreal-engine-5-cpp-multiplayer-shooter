@@ -134,9 +134,12 @@ void UCombatComponent::TickComponent(const float DeltaTime,
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    // A temporary trace used during development
-    FHitResult HitResult;
-    TraceUnderCrossHairs(HitResult);
+    if (Character->IsLocallyControlled())
+    {
+        // A temporary trace used during development
+        FHitResult HitResult;
+        TraceUnderCrossHairs(HitResult);
+    }
 }
 
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
