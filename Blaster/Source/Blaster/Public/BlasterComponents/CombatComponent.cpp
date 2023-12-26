@@ -8,7 +8,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Weapon/Weapon.h"
 
-#define TRACE_LENGTH 80000.f
+#define TARGETING_RANGE 80000.f
 
 UCombatComponent::UCombatComponent()
 {
@@ -92,8 +92,8 @@ void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult)
                                                      CrosshairWorldDirection))
         {
             const FVector Start{ CrosshairWorldPosition };
-            // Create the end by starting at start and moving along the unit vector direction our TRACE_LENGTH
-            const FVector End{ CrosshairWorldPosition + CrosshairWorldDirection * TRACE_LENGTH };
+            // Create the end by starting at start and moving along the unit vector direction our TARGETING_RANGE
+            const FVector End{ CrosshairWorldPosition + CrosshairWorldDirection * TARGETING_RANGE };
 
             GetWorld()->LineTraceSingleByChannel(OutHitResult, Start, End, ECC_Visibility);
 
