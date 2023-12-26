@@ -6,7 +6,7 @@
 
 class UBoxComponent;
 
-UCLASS()
+UCLASS(Abstract)
 class BLASTER_API AProjectile : public AActor
 {
     GENERATED_BODY()
