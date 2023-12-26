@@ -46,11 +46,11 @@ class RULERANGER_API UEnsureActorHasMeshComponentWithNamedSocketAction final : p
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess))
     FName Socket{ "" };
 
-    /** The message that indicates why we must have the socket. Used when emitting an error. */
+    /** The reason why we must have the socket. Used when emitting an error. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess))
-    FString Message{ "" };
+    FString Reason{ "" };
 
-    void EmitErrorMessage(URuleRangerActionContext* ActionContext, const TObjectPtr<UObject>& Asset);
+    void EmitErrorMessage(URuleRangerActionContext* ActionContext, const TObjectPtr<UObject>& Asset) const;
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;

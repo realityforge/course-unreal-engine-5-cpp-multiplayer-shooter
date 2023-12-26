@@ -16,23 +16,15 @@
 #include "RuleRanger/RuleRangerUtilities.h"
 
 void UEnsureActorHasMeshComponentWithNamedSocketAction::EmitErrorMessage(URuleRangerActionContext* ActionContext,
-                                                                         const TObjectPtr<UObject>& Asset)
+                                                                         const TObjectPtr<UObject>& Asset) const
 {
-    FString OutMessage;
-    if (Message.IsEmpty())
-    {
-        OutMessage = FString::Printf(TEXT("Socket named '%s' does not exist on "
-                                          "the mesh named '%s' assigned to the "
-                                          "%s component"),
-                                     *Socket.ToString(),
-                                     Asset ? *Asset->GetFullName() : TEXT("None"),
-                                     *ComponentName);
-    }
-    else
-    {
-        OutMessage = Message;
-    }
-
+    const auto OutMessage = FString::Printf(TEXT("Socket named '%s' does not exist on "
+                                                 "the mesh named '%s' assigned to the "
+                                                 "%s component. Reason: %s"),
+                                            *Socket.ToString(),
+                                            Asset ? *Asset->GetFullName() : TEXT("None"),
+                                            *ComponentName,
+                                            *Reason);
     ActionContext->Error(FText::FromString(OutMessage));
 }
 
