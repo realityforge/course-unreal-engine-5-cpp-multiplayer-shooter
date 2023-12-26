@@ -108,6 +108,7 @@ void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult)
                 // Draw a debug sphere at out hit location
                 DrawDebugSphere(GetWorld(), OutHitResult.ImpactPoint, 12.f, 12, FColor::Red);
             }
+            HitTarget = OutHitResult.ImpactPoint;
         }
     }
 }
@@ -123,7 +124,7 @@ void UCombatComponent::MulticastFire_Implementation()
     if (IsValid(Character) && IsValid(EquippedWeapon))
     {
         Character->PlayFireMontage(bAiming);
-        EquippedWeapon->Fire();
+        EquippedWeapon->Fire(HitTarget);
     }
 }
 

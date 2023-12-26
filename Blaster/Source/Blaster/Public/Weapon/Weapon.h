@@ -34,7 +34,7 @@ public:
 
     void SetWeaponState(const EWeaponState InWeaponState);
 
-    void Fire();
+    virtual void Fire(const FVector& HitTarget);
 
 protected:
     virtual void BeginPlay() override;

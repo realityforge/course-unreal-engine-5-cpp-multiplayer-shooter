@@ -72,6 +72,9 @@ private:
 
     bool bFireButtonPressed{ false };
 
+    // Cached result of HitTarget in TraceUnderCrossHairs
+    FVector HitTarget;
+
     void StopOrientingRotationToMovement() const;
 
 public:

@@ -89,7 +89,7 @@ void AWeapon::SetWeaponState(const EWeaponState InWeaponState)
     OnWeaponStateUpdated();
 }
 
-void AWeapon::Fire()
+void AWeapon::Fire(const FVector& HitTarget)
 {
     if (IsValid(FireAnimation))
     {
