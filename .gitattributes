@@ -8,6 +8,7 @@ Config/*.ini text=auto
 .gitattributes text
 .gitignore text
 .ruby-version text
+.braids.json text eol=lf
 Gemfile text
 LICENSE text
 
