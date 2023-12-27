@@ -76,14 +76,7 @@ void UCheckTopLevelFolderContentIsValidAction::Apply_Implementation(URuleRangerA
                                           : *FString::Printf(TEXT(" or the folder name must match regex %s"),
                                                              *ValidFolderRegexPattern))
                     : Message;
-                if (Message.IsEmpty())
-                {
-                    ActionContext->Error(FText::FromString(ErrorMessage));
-                }
-                else
-                {
-                    ActionContext->Error(FText::FromString(Message));
-                }
+                ActionContext->Error(FText::FromString(ErrorMessage));
             }
         }
     }
