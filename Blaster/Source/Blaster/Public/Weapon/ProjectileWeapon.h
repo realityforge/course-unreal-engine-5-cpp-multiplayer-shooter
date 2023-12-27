@@ -14,7 +14,7 @@ class BLASTER_API AProjectileWeapon : public AWeapon
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, meta = (AllowAbstract = "false"))
+    UPROPERTY(EditAnywhere, meta = (AllowAbstract = "false", RuleRangerRequired))
     TSubclassOf<AProjectile> ProjectileClass;
 
 public:
