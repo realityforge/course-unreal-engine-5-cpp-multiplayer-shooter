@@ -1,10 +1,13 @@
 #include "Weapon/Projectile.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AProjectile::AProjectile()
 {
     PrimaryActorTick.bCanEverTick = true;
+    // Server authoritative but replicated to client
+    bReplicates = true;
 
     CollisionBox = CreateDefaultSubobject<UBoxComponent>("CollisionBox");
     SetRootComponent(CollisionBox);
@@ -27,6 +30,18 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
     Super::BeginPlay();
+    if (Tracer)
+    {
+        // Create a particle system and attach it to a component so it will under component
+        TracerComponent = UGameplayStatics::SpawnEmitterAttached(
+            /* Particle System Template */ Tracer,
+            /* Component to attach to */ CollisionBox,
+            /* Name of bone/socket to attach to (none in our case) */ FName(),
+            /* Initial location of particle system */ GetActorLocation(),
+            /* Initial orientation of particle system */ GetActorRotation(),
+            /* Calculate relative transform such that particle system  maintains the same world transform */
+            EAttachLocation::KeepWorldPosition);
+    }
 }
 
 void AProjectile::Tick(float DeltaTime)
