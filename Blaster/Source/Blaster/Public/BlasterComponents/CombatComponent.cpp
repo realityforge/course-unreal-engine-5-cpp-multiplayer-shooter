@@ -108,11 +108,11 @@ void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult)
                 // when following tutorials
                 OutHitResult.ImpactPoint = End;
             }
-            else
-            {
-                // Draw a debug sphere at out hit location
-                DrawDebugSphere(GetWorld(), OutHitResult.ImpactPoint, 12.f, 12, FColor::Red);
-            }
+            // else
+            // {
+            //     // Draw a debug sphere at out hit location
+            //     DrawDebugSphere(GetWorld(), OutHitResult.ImpactPoint, 12.f, 12, FColor::Red);
+            // }
         }
     }
 }
