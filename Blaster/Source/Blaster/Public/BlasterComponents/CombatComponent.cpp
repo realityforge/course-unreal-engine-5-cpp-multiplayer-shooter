@@ -64,6 +64,7 @@ void UCombatComponent::SetFireButtonPressed(const bool bInFireButtonPressed)
         verify(Character->IsLocallyControlled());
 
         // Send fire action to the server
+        // Note: It is unclear why we are not tracing on the server as this seems prone to cheating
         FHitResult HitResult;
         TraceUnderCrossHairs(HitResult);
         ServerFire(HitResult.ImpactPoint);
