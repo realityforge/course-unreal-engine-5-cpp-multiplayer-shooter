@@ -61,6 +61,8 @@ void UCombatComponent::SetFireButtonPressed(const bool bInFireButtonPressed)
     bFireButtonPressed = bInFireButtonPressed;
     if (bFireButtonPressed)
     {
+        verify(Character->IsLocallyControlled());
+
         // Send fire action to the server
         FHitResult HitResult;
         TraceUnderCrossHairs(HitResult);
