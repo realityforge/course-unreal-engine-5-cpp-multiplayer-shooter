@@ -22,5 +22,4 @@ private:
     UPROPERTY(EditAnywhere)
     UBoxComponent* CollisionBox{ nullptr };
 
-public:
 };
