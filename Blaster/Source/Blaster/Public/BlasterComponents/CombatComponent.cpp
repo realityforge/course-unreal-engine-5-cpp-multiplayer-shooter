@@ -62,7 +62,9 @@ void UCombatComponent::SetFireButtonPressed(const bool bInFireButtonPressed)
     if (bFireButtonPressed)
     {
         // Send fire action to the server
-        ServerFire();
+        FHitResult HitResult;
+        TraceUnderCrossHairs(HitResult);
+        ServerFire(HitResult.ImpactPoint);
     }
 }
 
@@ -109,23 +111,22 @@ void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult)
                 // Draw a debug sphere at out hit location
                 DrawDebugSphere(GetWorld(), OutHitResult.ImpactPoint, 12.f, 12, FColor::Red);
             }
-            HitTarget = OutHitResult.ImpactPoint;
         }
     }
 }
 
-void UCombatComponent::ServerFire_Implementation()
+void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
 {
     // Send the fire action to all of the clients
-    MulticastFire();
+    MulticastFire(TraceHitTarget);
 }
 
-void UCombatComponent::MulticastFire_Implementation()
+void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
 {
     if (IsValid(Character) && IsValid(EquippedWeapon))
     {
         Character->PlayFireMontage(bAiming);
-        EquippedWeapon->Fire(HitTarget);
+        EquippedWeapon->Fire(TraceHitTarget);
     }
 }
 
@@ -134,13 +135,6 @@ void UCombatComponent::TickComponent(const float DeltaTime,
                                      FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-    if (Character->IsLocallyControlled())
-    {
-        // A temporary trace used during development
-        FHitResult HitResult;
-        TraceUnderCrossHairs(HitResult);
-    }
 }
 
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

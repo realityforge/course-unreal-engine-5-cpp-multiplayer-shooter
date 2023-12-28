@@ -43,10 +43,10 @@ protected:
     void SetFireButtonPressed(bool bInFireButtonPressed);
 
     UFUNCTION(Server, Reliable)
-    void ServerFire();
+    void ServerFire(const FVector_NetQuantize& TraceHitTarget);
 
     UFUNCTION(NetMulticast, Reliable)
-    void MulticastFire();
+    void MulticastFire(const FVector_NetQuantize& TraceHitTarget);
 
     void TraceUnderCrossHairs(FHitResult& OutHitResult);
 
@@ -71,9 +71,6 @@ private:
     float AimWalkSpeed{ 450.f };
 
     bool bFireButtonPressed{ false };
-
-    // Cached result of HitTarget in TraceUnderCrossHairs
-    FVector HitTarget;
 
     void StopOrientingRotationToMovement() const;
 };
