@@ -76,6 +76,4 @@ private:
     FVector HitTarget;
 
     void StopOrientingRotationToMovement() const;
-
-public:
 };
