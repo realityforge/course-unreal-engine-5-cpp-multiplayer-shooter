@@ -6,6 +6,8 @@
 #include "CoreMinimal.h"
 #include "CombatComponent.generated.h"
 
+class ABlasterHUD;
+class ABlasterPlayerController;
 class ABlasterCharacter;
 class AWeapon;
 
@@ -50,9 +52,15 @@ protected:
 
     void TraceUnderCrossHairs(FHitResult& OutHitResult) const;
 
+    void SetHUDCrosshairs(float DeltaTime);
+
 private:
     UPROPERTY(Transient)
     TObjectPtr<ABlasterCharacter> Character;
+    UPROPERTY(Transient)
+    TObjectPtr<ABlasterPlayerController> Controller;
+    UPROPERTY(Transient)
+    TObjectPtr<ABlasterHUD> HUD;
 
     /** The currently equipped weapon. */
     UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon)

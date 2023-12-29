@@ -4,8 +4,10 @@
 #include "Character/BlasterCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "HUD/BlasterHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "PlayerController/BlasterPlayerController.h"
 #include "Weapon/Weapon.h"
 
 #define TARGETING_RANGE 80000.f
@@ -118,6 +120,42 @@ void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult) const
     }
 }
 
+void UCombatComponent::SetHUDCrosshairs(const float DeltaTime)
+{
+    if (LIKELY(Character && Character->Controller))
+    {
+        if (UNLIKELY(!Controller))
+        {
+            Controller = Cast<ABlasterPlayerController>(Character->Controller);
+        }
+        if (UNLIKELY(!HUD))
+        {
+            HUD = Cast<ABlasterHUD>(Controller->GetHUD());
+        }
+        if (LIKELY(HUD))
+        {
+            FHUDPackage HUDPackage;
+            if (EquippedWeapon)
+            {
+                HUDPackage.CrosshairsCenter = EquippedWeapon->GetCrosshairsCenter();
+                HUDPackage.CrosshairsLeft = EquippedWeapon->GetCrosshairsLeft();
+                HUDPackage.CrosshairsRight = EquippedWeapon->GetCrosshairsRight();
+                HUDPackage.CrosshairsTop = EquippedWeapon->GetCrosshairsTop();
+                HUDPackage.CrosshairsBottom = EquippedWeapon->GetCrosshairsBottom();
+            }
+            else
+            {
+                HUDPackage.CrosshairsCenter = nullptr;
+                HUDPackage.CrosshairsLeft = nullptr;
+                HUDPackage.CrosshairsRight = nullptr;
+                HUDPackage.CrosshairsTop = nullptr;
+                HUDPackage.CrosshairsBottom = nullptr;
+            }
+            HUD->SetHUDPackage(HUDPackage);
+        }
+    }
+}
+
 void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
 {
     // Send the fire action to all of the clients
@@ -138,6 +176,7 @@ void UCombatComponent::TickComponent(const float DeltaTime,
                                      FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    SetHUDCrosshairs(DeltaTime);
 }
 
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
