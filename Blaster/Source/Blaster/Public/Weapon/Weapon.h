@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+class ACasing;
 class UWidgetComponent;
 class USphereComponent;
 
@@ -81,6 +82,12 @@ private:
               Category = "Weapon Properties",
               meta = (AllowPrivateAccess, RuleRangerRequired))
     TObjectPtr<UAnimationAsset> FireAnimation;
+
+    UPROPERTY(EditDefaultsOnly,
+              BlueprintReadOnly,
+              Category = "Weapon Properties",
+              meta = (AllowAbstract = "false", AllowPrivateAccess, RuleRangerRequired))
+    TSubclassOf<ACasing> CasingClass;
 
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
