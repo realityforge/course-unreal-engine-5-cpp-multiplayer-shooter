@@ -39,10 +39,20 @@ void UEnsureTextureSubTypePresentAction::ApplyRuleToTexture(URuleRangerActionCon
 {
     if (const auto SubTypes = ExtractSubTypes(Texture->GetName()); SubTypes.IsEmpty())
     {
-        ActionContext->Error(NSLOCTEXT("RuleRanger",
-                                       "UnableToParseTextureSubTypes",
-                                       "Unable to parse texture subtypes. They could "
-                                       "be missing or formatted incorrectly"));
+        if (bNotifyIfNameConventionMissing)
+        {
+            ActionContext->Error(NSLOCTEXT("RuleRanger",
+                                           "UnableToParseTextureSubTypes",
+                                           "Unable to parse texture subtypes. They could "
+                                           "be missing or formatted incorrectly"));
+        }
+        else
+        {
+            LogInfo(Texture,
+                    TEXT("Unable to parse texture subtypes. They could be missing "
+                         "or formatted incorrectly. Assuming missing which is valid "
+                         "when action is configured with bNotifyIfNameConventionMissing=true."));
+        }
     }
     else
     {
