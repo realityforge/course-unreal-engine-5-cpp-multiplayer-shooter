@@ -65,7 +65,7 @@ private:
               VisibleAnywhere,
               Category = "Weapon Properties",
               meta = (AllowPrivateAccess))
-    EWeaponState WeaponState;
+    EWeaponState WeaponState{ EWeaponState::EWS_Initial };
 
     /** Called when WeaponState has been replicated. */
     UFUNCTION()
@@ -75,7 +75,7 @@ private:
     void OnWeaponStateUpdated() const;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
-    TObjectPtr<UWidgetComponent> PickupWidget;
+    TObjectPtr<UWidgetComponent> PickupWidget{ nullptr };
 
     UPROPERTY(EditDefaultsOnly,
               BlueprintReadOnly,
