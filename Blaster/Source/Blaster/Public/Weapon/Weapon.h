@@ -106,4 +106,9 @@ private:
 
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
+    FORCEINLINE UTexture2D* GetCrosshairsCenter() const { return CrosshairsCenter; };
+    FORCEINLINE UTexture2D* GetCrosshairsLeft() const { return CrosshairsLeft; };
+    FORCEINLINE UTexture2D* GetCrosshairsRight() const { return CrosshairsRight; };
+    FORCEINLINE UTexture2D* GetCrosshairsTop() const { return CrosshairsTop; };
+    FORCEINLINE UTexture2D* GetCrosshairsBottom() const { return CrosshairsBottom; };
 };
