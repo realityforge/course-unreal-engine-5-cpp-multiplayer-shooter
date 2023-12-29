@@ -2,6 +2,8 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 
 AProjectile::AProjectile()
 {
@@ -42,9 +44,42 @@ void AProjectile::BeginPlay()
             /* Calculate relative transform such that particle system  maintains the same world transform */
             EAttachLocation::KeepWorldPosition);
     }
+    if (HasAuthority())
+    {
+        // We only run collision  on server so only add listener here
+        // We also can not be added in the constructor as this sometimes does not work (Due to saving it to CDO?)
+        CollisionBox->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+    }
+}
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComponent,
+                        AActor* OtherActor,
+                        UPrimitiveComponent* OtherComponent,
+                        FVector NormalImpulse,
+                        const FHitResult& Hit)
+{
+    // Mark this object as destroyed at the end of the tick
+    // This will create impact particles/sound in destroy action which runs on all clients as entity replicated
+    // This avoids the need to replicate the rpc to create impact sounds/effects and then destroy message
+    // This reduces the amount of messages by one
+    Destroy();
 }
 
 void AProjectile::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+}
+
+void AProjectile::Destroyed()
+{
+    Super::Destroyed();
+
+    if (ImpactParticles)
+    {
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, GetActorTransform());
+    }
+    if (ImpactSound)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
+    }
 }
