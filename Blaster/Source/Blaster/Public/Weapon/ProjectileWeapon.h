@@ -9,7 +9,7 @@ class AProjectile;
 /**
  *
  */
-UCLASS()
+UCLASS(Abstract)
 class BLASTER_API AProjectileWeapon : public AWeapon
 {
     GENERATED_BODY()
