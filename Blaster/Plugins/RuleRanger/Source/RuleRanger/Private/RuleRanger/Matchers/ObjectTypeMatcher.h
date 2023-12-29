@@ -35,6 +35,9 @@ public:
 
 private:
     /** The type to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere,
+              BlueprintReadWrite,
+              Category = "Rule Ranger",
+              meta = (AllowAbstract = "true", ExposeOnSpawn, AllowPrivateAccess))
     TSubclassOf<UObject> ObjectType;
 };
