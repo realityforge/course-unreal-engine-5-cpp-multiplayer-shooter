@@ -66,10 +66,10 @@ public:
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 protected:
-    void ApplyRuleToTexture(URuleRangerActionContext* ActionContext, UTexture2D* Texture);
+    void ApplyRuleToTexture(URuleRangerActionContext* ActionContext, const UTexture2D* Texture);
     void ApplyRuleToTextureWithSubTypes(URuleRangerActionContext* ActionContext,
-                                        UTexture2D* Texture,
-                                        const TArray<ETextureSubType>& SubTypes);
+                                        const UTexture2D* Texture,
+                                        const TArray<ETextureSubType>& SubTypes) const;
 
 private:
     /** The table that contains the object naming rules */

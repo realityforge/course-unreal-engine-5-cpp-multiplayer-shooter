@@ -35,7 +35,7 @@ bool FTextureSubTypeNameConvention::DoesTextMatchAtIndex(const FString& InText, 
 }
 
 void UEnsureTextureSubTypePresentAction::ApplyRuleToTexture(URuleRangerActionContext* ActionContext,
-                                                            UTexture2D* const Texture)
+                                                            const UTexture2D* Texture)
 {
     if (const auto SubTypes = ExtractSubTypes(Texture->GetName()); SubTypes.IsEmpty())
     {
@@ -164,8 +164,8 @@ TArray<ETextureSubType> UEnsureTextureSubTypePresentAction::ExtractSubTypes(cons
 }
 
 void UEnsureTextureSubTypePresentAction::ApplyRuleToTextureWithSubTypes(URuleRangerActionContext* ActionContext,
-                                                                        UTexture2D* Texture,
-                                                                        const TArray<ETextureSubType>& SubTypes)
+                                                                        const UTexture2D* Texture,
+                                                                        const TArray<ETextureSubType>& SubTypes) const
 {
     check(!SubTypes.IsEmpty());
     int NumComponentsDeclared = 0;
