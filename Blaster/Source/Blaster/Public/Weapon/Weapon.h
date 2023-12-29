@@ -81,13 +81,13 @@ private:
               BlueprintReadOnly,
               Category = "Weapon Properties",
               meta = (AllowPrivateAccess, RuleRangerRequired))
-    TObjectPtr<UAnimationAsset> FireAnimation;
+    TObjectPtr<UAnimationAsset> FireAnimation{ nullptr };
 
     UPROPERTY(EditDefaultsOnly,
               BlueprintReadOnly,
               Category = "Weapon Properties",
               meta = (AllowAbstract = "false", AllowPrivateAccess, RuleRangerRequired))
-    TSubclassOf<ACasing> CasingClass;
+    TSubclassOf<ACasing> CasingClass{ nullptr };
 
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
