@@ -89,6 +89,21 @@ private:
               meta = (AllowAbstract = "false", AllowPrivateAccess, RuleRangerRequired))
     TSubclassOf<ACasing> CasingClass{ nullptr };
 
+    //---------------------------------------------------------------------------
+    // Textures for the Crosshairs
+    //---------------------------------------------------------------------------
+
+    UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
+    UTexture2D* CrosshairsCenter{ nullptr };
+    UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
+    UTexture2D* CrosshairsLeft{ nullptr };
+    UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
+    UTexture2D* CrosshairsRight{ nullptr };
+    UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
+    UTexture2D* CrosshairsTop{ nullptr };
+    UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
+    UTexture2D* CrosshairsBottom{ nullptr };
+
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
 };
