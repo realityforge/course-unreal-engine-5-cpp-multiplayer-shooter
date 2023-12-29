@@ -71,7 +71,7 @@ void UCombatComponent::SetFireButtonPressed(const bool bInFireButtonPressed)
     }
 }
 
-void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult)
+void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult) const
 {
     if (GEngine && GEngine->GameViewport)
     {
