@@ -33,6 +33,8 @@ class BLASTER_API ABlasterHUD : public AHUD
 
     FHUDPackage HUDPackage;
 
+    void DrawCrossHair(UTexture2D* Texture, const FVector2D& ViewportCenter);
+
 public:
     virtual void DrawHUD() override;
 
