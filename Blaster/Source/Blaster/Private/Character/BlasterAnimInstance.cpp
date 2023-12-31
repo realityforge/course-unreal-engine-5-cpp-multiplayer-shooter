@@ -1,5 +1,5 @@
 #include "Character/BlasterAnimInstance.h"
-#include "BlasterCharacter.h"
+#include "Character/BlasterCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Weapon/Weapon.h"
