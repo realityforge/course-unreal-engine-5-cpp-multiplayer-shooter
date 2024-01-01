@@ -21,6 +21,9 @@ struct FHUDPackage
     UTexture2D* CrosshairsTop{ nullptr };
     UPROPERTY()
     UTexture2D* CrosshairsBottom{ nullptr };
+    // The factor applied to CrosshairSpreadMax
+    UPROPERTY()
+    float CrosshairSpread{ 0.f };
 };
 
 /**
@@ -33,7 +36,10 @@ class BLASTER_API ABlasterHUD : public AHUD
 
     FHUDPackage HUDPackage;
 
-    void DrawCrossHair(UTexture2D* Texture, const FVector2D& ViewportCenter);
+    void DrawCrossHair(UTexture2D* Texture, const FVector2D& ViewportCenter, const FVector2D& Spread);
+
+    UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess))
+    float CrosshairSpreadMax{ 16.f };
 
 public:
     virtual void DrawHUD() override;

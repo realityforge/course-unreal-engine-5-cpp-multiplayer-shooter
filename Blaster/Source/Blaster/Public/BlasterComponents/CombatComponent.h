@@ -80,5 +80,8 @@ private:
 
     bool bFireButtonPressed{ false };
 
+    /** The current spread factor because we are currently in air or have been recently in air */
+    float CrosshairInAirFactor{ 0.f };
+
     void StopOrientingRotationToMovement() const;
 };
