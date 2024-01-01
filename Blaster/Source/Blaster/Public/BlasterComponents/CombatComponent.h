@@ -76,7 +76,7 @@ private:
 
     /** The speed at which the character moves when walking and aiming. */
     UPROPERTY(EditAnywhere)
-    float AimWalkSpeed{ 450.f };
+    float AimWalkSpeed{ 350.f };
 
     bool bFireButtonPressed{ false };
 
