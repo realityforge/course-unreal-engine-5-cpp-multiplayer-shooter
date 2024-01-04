@@ -198,6 +198,14 @@ void UCombatComponent::TickComponent(const float DeltaTime,
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     SetHUDCrosshairs(DeltaTime);
+
+    if (Character && Character->IsLocallyControlled())
+    {
+        FHitResult HitResult;
+        TraceUnderCrossHairs(HitResult);
+        // We calculate this every frame so we can orient right hand to face where we are aiming
+        HitTarget = HitResult.ImpactPoint;
+    }
 }
 
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

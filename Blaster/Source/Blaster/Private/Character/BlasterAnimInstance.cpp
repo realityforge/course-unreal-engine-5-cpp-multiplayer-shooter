@@ -103,6 +103,29 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
                 OutRotation);
             LeftHandTransform.SetLocation(OutPosition);
             LeftHandTransform.SetRotation(FQuat(OutRotation));
+
+            if (BlasterCharacter->IsLocallyControlled())
+            {
+                bLocallyControlled = true;
+                const auto RightHandTransform = WeaponMesh->GetSocketTransform(RightHandBoneName, RTS_World);
+                const auto HitTarget = BlasterCharacter->GetHitTarget();
+
+                // Right hand bone has x axis pointing up to elbow rather than pointing down to fingers
+
+                const FVector Target =
+                    RightHandTransform.GetLocation() + (RightHandTransform.GetLocation() - HitTarget);
+                RightHandRotation = UKismetMathLibrary::FindLookAtRotation(RightHandTransform.GetLocation(), Target);
+
+                // DEBUG: Shows the difference lines between muzzle and where we are actually aiming and gun orientation
+                //
+                // const FTransform MuzzleFlashTransform = WeaponMesh->GetSocketTransform(FName("MuzzleFlash"),
+                // RTS_World); const FVector ForwardVector = MuzzleFlashTransform.GetRotation().GetForwardVector();
+                // DrawDebugLine(GetWorld(),
+                //               MuzzleFlashTransform.GetLocation(),
+                //               MuzzleFlashTransform.GetLocation() + 1000.f * ForwardVector,
+                //               FColor::Emerald);
+                // DrawDebugLine(GetWorld(), MuzzleFlashTransform.GetLocation(), HitTarget, FColor::Orange);
+            }
         }
     }
 }

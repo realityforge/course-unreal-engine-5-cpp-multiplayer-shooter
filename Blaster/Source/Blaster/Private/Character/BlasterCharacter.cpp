@@ -355,6 +355,11 @@ bool ABlasterCharacter::IsWeaponEquipped() const
     return IsValid(Combat) && IsValid(Combat->EquippedWeapon);
 }
 
+FVector ABlasterCharacter::GetHitTarget() const
+{
+    return Combat ? Combat->HitTarget : FVector();
+}
+
 bool ABlasterCharacter::IsAiming() const
 {
     return IsValid(Combat) && Combat->bAiming;

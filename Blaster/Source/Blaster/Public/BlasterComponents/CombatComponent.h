@@ -83,5 +83,12 @@ private:
     /** The current spread factor because we are currently in air or have been recently in air */
     float CrosshairInAirFactor{ 0.f };
 
+    /**
+     * The target hit by tracing from our crosshairs.
+     * Done every frame for locally controlled characters to orient right hand when equipped with a weapon.
+     * (Why not just do when weapon is equipped?)
+     */
+    FVector HitTarget;
+
     void StopOrientingRotationToMovement() const;
 };
