@@ -74,6 +74,7 @@ void ABlasterCharacter::PostInitializeComponents()
     }
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::PlayFireMontage(const bool bAiming)
 {
     if (IsValid(Combat) && IsValid(Combat->EquippedWeapon) && IsValid(FireWeaponMontage))
