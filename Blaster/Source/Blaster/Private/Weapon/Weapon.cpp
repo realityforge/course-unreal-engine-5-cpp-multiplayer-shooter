@@ -1,10 +1,10 @@
 #include "Weapon/Weapon.h"
-#include "Casing.h"
 #include "Character/BlasterCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Net/UnrealNetwork.h"
+#include "Weapon/Casing.h"
 
 AWeapon::AWeapon()
 {
