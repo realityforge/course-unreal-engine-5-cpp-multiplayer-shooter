@@ -197,7 +197,6 @@ void UCombatComponent::TickComponent(const float DeltaTime,
                                      FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    SetHUDCrosshairs(DeltaTime);
 
     if (Character && Character->IsLocallyControlled())
     {
@@ -205,6 +204,9 @@ void UCombatComponent::TickComponent(const float DeltaTime,
         TraceUnderCrossHairs(HitResult);
         // We calculate this every frame so we can orient right hand to face where we are aiming
         HitTarget = HitResult.ImpactPoint;
+
+        // Only need to update crosshairs for local clients
+        SetHUDCrosshairs(DeltaTime);
     }
 }
 
