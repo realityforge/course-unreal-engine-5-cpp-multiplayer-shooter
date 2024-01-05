@@ -121,9 +121,9 @@ void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult) const
 
             if (!OutHitResult.bBlockingHit)
             {
-                // If the trace does not hit anything then we set the OutHitResult.ImpactPoint to the end of our trace
-                // As we know our caller is mostly just going to access this. Bad coding practice ... but such is life
-                // when following tutorials
+                // If the trace does not hit anything then we set the OutHitResult.ImpactPoint to the end of our
+                // trace As we know our caller is mostly just going to access this. Bad coding practice ... but such
+                // is life when following tutorials
                 OutHitResult.ImpactPoint = End;
             }
             // else
