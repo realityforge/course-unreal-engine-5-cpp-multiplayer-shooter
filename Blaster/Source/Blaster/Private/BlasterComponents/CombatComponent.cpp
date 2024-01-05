@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BlasterComponents/CombatComponent.h"
+#include "Camera/CameraComponent.h"
 #include "Character/BlasterCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -18,10 +19,19 @@ UCombatComponent::UCombatComponent()
     PrimaryComponentTick.bCanEverTick = true;
 }
 
+void UCombatComponent::InitDefaultFOV()
+{
+    if (Character && Character->GetFollowCamera())
+    {
+        CurrentFOV = DefaultFOV = Character->GetFollowCamera()->FieldOfView;
+    }
+}
+
 void UCombatComponent::BeginPlay()
 {
     Super::BeginPlay();
     MirrorWalkSpeedBasedOnState();
+    InitDefaultFOV();
 }
 
 void UCombatComponent::MirrorWalkSpeedBasedOnState() const
@@ -207,6 +217,9 @@ void UCombatComponent::TickComponent(const float DeltaTime,
 
         // Only need to update crosshairs for local clients
         SetHUDCrosshairs(DeltaTime);
+
+        // Only need to update FOV local clients
+        UpdateFOV(DeltaTime);
     }
 }
 
@@ -219,6 +232,26 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 }
 
 static const FName RightHandSocketName("RightHandSocket");
+
+void UCombatComponent::UpdateFOV(const float DeltaTime)
+{
+    check(Character && Character->IsLocallyControlled());
+    if (EquippedWeapon && bAiming)
+    {
+        CurrentFOV = FMath::FInterpTo(CurrentFOV,
+                                      EquippedWeapon->GetZoomedFOV(),
+                                      DeltaTime,
+                                      EquippedWeapon->GetZoomInterpSpeed());
+    }
+    else
+    {
+        CurrentFOV = FMath::FInterpTo(CurrentFOV, DefaultFOV, DeltaTime, ZoomInterpSpeed);
+    }
+    if (const auto CameraComponent = Character->GetFollowCamera(); ensure(CameraComponent))
+    {
+        CameraComponent->SetFieldOfView(CurrentFOV);
+    }
+}
 
 void UCombatComponent::StopOrientingRotationToMovement() const
 {

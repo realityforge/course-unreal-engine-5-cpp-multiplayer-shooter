@@ -90,5 +90,23 @@ private:
      */
     FVector HitTarget;
 
+    //---------------------------------------------------------------------------
+    // Zoomed FOV while aiming
+    //---------------------------------------------------------------------------
+
+    /** The speed at which to interp back to default ZoomFOV. */
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    float ZoomInterpSpeed{ 20.f };
+
+    /** FOV when not aiming. (Cached from the cameras base FOV in BeginPlay) */
+    float DefaultFOV{ 0 };
+
+    /** Current FOV used during interping FOV */
+    float CurrentFOV{ 0 };
+
+    void InitDefaultFOV();
+
+    void UpdateFOV(float DeltaTime);
+
     void StopOrientingRotationToMovement() const;
 };

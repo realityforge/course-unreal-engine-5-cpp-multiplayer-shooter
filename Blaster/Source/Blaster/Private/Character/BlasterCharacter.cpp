@@ -31,6 +31,14 @@ ABlasterCharacter::ABlasterCharacter()
     CameraBoom->bUsePawnControlRotation = true;
     FollowCamera->bUsePawnControlRotation = false;
 
+    // Setup the Follow camera so that it is always sharp, regardless of where you are viewing
+    // This is most needed when zooming as you can have a high FOV and view close or far objects
+    // and you want both to be sharp
+    FollowCamera->PostProcessSettings.bOverride_DepthOfFieldFstop = true;
+    FollowCamera->PostProcessSettings.DepthOfFieldFstop = 32;
+    FollowCamera->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = true;
+    FollowCamera->PostProcessSettings.DepthOfFieldFocalDistance = 10000;
+
     bUseControllerRotationYaw = false;
     GetCharacterMovement()->bOrientRotationToMovement = true;
 

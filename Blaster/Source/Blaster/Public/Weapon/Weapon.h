@@ -104,6 +104,18 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
     UTexture2D* CrosshairsBottom{ nullptr };
 
+    //---------------------------------------------------------------------------
+    // Zoomed FOV while aiming
+    //---------------------------------------------------------------------------
+
+    /** The FOV when zoomed in using weapon. */
+    UPROPERTY(EditDefaultsOnly, Category = "Aiming")
+    float ZoomedFOV{ 30.f };
+
+    /** The speed at which to interp to or from ZoomFOV. */
+    UPROPERTY(EditDefaultsOnly, Category = "Aiming")
+    float ZoomInterpSpeed{ 20.f };
+
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
     FORCEINLINE UTexture2D* GetCrosshairsCenter() const { return CrosshairsCenter; };
@@ -111,4 +123,6 @@ public:
     FORCEINLINE UTexture2D* GetCrosshairsRight() const { return CrosshairsRight; };
     FORCEINLINE UTexture2D* GetCrosshairsTop() const { return CrosshairsTop; };
     FORCEINLINE UTexture2D* GetCrosshairsBottom() const { return CrosshairsBottom; };
+    FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
+    FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
 };
