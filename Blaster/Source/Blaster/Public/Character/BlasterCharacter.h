@@ -4,6 +4,7 @@
 #include "EnhancedInputComponent.h"
 #include "GameFramework/Character.h"
 #include "TurningInPlace.h"
+#include "interfaces/InterfaceWithCrosshair.h"
 #include "BlasterCharacter.generated.h"
 
 class UCombatComponent;
@@ -16,7 +17,7 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class ABlasterCharacter : public ACharacter
+class ABlasterCharacter : public ACharacter, public IInterfaceWithCrosshair
 {
     GENERATED_BODY()
 

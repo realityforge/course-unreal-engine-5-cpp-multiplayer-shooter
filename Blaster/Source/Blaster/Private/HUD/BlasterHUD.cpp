@@ -17,34 +17,51 @@ void ABlasterHUD::DrawHUD()
         // Crosshairs* textures can be null if no weapon is equipped
         if (HUDPackage.CrosshairsTop)
         {
-            DrawCrossHair(HUDPackage.CrosshairsTop, ViewportCenter, FVector2D{ 0.f, -Spread });
+            DrawCrossHair(HUDPackage.CrosshairsTop,
+                          ViewportCenter,
+                          FVector2D{ 0.f, -Spread },
+                          HUDPackage.CrosshairColor);
         }
         if (HUDPackage.CrosshairsBottom)
         {
-            DrawCrossHair(HUDPackage.CrosshairsBottom, ViewportCenter, FVector2D{ 0.f, Spread });
+            DrawCrossHair(HUDPackage.CrosshairsBottom,
+                          ViewportCenter,
+                          FVector2D{ 0.f, Spread },
+                          HUDPackage.CrosshairColor);
         }
         if (HUDPackage.CrosshairsCenter)
         {
-            DrawCrossHair(HUDPackage.CrosshairsCenter, ViewportCenter, FVector2D{ 0.f, 0.f });
+            DrawCrossHair(HUDPackage.CrosshairsCenter,
+                          ViewportCenter,
+                          FVector2D{ 0.f, 0.f },
+                          HUDPackage.CrosshairColor);
         }
         if (HUDPackage.CrosshairsLeft)
         {
-            DrawCrossHair(HUDPackage.CrosshairsLeft, ViewportCenter, FVector2D{ -Spread, 0.f });
+            DrawCrossHair(HUDPackage.CrosshairsLeft,
+                          ViewportCenter,
+                          FVector2D{ -Spread, 0.f },
+                          HUDPackage.CrosshairColor);
         }
         if (HUDPackage.CrosshairsRight)
         {
-            DrawCrossHair(HUDPackage.CrosshairsRight, ViewportCenter, FVector2D{ Spread, 0.f });
+            DrawCrossHair(HUDPackage.CrosshairsRight,
+                          ViewportCenter,
+                          FVector2D{ Spread, 0.f },
+                          HUDPackage.CrosshairColor);
         }
     }
 }
 
-void ABlasterHUD::DrawCrossHair(UTexture2D* Texture, const FVector2D& ViewportCenter, const FVector2D& Spread)
+void ABlasterHUD::DrawCrossHair(UTexture2D* Texture,
+                                const FVector2D& ViewportCenter,
+                                const FVector2D& Spread,
+                                const FLinearColor& Color)
 {
     const float TextureWidth = Texture->GetSizeX();
     const float TextureHeight = Texture->GetSizeY();
     // Offset origin of draw based on dimensions of icon and spread
     const float OriginX = ViewportCenter.X - (TextureWidth / 2.f) + Spread.X;
     const float SpreadY = ViewportCenter.Y - (TextureHeight / 2.f) + Spread.Y;
-    const FLinearColor& TintColor = FLinearColor::White;
-    DrawTexture(Texture, OriginX, SpreadY, TextureWidth, TextureHeight, 0.f, 0.f, 1.f, 1.f, TintColor);
+    DrawTexture(Texture, OriginX, SpreadY, TextureWidth, TextureHeight, 0.f, 0.f, 1.f, 1.f, Color);
 }

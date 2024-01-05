@@ -4,6 +4,7 @@
 
 #include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
+#include "HUD/BlasterHUD.h"
 #include "CombatComponent.generated.h"
 
 class ABlasterHUD;
@@ -50,7 +51,7 @@ protected:
     UFUNCTION(NetMulticast, Reliable)
     void MulticastFire(const FVector_NetQuantize& TraceHitTarget);
 
-    void TraceUnderCrossHairs(FHitResult& OutHitResult) const;
+    void TraceUnderCrossHairs(FHitResult& OutHitResult);
 
     void SetHUDCrosshairs(float DeltaTime);
 
@@ -61,6 +62,8 @@ private:
     TObjectPtr<ABlasterPlayerController> Controller;
     UPROPERTY(Transient)
     TObjectPtr<ABlasterHUD> HUD;
+    UPROPERTY(Transient)
+    FHUDPackage HUDPackage;
 
     /** The currently equipped weapon. */
     UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon)

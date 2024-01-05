@@ -58,6 +58,7 @@ ABlasterCharacter::ABlasterCharacter()
     // does not move in. We do this by making sure we do not block camera
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
     GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+    GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
     // Set some values for update that are relatively high as the character is the actor
     // most of interest in a fast moving FPS

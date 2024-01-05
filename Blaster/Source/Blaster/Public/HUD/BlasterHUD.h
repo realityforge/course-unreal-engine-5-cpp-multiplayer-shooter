@@ -24,6 +24,9 @@ struct FHUDPackage
     // The factor applied to CrosshairSpreadMax
     UPROPERTY()
     float CrosshairSpread{ 0.f };
+    /** The color to draw crosshairs */
+    UPROPERTY()
+    FLinearColor CrosshairColor{ FLinearColor::White };
 };
 
 /**
@@ -36,7 +39,10 @@ class BLASTER_API ABlasterHUD : public AHUD
 
     FHUDPackage HUDPackage;
 
-    void DrawCrossHair(UTexture2D* Texture, const FVector2D& ViewportCenter, const FVector2D& Spread);
+    void DrawCrossHair(UTexture2D* Texture,
+                       const FVector2D& ViewportCenter,
+                       const FVector2D& Spread,
+                       const FLinearColor& Color);
 
     UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess))
     float CrosshairSpreadMax{ 16.f };
