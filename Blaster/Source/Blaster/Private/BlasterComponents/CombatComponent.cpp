@@ -113,7 +113,18 @@ void UCombatComponent::TraceUnderCrossHairs(FHitResult& OutHitResult)
                                                      CrosshairWorldPosition,
                                                      CrosshairWorldDirection))
         {
-            const FVector Start{ CrosshairWorldPosition };
+
+            // The distance from the center of the Viewport to the center of the Character
+            const float DistanceToCharacter = (Character->GetActorLocation() - CrosshairWorldPosition).Size();
+
+            // Push the start vector from the center of the viewport forward past the character
+            // Starting the trace in front of the character means we can not trace and hit self nor hit another
+            // character that is between the camera and the character (which would cause the gun to point in
+            // reverse direction and fire bullets backwards which is not what we want.
+            constexpr float UnitsInFrontOfCharacter = 100.f;
+            const FVector Start{ CrosshairWorldPosition
+                                 + (CrosshairWorldDirection * (DistanceToCharacter + UnitsInFrontOfCharacter)) };
+
             // Create the end by starting at start and moving along the unit vector direction our TARGETING_RANGE
             const FVector End{ CrosshairWorldPosition + CrosshairWorldDirection * TARGETING_RANGE };
 
