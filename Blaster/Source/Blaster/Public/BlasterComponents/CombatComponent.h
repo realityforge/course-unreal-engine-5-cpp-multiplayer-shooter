@@ -83,6 +83,12 @@ private:
     /** The current spread factor because we are currently in air or have been recently in air */
     float CrosshairInAirFactor{ 0.f };
 
+    /** The current spread factor because we are aiming or have been recently aiming */
+    float CrosshairAimFactor{ 0.f };
+
+    /** The current spread factor because we have recently shot. Accumulates with every shot. */
+    float CrosshairShootingFactor{ 0.f };
+
     /**
      * The target hit by tracing from our crosshairs.
      * Done every frame for locally controlled characters to orient right hand when equipped with a weapon.

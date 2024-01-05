@@ -80,6 +80,11 @@ void UCombatComponent::SetFireButtonPressed(const bool bInFireButtonPressed)
         FHitResult HitResult;
         TraceUnderCrossHairs(HitResult);
         ServerFire(HitResult.ImpactPoint);
+        if (EquippedWeapon)
+        {
+            CrosshairShootingFactor += 0.75f;
+            CrosshairShootingFactor = FMath::Min(CrosshairShootingFactor, 1.f);
+        }
     }
 }
 
@@ -172,7 +177,22 @@ void UCombatComponent::SetHUDCrosshairs(const float DeltaTime)
                     CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, Target, DeltaTime, 30.f);
                 }
 
-                HUDPackage.CrosshairSpread = CrosshairVelocityFactor + CrosshairInAirFactor;
+                if (bAiming)
+                {
+                    constexpr float Target = 0.f;
+                    CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, Target, DeltaTime, 30.f);
+                }
+                else
+                {
+                    // If we are not aiming then we have a minimum spread
+                    constexpr float Target = 0.58f;
+                    CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, Target, DeltaTime, 30.f);
+                }
+
+                CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.f, DeltaTime, 30.f);
+
+                HUDPackage.CrosshairSpread =
+                    CrosshairVelocityFactor + CrosshairInAirFactor + CrosshairAimFactor + CrosshairShootingFactor;
             }
             else
             {
