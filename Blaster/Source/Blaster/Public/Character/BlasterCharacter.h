@@ -197,6 +197,12 @@ private:
                         ETriggerEvent TriggerEvent,
                         void (ThisClass::*Func)(const FInputActionValue&));
 
+    void HideCharacterIfCameraClose() const;
+
+    /** The distance from the camera where the camera will disappear */
+    UPROPERTY(EditDefaultsOnly)
+    float CameraThreshold = 200.f;
+
 public:
     /** Return the CameraBoom SubObject **/
     FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

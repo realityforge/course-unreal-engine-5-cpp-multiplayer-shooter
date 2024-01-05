@@ -379,6 +379,7 @@ void ABlasterCharacter::Tick(const float DeltaTime)
     Super::Tick(DeltaTime);
 
     CalculateAimOffset(DeltaTime);
+    HideCharacterIfCameraClose();
 }
 
 void ABlasterCharacter::SafeBindAction(UEnhancedInputComponent* const Input,
@@ -394,6 +395,24 @@ void ABlasterCharacter::SafeBindAction(UEnhancedInputComponent* const Input,
     else
     {
         Input->BindAction(InputAction, TriggerEvent, this, Func);
+    }
+}
+
+void ABlasterCharacter::HideCharacterIfCameraClose() const
+{
+    if (IsLocallyControlled())
+    {
+        const double BoomLength = (GetFollowCamera()->GetComponentLocation() - GetActorLocation()).Size();
+        const bool bHideCharacter = BoomLength < CameraThreshold;
+
+        // A better approach would be to have a camera fade threshold where the character
+        // fades as it approaches camera. But this means changing materials or extracting a master material
+        // with a camera depth fade node ... which was beyond this course
+        GetMesh()->SetVisibility(!bHideCharacter);
+        if (ensure(Combat) && Combat->EquippedWeapon && Combat->EquippedWeapon->GetWeaponMesh())
+        {
+            Combat->EquippedWeapon->GetWeaponMesh()->bOwnerNoSee = bHideCharacter;
+        }
     }
 }
 
