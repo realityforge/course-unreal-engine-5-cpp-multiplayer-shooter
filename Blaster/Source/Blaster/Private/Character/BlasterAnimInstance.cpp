@@ -114,7 +114,11 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
 
                 const FVector Target =
                     RightHandTransform.GetLocation() + (RightHandTransform.GetLocation() - HitTarget);
-                RightHandRotation = UKismetMathLibrary::FindLookAtRotation(RightHandTransform.GetLocation(), Target);
+                const auto TargetRightHandRotation =
+                    UKismetMathLibrary::FindLookAtRotation(RightHandTransform.GetLocation(), Target);
+                // Interp the rotation change if any so that moving from aiming at a far target to near target will  not
+                // result in a jerk but a smooth interpolation
+                RightHandRotation = FMath::RInterpTo(RightHandRotation, TargetRightHandRotation, DeltaSeconds, 30.f);
 
                 // DEBUG: Shows the difference lines between muzzle and where we are actually aiming and gun orientation
                 //
