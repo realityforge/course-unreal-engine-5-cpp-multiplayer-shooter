@@ -117,6 +117,17 @@ void ABlasterCharacter::PlayHitReactMontage() const
     }
 }
 
+void ABlasterCharacter::OnRep_ReplicatedMovement()
+{
+    Super::OnRep_ReplicatedMovement();
+
+    SimProxiesTurn();
+
+    // In tick we fake network replication and call this method thus we reset the timer here
+    // so we don't have tick pass through here
+    TimeSinceLastMovementReplication = 0.f;
+}
+
 void ABlasterCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -240,21 +251,10 @@ void ABlasterCharacter::Jump()
     }
 }
 
-void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTime)
+void ABlasterCharacter::CalculateAimOffsetPitch()
 {
-    if (!IsValid(Combat) || !IsValid(Combat->EquippedWeapon))
-    {
-        // If we have no weapon then we do not need to calculate aiming
-        return;
-    }
-    const float Speed = CalculateSpeed();
-    // ReSharper disable once CppTooWideScopeInitStatement
-    const bool bInAir = GetCharacterMovement()->IsFalling();
-
-    const FRotator BaseAimRotation = GetBaseAimRotation();
-
     // Simply grab the pitch from where the character is aiming
-    AimOffsetPitch = BaseAimRotation.Pitch;
+    AimOffsetPitch = GetBaseAimRotation().Pitch;
     if (AimOffsetPitch > 180.f && !IsLocallyControlled())
     {
         // If BaseAimRotation is replicated across the network it is compressed into the
@@ -268,6 +268,22 @@ void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTim
         // const FVector2D OutRange(-90.f, 0.f);
         // AimOffsetPitch = FMath::GetMappedRangeValueClamped(InRange, OutRange, AimOffsetPitch);
     }
+}
+
+void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTime)
+{
+    if (!IsValid(Combat) || !IsValid(Combat->EquippedWeapon))
+    {
+        // If we have no weapon then we do not need to calculate aiming
+        return;
+    }
+    const float Speed = CalculateSpeed();
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const bool bInAir = GetCharacterMovement()->IsFalling();
+
+    const FRotator BaseAimRotation = GetBaseAimRotation();
+
+    CalculateAimOffsetPitch();
 
     // To calculate the yaw we need more complexity as when
     // we are moving it is the direction in which we are moving
@@ -275,6 +291,8 @@ void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTim
     if (0.f == Speed && !bInAir)
     {
         // Standing still, not jumping
+
+        bRotateRootBone = true;
 
         const FRotator CurrentAimRotation = FRotator(0.f, BaseAimRotation.Yaw, 0.f);
         const FRotator DeltaAimRotation =
@@ -295,12 +313,61 @@ void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTim
     {
         // Moving or jumping
 
+        bRotateRootBone = false;
+
         AimOffsetBaseAimRotation = FRotator(0.f, BaseAimRotation.Yaw, 0.f);
         AimOffsetYaw = 0;
 
         // We revert to using the controller yaw for character rotation
         bUseControllerRotationYaw = true;
         TurningInPlace = ETurningInPlace::TIP_NotTurning;
+    }
+}
+
+void ABlasterCharacter::SimProxiesTurn()
+{
+    // This is horrible. We fake turn in place animations for simulated proxies so that they look like
+    // they are facing in the right direction without sliding feet. This is not what the autonomous proxy
+    // does or what the server does and is an approximation so bullet shots that hit a simulated proxy may
+    // not hit on server or vice versa. I am not sure this is how you would ever build a game - also concerning
+    // is that the gun is never facing the actual target except for locally controlled actor ... which is also
+    // horrible for a shooter platform.
+    // I don't know why this is this way but just following tutorial in case future lessons depend upon it.
+    // I assume the trainer just was not understand how to do this properly so we end up with this.
+
+    check(Combat);
+    if (Combat->EquippedWeapon)
+    {
+        bRotateRootBone = false;
+        const float Speed = CalculateSpeed();
+        if (Speed > 0.f)
+        {
+            TurningInPlace = ETurningInPlace::TIP_NotTurning;
+        }
+        else
+        {
+            const FRotator ProxyRotation = GetActorRotation();
+
+            // Get the difference between last frames rotation and current frames rotation
+            // ReSharper disable once CppTooWideScopeInitStatement
+            const float ProxyYaw =
+                UKismetMathLibrary::NormalizedDeltaRotator(ProxyRotation, ProxyRotationLastFrame).Yaw;
+
+            // If we cross a threshold then change to turning in place animations
+            if (ProxyYaw > ProxyTurnThreshold)
+            {
+                TurningInPlace = ETurningInPlace::TIP_TurningRight;
+            }
+            else if (ProxyYaw < -ProxyTurnThreshold)
+            {
+                TurningInPlace = ETurningInPlace::TIP_TurningLeft;
+            }
+            else
+            {
+                TurningInPlace = ETurningInPlace::TIP_NotTurning;
+            }
+            ProxyRotationLastFrame = ProxyRotation;
+        }
     }
 }
 
@@ -398,7 +465,22 @@ void ABlasterCharacter::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    CalculateAimOffset(DeltaTime);
+    if (GetLocalRole() > ROLE_SimulatedProxy && IsLocallyControlled())
+    {
+        // We get here if we are locally controlled and on the server node or locally controlled and on the client
+        // Not sure why this is not equivalent to just IsLocallyControlled() ...
+        CalculateAimOffset(DeltaTime);
+    }
+    else
+    {
+        TimeSinceLastMovementReplication += DeltaTime;
+        if (TimeSinceLastMovementReplication > 0.25f)
+        {
+            // If it has been "long" enough since the last network tick hen fake it to try and avoid jitter
+            OnRep_ReplicatedMovement();
+        }
+        CalculateAimOffsetPitch();
+    }
     HideCharacterIfCameraClose();
 }
 

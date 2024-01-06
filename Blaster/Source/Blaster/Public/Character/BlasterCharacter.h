@@ -36,6 +36,8 @@ public:
     UFUNCTION(NetMulticast, Unreliable)
     void MulticastHit();
 
+    virtual void OnRep_ReplicatedMovement() override;
+
 protected:
     virtual void BeginPlay() override;
 
@@ -171,6 +173,23 @@ private:
 
     void PlayHitReactMontage() const;
 
+    void CalculateAimOffsetPitch();
+
+    void SimProxiesTurn();
+
+    /**
+     * Should we rotate the root bone?
+     * We should be rotating root bone if not a simulated proxy.
+     * (Locally controlled on server or client)
+     */
+    bool bRotateRootBone{ false };
+
+    float ProxyTurnThreshold = 0.5f;
+
+    FRotator ProxyRotationLastFrame;
+
+    float TimeSinceLastMovementReplication{ 0.f };
+
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
@@ -222,6 +241,7 @@ public:
     FORCEINLINE float GetAimOffsetYaw() const { return AimOffsetYaw; }
     FORCEINLINE float GetAimOffsetPitch() const { return AimOffsetPitch; }
     FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
+    FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
 
     void SetOverlappingWeapon(AWeapon* Weapon);
 
