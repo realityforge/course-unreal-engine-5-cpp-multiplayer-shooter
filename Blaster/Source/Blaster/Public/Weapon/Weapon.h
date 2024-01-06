@@ -116,6 +116,16 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Aiming")
     float ZoomInterpSpeed{ 20.f };
 
+    //---------------------------------------------------------------------------
+    // Automatic fire
+    //---------------------------------------------------------------------------
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    float FireDelay{ 0.15f };
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    bool bAutomaticFire{ true };
+
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
     FORCEINLINE UTexture2D* GetCrosshairsCenter() const { return CrosshairsCenter; };
@@ -125,4 +135,6 @@ public:
     FORCEINLINE UTexture2D* GetCrosshairsBottom() const { return CrosshairsBottom; };
     FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
     FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
+    FORCEINLINE float GetFireDelay() const { return FireDelay; }
+    FORCEINLINE bool IsAutomaticFire() const { return bAutomaticFire; }
 };

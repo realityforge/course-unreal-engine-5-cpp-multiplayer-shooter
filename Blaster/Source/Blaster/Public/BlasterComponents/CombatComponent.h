@@ -33,6 +33,7 @@ public:
 
 protected:
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
     void MirrorWalkSpeedBasedOnState() const;
 
     void SetAiming(bool bInAiming);
@@ -118,4 +119,16 @@ private:
     void UpdateFOV(float DeltaTime);
 
     void StopOrientingRotationToMovement() const;
+
+    //---------------------------------------------------------------------------
+    // Automatic Fire Management
+    //---------------------------------------------------------------------------
+
+    void Fire();
+
+    FTimerHandle FireTimer;
+    bool bCanFire{ true };
+
+    void StartFireTimer();
+    void FireTimerFinished();
 };

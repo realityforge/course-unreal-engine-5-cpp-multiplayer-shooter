@@ -34,6 +34,12 @@ void UCombatComponent::BeginPlay()
     InitDefaultFOV();
 }
 
+void UCombatComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Super::EndPlay(EndPlayReason);
+    GetWorld()->GetTimerManager().ClearTimer(FireTimer);
+}
+
 void UCombatComponent::MirrorWalkSpeedBasedOnState() const
 {
     if (Character)
@@ -68,23 +74,32 @@ void UCombatComponent::OnRep_EquippedWeapon()
     }
 }
 
+void UCombatComponent::Fire()
+{
+    verify(Character->IsLocallyControlled());
+
+    if (bCanFire)
+    {
+        bCanFire = false;
+        // Send fire action to the server
+        ServerFire(HitTarget);
+
+        if (EquippedWeapon)
+        {
+            CrosshairShootingFactor += 0.75f;
+            CrosshairShootingFactor = FMath::Min(CrosshairShootingFactor, 1.f);
+
+            StartFireTimer();
+        }
+    }
+}
+
 void UCombatComponent::SetFireButtonPressed(const bool bInFireButtonPressed)
 {
     bFireButtonPressed = bInFireButtonPressed;
     if (bFireButtonPressed)
     {
-        verify(Character->IsLocallyControlled());
-
-        // Send fire action to the server
-        // Note: It is unclear why we are not tracing on the server as this seems prone to cheating
-        FHitResult HitResult;
-        TraceUnderCrossHairs(HitResult);
-        ServerFire(HitResult.ImpactPoint);
-        if (EquippedWeapon)
-        {
-            CrosshairShootingFactor += 0.75f;
-            CrosshairShootingFactor = FMath::Min(CrosshairShootingFactor, 1.f);
-        }
+        Fire();
     }
 }
 
@@ -296,6 +311,25 @@ void UCombatComponent::StopOrientingRotationToMovement() const
 {
     Character->GetCharacterMovement()->bOrientRotationToMovement = false;
     Character->bUseControllerRotationYaw = true;
+}
+
+void UCombatComponent::StartFireTimer()
+{
+    check(EquippedWeapon);
+    check(Character);
+    GetWorld()->GetTimerManager().SetTimer(FireTimer,
+                                           this,
+                                           &UCombatComponent::FireTimerFinished,
+                                           EquippedWeapon->GetFireDelay());
+}
+
+void UCombatComponent::FireTimerFinished()
+{
+    bCanFire = true;
+    if (bFireButtonPressed && EquippedWeapon && EquippedWeapon->IsAutomaticFire())
+    {
+        Fire();
+    }
 }
 
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
