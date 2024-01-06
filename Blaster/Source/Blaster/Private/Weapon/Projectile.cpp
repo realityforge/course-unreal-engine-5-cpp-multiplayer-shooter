@@ -1,4 +1,5 @@
 #include "Weapon/Projectile.h"
+#include "Blaster/Blaster.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -18,6 +19,10 @@ AProjectile::AProjectile()
     CollisionBox->SetCollisionResponseToAllChannels(ECR_Ignore);
     CollisionBox->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     CollisionBox->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+    // Use ECC_SkeletalMesh over ECC_Pawn as ECC_Pawn would collide with the capsule which
+    // would result in less precise hit detection. This traces against the Physics asset
+    // associated with the mesh which is much more precise
+    CollisionBox->SetCollisionResponseToChannel(ECC_SkeletalMesh, ECR_Block);
 
     ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
     // We don't need a SetupAttachment here

@@ -1,4 +1,5 @@
 #include "Character/BlasterCharacter.h"
+#include "Blaster/Blaster.h"
 #include "BlasterComponents/CombatComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -57,6 +58,7 @@ ABlasterCharacter::ABlasterCharacter()
     // Make sure when another character moves between our camera and our character, the camera boom
     // does not move in. We do this by making sure we do not block camera
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+    GetMesh()->SetCollisionObjectType(ECC_SkeletalMesh);
     GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
     GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
