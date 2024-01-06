@@ -31,9 +31,10 @@ public:
 
     void EquipWeapon(AWeapon* WeaponToEquip);
 
-protected:
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+protected:
     void MirrorWalkSpeedBasedOnState() const;
 
     void SetAiming(bool bInAiming);
