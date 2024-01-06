@@ -211,6 +211,8 @@ private:
     UPROPERTY(EditDefaultsOnly)
     float CameraThreshold = 200.f;
 
+    float CalculateSpeed() const;
+
 public:
     /** Return the CameraBoom SubObject **/
     FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

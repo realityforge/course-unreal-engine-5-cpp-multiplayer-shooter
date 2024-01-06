@@ -247,10 +247,7 @@ void ABlasterCharacter::CalculateAimOffset([[maybe_unused]] const float DeltaTim
         // If we have no weapon then we do not need to calculate aiming
         return;
     }
-    FVector Velocity = GetVelocity();
-    // We are only looking for lateral Velocity so we zero out height
-    Velocity.Z = 0.f;
-    const float Speed = Velocity.Size();
+    const float Speed = CalculateSpeed();
     // ReSharper disable once CppTooWideScopeInitStatement
     const bool bInAir = GetCharacterMovement()->IsFalling();
 
@@ -437,6 +434,14 @@ void ABlasterCharacter::HideCharacterIfCameraClose() const
             Combat->EquippedWeapon->GetWeaponMesh()->bOwnerNoSee = bHideCharacter;
         }
     }
+}
+
+float ABlasterCharacter::CalculateSpeed() const
+{
+    auto Velocity = GetVelocity();
+    // We are only looking for lateral Velocity so we zero out height
+    Velocity.Z = 0.f;
+    return Velocity.Size();
 }
 
 void ABlasterCharacter::SafeBindAction(UEnhancedInputComponent* const Input,
