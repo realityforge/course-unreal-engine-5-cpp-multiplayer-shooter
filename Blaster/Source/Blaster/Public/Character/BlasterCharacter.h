@@ -32,6 +32,9 @@ public:
     virtual void PostInitializeComponents() override;
 
     void PlayFireMontage(bool bAiming);
+    /** Called on server to trigger animation for hit reaction. This is cosmetic so is marked as unreliable. */
+    UFUNCTION(NetMulticast, Unreliable)
+    void MulticastHit();
 
 protected:
     virtual void BeginPlay() override;
@@ -162,6 +165,11 @@ private:
 
     UPROPERTY(EditAnywhere, Category = Combat)
     UAnimMontage* FireWeaponMontage{ nullptr };
+
+    UPROPERTY(EditAnywhere, Category = Combat)
+    UAnimMontage* HitReactMontage{ nullptr };
+
+    void PlayHitReactMontage() const;
 
     //---------------------------------------------------------------------------
 

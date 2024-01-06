@@ -101,6 +101,22 @@ void ABlasterCharacter::PlayFireMontage(const bool bAiming)
     }
 }
 
+void ABlasterCharacter::PlayHitReactMontage() const
+{
+    check(Combat);
+    if (IsValid(Combat) && IsValid(Combat->EquippedWeapon) && IsValid(HitReactMontage))
+    {
+        check(GetMesh());
+        if (const auto AnimInstance = GetMesh()->GetAnimInstance(); IsValid(AnimInstance))
+        {
+            AnimInstance->Montage_Play(HitReactMontage);
+            // Animation montage should be configured based on hit direction ...
+            const FName SectionName("FromFront");
+            AnimInstance->Montage_JumpToSection(SectionName);
+        }
+    }
+}
+
 void ABlasterCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -321,6 +337,11 @@ void ABlasterCharacter::ServerEquip_Implementation()
     {
         Combat->EquipWeapon(OverlappingWeapon);
     }
+}
+
+void ABlasterCharacter::MulticastHit_Implementation()
+{
+    PlayHitReactMontage();
 }
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
