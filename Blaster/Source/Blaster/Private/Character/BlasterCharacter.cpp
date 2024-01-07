@@ -74,6 +74,7 @@ void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME_CONDITION(ABlasterCharacter, OverlappingWeapon, COND_OwnerOnly);
+    DOREPLIFETIME(ABlasterCharacter, Health);
 }
 
 void ABlasterCharacter::PostInitializeComponents()
@@ -407,6 +408,8 @@ void ABlasterCharacter::MulticastHit_Implementation()
 {
     PlayHitReactMontage();
 }
+
+void ABlasterCharacter::OnRep_Health() {}
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const
