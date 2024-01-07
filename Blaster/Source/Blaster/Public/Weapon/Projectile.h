@@ -46,4 +46,10 @@ private:
 
     UPROPERTY(EditAnywhere, meta = (RuleRangerRequired))
     USoundCue* ImpactSound{ nullptr };
+
+    UPROPERTY(EditAnywhere)
+    float Damage{ 20.f };
+
+public:
+    FORCEINLINE float GetDamage() const { return Damage; }
 };
