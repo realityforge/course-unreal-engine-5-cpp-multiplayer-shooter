@@ -1,6 +1,26 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "HUD/BlasterHUD.h"
+#include "Blueprint/UserWidget.h"
+#include "HUD/CharacterOverlay.h"
+
+void ABlasterHUD::AddCharacterOverlay()
+{
+    if (const auto PlayerController = GetOwningPlayerController(); ensure(PlayerController))
+    {
+        if (CharacterOverlayClass)
+        {
+            CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);
+            CharacterOverlay->AddToViewport();
+        }
+    }
+}
+
+void ABlasterHUD::BeginPlay()
+{
+    Super::BeginPlay();
+    AddCharacterOverlay();
+}
 
 void ABlasterHUD::DrawHUD()
 {

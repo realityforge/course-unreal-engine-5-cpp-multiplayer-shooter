@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "BlasterHUD.generated.h"
 
+class UCharacterOverlay;
+
 USTRUCT(BlueprintType)
 struct FHUDPackage
 {
@@ -47,8 +49,21 @@ class BLASTER_API ABlasterHUD : public AHUD
     UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess))
     float CrosshairSpreadMax{ 16.f };
 
+    UPROPERTY(EditAnywhere, Category = "PlayerStats", meta = (AllowAbstract = "false", RuleRangerRequired))
+    TSubclassOf<UCharacterOverlay> CharacterOverlayClass{ nullptr };
+
+    UPROPERTY(VisibleAnywhere, Transient, Category = "PlayerStats")
+    TObjectPtr<UCharacterOverlay> CharacterOverlay{ nullptr };
+
+    void AddCharacterOverlay();
+
+protected:
+    virtual void BeginPlay() override;
+
 public:
     virtual void DrawHUD() override;
 
     FORCEINLINE void SetHUDPackage(const FHUDPackage& InHUDPackage) { HUDPackage = InHUDPackage; }
+
+    FORCEINLINE UCharacterOverlay* GetCharacterOverlay() const { return CharacterOverlay; }
 };
