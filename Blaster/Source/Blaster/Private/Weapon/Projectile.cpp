@@ -1,6 +1,5 @@
 #include "Weapon/Projectile.h"
 #include "Blaster/Blaster.h"
-#include "Character/BlasterCharacter.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -64,10 +63,6 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent,
                         FVector NormalImpulse,
                         const FHitResult& Hit)
 {
-    if (const auto BlasterCharacter = Cast<ABlasterCharacter>(OtherActor))
-    {
-        BlasterCharacter->MulticastHit();
-    }
     // Mark this object as destroyed at the end of the tick
     // This will create impact particles/sound in destroy action which runs on all clients as entity replicated
     // This avoids the need to replicate the rpc to create impact sounds/effects and then destroy message

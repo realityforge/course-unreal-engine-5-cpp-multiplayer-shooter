@@ -153,8 +153,22 @@ void ABlasterCharacter::BeginPlay()
     }
 
     UpdateHUDHealth();
+    if (HasAuthority())
     {
+        // Where we have authority we make sure we react to damage
+        OnTakeAnyDamage.AddDynamic(this, &ABlasterCharacter::OnTakeDamage);
     }
+}
+
+void ABlasterCharacter::OnTakeDamage([[maybe_unused]] AActor* DamagedActor,
+                                     const float Damage,
+                                     [[maybe_unused]] const UDamageType* DamageType,
+                                     [[maybe_unused]] AController* InstigatorController,
+                                     [[maybe_unused]] AActor* DamageCauser)
+{
+    Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
+    UpdateHUDHealth();
+    PlayHitReactMontage();
 }
 
 void ABlasterCharacter::MoveInputActionTriggered(const FInputActionValue& Value)
@@ -418,12 +432,12 @@ void ABlasterCharacter::ServerEquip_Implementation()
     }
 }
 
-void ABlasterCharacter::MulticastHit_Implementation()
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ABlasterCharacter::OnRep_Health()
 {
+    UpdateHUDHealth();
     PlayHitReactMontage();
 }
-
-void ABlasterCharacter::OnRep_Health() {}
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const

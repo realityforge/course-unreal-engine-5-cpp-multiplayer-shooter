@@ -32,9 +32,6 @@ public:
     virtual void PostInitializeComponents() override;
 
     void PlayFireMontage(bool bAiming);
-    /** Called on server to trigger animation for hit reaction. This is cosmetic so is marked as unreliable. */
-    UFUNCTION(NetMulticast, Unreliable)
-    void MulticastHit();
 
     virtual void OnRep_ReplicatedMovement() override;
 
@@ -207,6 +204,12 @@ private:
 
     void UpdateHUDHealth() const;
 
+    UFUNCTION()
+    void OnTakeDamage(AActor* DamagedActor,
+                      float Damage,
+                      const UDamageType* DamageType,
+                      AController* InstigatorController,
+                      AActor* DamageCauser);
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
