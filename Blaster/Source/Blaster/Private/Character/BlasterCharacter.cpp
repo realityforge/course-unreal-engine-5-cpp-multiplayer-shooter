@@ -11,6 +11,7 @@
 #include "InputMappingContext.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
+#include "PlayerController/BlasterPlayerController.h"
 #include "Weapon/Weapon.h"
 
 ABlasterCharacter::ABlasterCharacter()
@@ -140,6 +141,12 @@ void ABlasterCharacter::BeginPlay()
         {
             Subsystem->AddMappingContext(InputMapping.LoadSynchronous(), 0);
         }
+    }
+
+    if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+    {
+        // Initialize Health on HUD
+        PlayerController->SetHUDHealth(Health, MaxHealth);
     }
 }
 
