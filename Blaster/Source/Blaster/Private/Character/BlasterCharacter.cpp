@@ -130,6 +130,15 @@ void ABlasterCharacter::OnRep_ReplicatedMovement()
     TimeSinceLastMovementReplication = 0.f;
 }
 
+void ABlasterCharacter::UpdateHUDHealth() const
+{
+    if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+    {
+        // Initialize Health on HUD
+        PlayerController->SetHUDHealth(Health, MaxHealth);
+    }
+}
+
 void ABlasterCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -143,10 +152,8 @@ void ABlasterCharacter::BeginPlay()
         }
     }
 
-    if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+    UpdateHUDHealth();
     {
-        // Initialize Health on HUD
-        PlayerController->SetHUDHealth(Health, MaxHealth);
     }
 }
 
