@@ -15,11 +15,6 @@
 #include "CheckTexturePowerOfTwoAction.h"
 #include "Editor.h"
 
-UCheckTexturePowerOfTwoAction::UCheckTexturePowerOfTwoAction()
-{
-    TextureGroupsToSkip.Add(TEXTUREGROUP_UI);
-}
-
 void UCheckTexturePowerOfTwoAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (IsValid(Object))
@@ -27,14 +22,6 @@ void UCheckTexturePowerOfTwoAction::Apply_Implementation(URuleRangerActionContex
         if (const auto Texture = Cast<UTexture2D>(Object); !Texture)
         {
             LogError(Object, TEXT("Attempt to run on Object that is not a Texture2D instance."));
-        }
-        else if (TextureGroupsToSkip.Contains(Texture->LODGroup))
-        {
-            const auto TextureGroupEnum = StaticEnum<TextureGroup>();
-            const auto TextureGroup = TextureGroupEnum->GetMetaData(TEXT("DisplayName"), Texture->LODGroup);
-            LogInfo(
-                Object,
-                FString::Printf(TEXT("Skipping object as it's TextureGroup %s is in the skip list"), *TextureGroup));
         }
         else
         {
@@ -46,38 +33,17 @@ void UCheckTexturePowerOfTwoAction::Apply_Implementation(URuleRangerActionContex
 
             if (bInvalidX || bInvalidY)
             {
-                const auto TextureGroupEnum = StaticEnum<TextureGroup>();
-                FString TextureGroupsLabel;
-                for (TEnumAsByte<TextureGroup> TextureGroup : TextureGroupsToSkip)
-                {
-                    if (!TextureGroupsLabel.IsEmpty())
-                    {
-                        TextureGroupsLabel.Append(TEXT(", "));
-                    }
-                    TextureGroupsLabel.Append(TextureGroupEnum->GetMetaData(TEXT("DisplayName"), TextureGroup));
-                }
-                FFormatNamedArguments AltActionArguments;
-                AltActionArguments.Add(TEXT("Groups"), FText::FromString(TextureGroupsLabel));
-                const FText AltAction = TextureGroupsLabel.IsEmpty()
-                    ? FText::GetEmpty()
-                    : FText::Format(NSLOCTEXT("RuleRanger",
-                                              "CheckTexture2DPowerOfTwoAction_AltAction",
-                                              " or assign the texture to one of the LOD groups: {Groups}"),
-                                    AltActionArguments);
-
                 FFormatNamedArguments Arguments;
                 Arguments.Add(TEXT("X"), FText::FromString(FString::FromInt(SizeX)));
                 Arguments.Add(TEXT("Y"), FText::FromString(FString::FromInt(SizeY)));
-                Arguments.Add(TEXT("AltAction"), AltAction);
 
                 if (bInvalidX && bInvalidY)
                 {
-                    const FText Message =
-                        FText::Format(NSLOCTEXT("RuleRanger",
-                                                "CheckTexture2DPowerOfTwoAction_FailXY",
-                                                "Texture has dimensions {X}x{Y} and neither width nor"
-                                                " height is a power of two. Fix both dimensions{AltAction}"),
-                                      Arguments);
+                    const FText Message = FText::Format(NSLOCTEXT("RuleRanger",
+                                                                  "CheckTexture2DPowerOfTwoAction_FailXY",
+                                                                  "Texture has dimensions {X}x{Y} and neither width nor"
+                                                                  " height is a power of two. Fix both dimensions"),
+                                                        Arguments);
                     ActionContext->Error(Message);
                 }
                 else if (bInvalidX)
@@ -86,7 +52,7 @@ void UCheckTexturePowerOfTwoAction::Apply_Implementation(URuleRangerActionContex
                         NSLOCTEXT(
                             "RuleRanger",
                             "CheckTexture2DPowerOfTwoAction_FailX",
-                            "Texture has dimensions {X}x{Y} and width is not a power of two. Fix the width dimension{AltAction}"),
+                            "Texture has dimensions {X}x{Y} and width is not a power of two. Fix the width dimension"),
                         Arguments);
                     ActionContext->Error(Message);
                 }
@@ -96,7 +62,7 @@ void UCheckTexturePowerOfTwoAction::Apply_Implementation(URuleRangerActionContex
                         NSLOCTEXT(
                             "RuleRanger",
                             "CheckTexture2DPowerOfTwoAction_FailX",
-                            "Texture has dimensions {X}x{Y} and height is not a power of two. Fix the height dimension{AltAction}"),
+                            "Texture has dimensions {X}x{Y} and height is not a power of two. Fix the height dimension"),
                         Arguments);
                     ActionContext->Error(Message);
                 }

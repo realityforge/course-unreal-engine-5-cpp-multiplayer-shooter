@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,16 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
 #include "CoreMinimal.h"
-#include "Engine/DataTable.h"
-#include "RuleRangerAction.h"
-#include "CheckTexturePowerOfTwoAction.generated.h"
+#include "RuleRangerMatcher.h"
+#include "UObject/Object.h"
+#include "TextureGroupMatcher.generated.h"
 
 /**
- * Action to check that a Texture has power of 2 Dimensions.
+ * Matcher that matches textures that are in one of the specified TextureGroups.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"),
        Blueprintable,
@@ -28,10 +26,14 @@ UCLASS(AutoExpandCategories = ("Rule Ranger"),
        CollapseCategories,
        DefaultToInstanced,
        EditInlineNew)
-class RULERANGER_API UCheckTexturePowerOfTwoAction final : public URuleRangerAction
+class RULERANGER_API UTextureGroupMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
+    /** The TextureGroups to match. */
+    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    TSet<TEnumAsByte<TextureGroup>> TextureGroups;
+
 public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+    virtual bool Test_Implementation(UObject* Object) override;
 };
