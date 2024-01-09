@@ -45,4 +45,4 @@ Possible Directory layout:
  `Characters/[CharacterName]/Rigs`
  `Characters/[CharacterName]/Textures`
 
-* Remove `if (IsValid(Object))` and  `if (const auto Blueprint = Cast<UBlueprint>(Object); !Blueprint)` style code from all the rules. By skipping invalid Objects or setting type for action ahead of time
+* Remove `if (const auto Blueprint = Cast<UBlueprint>(Object); !Blueprint)` style code from all the rules. By setting type for action ahead of time

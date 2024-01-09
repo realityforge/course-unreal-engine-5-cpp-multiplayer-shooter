@@ -16,32 +16,29 @@
 
 void UEnsureSkeletalMeshHasBones::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
-    if (IsValid(Object))
+    if (const auto SkeletalMesh = Cast<USkeletalMesh>(Object))
     {
-        if (const auto SkeletalMesh = Cast<USkeletalMesh>(Object))
+        if (ensure(SkeletalMesh->GetSkeleton()))
         {
-            if (ensure(SkeletalMesh->GetSkeleton()))
+            const USkeleton* Skeleton = SkeletalMesh->GetSkeleton();
+            for (const auto BoneName : Bones)
             {
-                const USkeleton* Skeleton = SkeletalMesh->GetSkeleton();
-                for (const auto BoneName : Bones)
+                if (INDEX_NONE == Skeleton->GetReferenceSkeleton().FindBoneIndex(BoneName))
                 {
-                    if (INDEX_NONE == Skeleton->GetReferenceSkeleton().FindBoneIndex(BoneName))
-                    {
-                        const auto OutMessage = FString::Printf(TEXT("Bone named '%s' does not exist on "
-                                                                     "the SkeletalMesh named '%s' with Skeleton named  "
-                                                                     "%s component. Reason: %s"),
-                                                                *BoneName.ToString(),
-                                                                *SkeletalMesh->GetFullName(),
-                                                                *Skeleton->GetFullName(),
-                                                                *Reason);
-                        ActionContext->Error(FText::FromString(OutMessage));
-                    }
+                    const auto OutMessage = FString::Printf(TEXT("Bone named '%s' does not exist on "
+                                                                 "the SkeletalMesh named '%s' with Skeleton named  "
+                                                                 "%s component. Reason: %s"),
+                                                            *BoneName.ToString(),
+                                                            *SkeletalMesh->GetFullName(),
+                                                            *Skeleton->GetFullName(),
+                                                            *Reason);
+                    ActionContext->Error(FText::FromString(OutMessage));
                 }
             }
         }
-        else
-        {
-            LogError(Object, TEXT("Action running on class that is not a SkeletalMesh"));
-        }
+    }
+    else
+    {
+        LogError(Object, TEXT("Action running on class that is not a SkeletalMesh"));
     }
 }

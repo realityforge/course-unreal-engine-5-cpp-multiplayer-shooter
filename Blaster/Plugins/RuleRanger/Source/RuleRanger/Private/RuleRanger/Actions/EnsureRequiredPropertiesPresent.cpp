@@ -18,66 +18,63 @@ static const FName RequiredPropertyName("RuleRangerRequired");
 
 void UEnsureRequiredPropertiesPresent::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
-    if (IsValid(Object))
+    const UBlueprint* Blueprint = Cast<UBlueprint>(Object);
+    UClass* Class;
+    if (Blueprint && Blueprint->GeneratedClass)
     {
-        const UBlueprint* Blueprint = Cast<UBlueprint>(Object);
-        UClass* Class;
-        if (Blueprint && Blueprint->GeneratedClass)
-        {
-            Class = Blueprint->GeneratedClass;
-        }
-        else
-        {
-            Class = Object->GetClass();
-        }
-        const FName Key("RuleRangerRequired");
+        Class = Blueprint->GeneratedClass;
+    }
+    else
+    {
+        Class = Object->GetClass();
+    }
+    const FName Key("RuleRangerRequired");
 
-        const UObject* DefaultObject = Class->GetDefaultObject(true);
-        for (TFieldIterator<FProperty> PropertyIt(Class); PropertyIt; ++PropertyIt)
+    const UObject* DefaultObject = Class->GetDefaultObject(true);
+    for (TFieldIterator<FProperty> PropertyIt(Class); PropertyIt; ++PropertyIt)
+    {
+        const FProperty* Property = *PropertyIt;
+        if (PropertyIt->GetMetaDataMap() && PropertyIt->GetMetaDataMap()->Contains(Key))
         {
-            const FProperty* Property = *PropertyIt;
-            if (PropertyIt->GetMetaDataMap() && PropertyIt->GetMetaDataMap()->Contains(Key))
+            if (const auto ObjectProperty = CastField<FObjectPropertyBase>(Property))
             {
-                if (const auto ObjectProperty = CastField<FObjectPropertyBase>(Property))
+                if (1 == ObjectProperty->ArrayDim)
                 {
-                    if (1 == ObjectProperty->ArrayDim)
+                    if (!ObjectProperty->GetObjectPropertyValue_InContainer(DefaultObject))
                     {
-                        if (!ObjectProperty->GetObjectPropertyValue_InContainer(DefaultObject))
-                        {
-                            const auto& ErrorMessage = FString::Printf(
-                                TEXT("Object contains property named '%s' that is not set but the property is "
-                                     "annotated with the %s meta property which indicates it MUST be set."),
-                                *Property->GetDisplayNameText().ToString(),
-                                *RequiredPropertyName.ToString());
-                            ActionContext->Error(FText::FromString(ErrorMessage));
-                        }
-                    }
-                    else
-                    {
-                        for (int32 i = 0; i < ObjectProperty->ArrayDim; i++)
-                        {
-                            if (!ObjectProperty->GetObjectPropertyValue_InContainer(DefaultObject, i))
-                            {
-                                const auto& ErrorMessage = FString::Printf(
-                                    TEXT("Object contains property named '%s' that has index %d that is not set "
-                                         "but the property is annotated with the %s meta property which indicates "
-                                         "it MUST be set."),
-                                    *Property->GetDisplayNameText().ToString(),
-                                    i,
-                                    *RequiredPropertyName.ToString());
-                                ActionContext->Error(FText::FromString(ErrorMessage));
-                            }
-                        }
+                        const auto& ErrorMessage = FString::Printf(
+                            TEXT("Object contains property named '%s' that is not set but the property is "
+                                 "annotated with the %s meta property which indicates it MUST be set."),
+                            *Property->GetDisplayNameText().ToString(),
+                            *RequiredPropertyName.ToString());
+                        ActionContext->Error(FText::FromString(ErrorMessage));
                     }
                 }
                 else
                 {
-                    LogError(Object,
-                             FString::Printf(TEXT("Property named %s is annotated with the meta property %s "
-                                                  "but this is not supported property types other than references."),
-                                             *Property->GetDisplayNameText().ToString(),
-                                             *RequiredPropertyName.ToString()));
+                    for (int32 i = 0; i < ObjectProperty->ArrayDim; i++)
+                    {
+                        if (!ObjectProperty->GetObjectPropertyValue_InContainer(DefaultObject, i))
+                        {
+                            const auto& ErrorMessage = FString::Printf(
+                                TEXT("Object contains property named '%s' that has index %d that is not set "
+                                     "but the property is annotated with the %s meta property which indicates "
+                                     "it MUST be set."),
+                                *Property->GetDisplayNameText().ToString(),
+                                i,
+                                *RequiredPropertyName.ToString());
+                            ActionContext->Error(FText::FromString(ErrorMessage));
+                        }
+                    }
                 }
+            }
+            else
+            {
+                LogError(Object,
+                         FString::Printf(TEXT("Property named %s is annotated with the meta property %s "
+                                              "but this is not supported property types other than references."),
+                                         *Property->GetDisplayNameText().ToString(),
+                                         *RequiredPropertyName.ToString()));
             }
         }
     }

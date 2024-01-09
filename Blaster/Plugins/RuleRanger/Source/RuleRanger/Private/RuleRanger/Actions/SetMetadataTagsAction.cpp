@@ -18,64 +18,61 @@
 
 void USetMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
-    if (IsValid(Object))
+    if (const auto Subsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>())
     {
-        if (const auto Subsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>())
+        for (const auto& MetadataTag : MetadataTags)
         {
-            for (const auto& MetadataTag : MetadataTags)
+            if (NAME_None == MetadataTag.Key)
             {
-                if (NAME_None == MetadataTag.Key)
+                LogError(Object, TEXT("Empty key specified when attempting to add MetadataTag"));
+            }
+            else if (MetadataTag.Value.IsEmpty())
+            {
+                LogError(Object, TEXT("Empty Value specified when attempting to add MetadataTag"));
+            }
+            else
+            {
+                FString ExistingValue = Subsystem->GetMetadataTag(Object, MetadataTag.Key);
+                if (ExistingValue.Equals(MetadataTag.Value))
                 {
-                    LogError(Object, TEXT("Empty key specified when attempting to add MetadataTag"));
-                }
-                else if (MetadataTag.Value.IsEmpty())
-                {
-                    LogError(Object, TEXT("Empty Value specified when attempting to add MetadataTag"));
+                    LogInfo(Object,
+                            FString::Printf(TEXT("MetaDataTag %s=%s already exists on Object. No action required"),
+                                            *MetadataTag.Key.ToString(),
+                                            *MetadataTag.Value));
                 }
                 else
                 {
-                    FString ExistingValue = Subsystem->GetMetadataTag(Object, MetadataTag.Key);
-                    if (ExistingValue.Equals(MetadataTag.Value))
+                    if (ActionContext->IsDryRun())
                     {
-                        LogInfo(Object,
-                                FString::Printf(TEXT("MetaDataTag %s=%s already exists on Object. No action required"),
-                                                *MetadataTag.Key.ToString(),
-                                                *MetadataTag.Value));
+                        FFormatNamedArguments Arguments;
+                        Arguments.Add(TEXT("Key"), FText::FromString(MetadataTag.Key.ToString()));
+                        Arguments.Add(TEXT("Value"), FText::FromString(MetadataTag.Value));
+                        const FText Message =
+                            FText::Format(NSLOCTEXT("RuleRanger",
+                                                    "MetaDataTagAddOmitted",
+                                                    "MetaData tag {Key}={Value} is not present. This tag would "
+                                                    "be added if RuleRanger was not in DryRun mode"),
+                                          Arguments);
+
+                        ActionContext->Error(Message);
                     }
                     else
                     {
-                        if (ActionContext->IsDryRun())
-                        {
-                            FFormatNamedArguments Arguments;
-                            Arguments.Add(TEXT("Key"), FText::FromString(MetadataTag.Key.ToString()));
-                            Arguments.Add(TEXT("Value"), FText::FromString(MetadataTag.Value));
-                            const FText Message =
-                                FText::Format(NSLOCTEXT("RuleRanger",
-                                                        "MetaDataTagAddOmitted",
-                                                        "MetaData tag {Key}={Value} is not present. This tag would "
-                                                        "be added if RuleRanger was not in DryRun mode"),
-                                              Arguments);
+                        FFormatNamedArguments Arguments;
+                        Arguments.Add(TEXT("Key"), FText::FromString(MetadataTag.Key.ToString()));
+                        Arguments.Add(TEXT("Value"), FText::FromString(MetadataTag.Value));
+                        const FText Message =
+                            FText::Format(NSLOCTEXT("RuleRanger",
+                                                    "SetMetaDataTag",
+                                                    "MetaData tag {Key}={Value} is not present. Adding tag."),
+                                          Arguments);
 
-                            ActionContext->Error(Message);
-                        }
-                        else
-                        {
-                            FFormatNamedArguments Arguments;
-                            Arguments.Add(TEXT("Key"), FText::FromString(MetadataTag.Key.ToString()));
-                            Arguments.Add(TEXT("Value"), FText::FromString(MetadataTag.Value));
-                            const FText Message =
-                                FText::Format(NSLOCTEXT("RuleRanger",
-                                                        "SetMetaDataTag",
-                                                        "MetaData tag {Key}={Value} is not present. Adding tag."),
-                                              Arguments);
-
-                            ActionContext->Info(Message);
-                            Subsystem->SetMetadataTag(Object, MetadataTag.Key, MetadataTag.Value);
-                            // This should not be called during loads of object so neither of these functions should
-                            // return false
-                            ensure(Object->MarkPackageDirty());
-                            ensure(Object->GetOuter()->MarkPackageDirty());
-                        }
+                        ActionContext->Info(Message);
+                        Subsystem->SetMetadataTag(Object, MetadataTag.Key, MetadataTag.Value);
+                        // This should not be called during loads of object so neither of these functions should
+                        // return false
+                        ensure(Object->MarkPackageDirty());
+                        ensure(Object->GetOuter()->MarkPackageDirty());
                     }
                 }
             }

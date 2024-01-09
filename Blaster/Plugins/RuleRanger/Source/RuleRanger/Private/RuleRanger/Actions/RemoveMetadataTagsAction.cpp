@@ -18,59 +18,55 @@
 
 void URemoveMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
-    if (IsValid(Object))
+    if (const auto Subsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>())
     {
-        if (const auto Subsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>())
+        for (const auto& MetadataKey : Keys)
         {
-            for (const auto& MetadataKey : Keys)
+            if (NAME_None == MetadataKey)
             {
-                if (NAME_None == MetadataKey)
+                LogError(Object, TEXT("Empty key specified when attempting to remove MetadataTag."));
+            }
+            else
+            {
+                // ReSharper disable once CppTooWideScopeInitStatement
+                FString ExistingValue = Subsystem->GetMetadataTag(Object, MetadataKey);
+                if (ExistingValue.Equals(TEXT("")))
                 {
-                    LogError(Object, TEXT("Empty key specified when attempting to remove MetadataTag."));
+                    LogInfo(Object,
+                            FString::Printf(TEXT("MetaData with key %s does not exist on object. No action required"),
+                                            *MetadataKey.ToString()));
                 }
                 else
                 {
-                    // ReSharper disable once CppTooWideScopeInitStatement
-                    FString ExistingValue = Subsystem->GetMetadataTag(Object, MetadataKey);
-                    if (ExistingValue.Equals(TEXT("")))
+                    if (ActionContext->IsDryRun())
                     {
-                        LogInfo(
-                            Object,
-                            FString::Printf(TEXT("MetaData with key %s does not exist on object. No action required"),
-                                            *MetadataKey.ToString()));
+                        FFormatNamedArguments Arguments;
+                        Arguments.Add(TEXT("Key"), FText::FromString(MetadataKey.ToString()));
+                        const FText Message =
+                            FText::Format(NSLOCTEXT("RuleRanger",
+                                                    "MetaDataTagRemoveOmitted",
+                                                    "MetaData tag {Key} is present. This tag would be removed if "
+                                                    "RuleRanger was not in DryRun mode"),
+                                          Arguments);
+
+                        ActionContext->Error(Message);
                     }
                     else
                     {
-                        if (ActionContext->IsDryRun())
-                        {
-                            FFormatNamedArguments Arguments;
-                            Arguments.Add(TEXT("Key"), FText::FromString(MetadataKey.ToString()));
-                            const FText Message =
-                                FText::Format(NSLOCTEXT("RuleRanger",
-                                                        "MetaDataTagRemoveOmitted",
-                                                        "MetaData tag {Key} is present. This tag would be removed if "
-                                                        "RuleRanger was not in DryRun mode"),
-                                              Arguments);
+                        FFormatNamedArguments Arguments;
+                        Arguments.Add(TEXT("Key"), FText::FromString(MetadataKey.ToString()));
+                        const FText Message =
+                            FText::Format(NSLOCTEXT("RuleRanger",
+                                                    "RemovingMetaDataTag",
+                                                    "MetaData tag with key {Key} is present. Removing tag."),
+                                          Arguments);
 
-                            ActionContext->Error(Message);
-                        }
-                        else
-                        {
-                            FFormatNamedArguments Arguments;
-                            Arguments.Add(TEXT("Key"), FText::FromString(MetadataKey.ToString()));
-                            const FText Message =
-                                FText::Format(NSLOCTEXT("RuleRanger",
-                                                        "RemovingMetaDataTag",
-                                                        "MetaData tag with key {Key} is present. Removing tag."),
-                                              Arguments);
-
-                            ActionContext->Info(Message);
-                            Subsystem->RemoveMetadataTag(Object, MetadataKey);
-                            // This should not be called during loads of object so neither of these functions should
-                            // return false
-                            ensure(Object->MarkPackageDirty());
-                            ensure(Object->GetOuter()->MarkPackageDirty());
-                        }
+                        ActionContext->Info(Message);
+                        Subsystem->RemoveMetadataTag(Object, MetadataKey);
+                        // This should not be called during loads of object so neither of these functions should
+                        // return false
+                        ensure(Object->MarkPackageDirty());
+                        ensure(Object->GetOuter()->MarkPackageDirty());
                     }
                 }
             }

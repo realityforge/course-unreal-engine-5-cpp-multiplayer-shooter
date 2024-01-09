@@ -19,130 +19,124 @@
 
 void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
-    if (IsValid(Object))
+    if (!NameConventionsTables.IsEmpty())
     {
-        if (!NameConventionsTables.IsEmpty())
+        RebuildNameConventionsCacheIfNecessary();
+
+        if (!NameConventionsCache.IsEmpty())
         {
-            RebuildNameConventionsCacheIfNecessary();
+            const auto Subsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>();
+            const auto Variant = Subsystem ? Subsystem->GetMetadataTag(Object, FName("RuleRanger.Variant")) : TEXT("");
 
-            if (!NameConventionsCache.IsEmpty())
+            const FString OriginalName{ Object->GetName() };
+
+            TArray<UClass*> Classes;
+            FRuleRangerUtilities::CollectTypeHierarchy(Object, Classes);
+            for (auto Class : Classes)
             {
-                const auto Subsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>();
-                const auto Variant =
-                    Subsystem ? Subsystem->GetMetadataTag(Object, FName("RuleRanger.Variant")) : TEXT("");
-
-                const FString OriginalName{ Object->GetName() };
-
-                TArray<UClass*> Classes;
-                FRuleRangerUtilities::CollectTypeHierarchy(Object, Classes);
-                for (auto Class : Classes)
-                {
-                    LogInfo(
-                        Object,
+                LogInfo(Object,
                         FString::Printf(TEXT("Looking for NamingConvention rules for class %s"), *Class->GetName()));
-                    if (TArray<FNameConvention>* NameConventions = NameConventionsCache.Find(Class))
+                if (TArray<FNameConvention>* NameConventions = NameConventionsCache.Find(Class))
+                {
+                    LogInfo(Object,
+                            FString::Printf(TEXT("Found %d NamingConvention rules for %s"),
+                                            NameConventions->Num(),
+                                            *Class->GetName()));
+                    for (int i = 0; i < NameConventions->Num(); i++)
                     {
+                        const FNameConvention& NameConvention = (*NameConventions)[i];
                         LogInfo(Object,
-                                FString::Printf(TEXT("Found %d NamingConvention rules for %s"),
-                                                NameConventions->Num(),
-                                                *Class->GetName()));
-                        for (int i = 0; i < NameConventions->Num(); i++)
-                        {
-                            const FNameConvention& NameConvention = (*NameConventions)[i];
-                            LogInfo(
-                                Object,
                                 FString::Printf(TEXT("Attempting to match NameConvention "
                                                      "Prefix=%s, Suffix=%s, Variant=%s against asset with Variant=%s"),
                                                 *NameConvention.Prefix,
                                                 *NameConvention.Suffix,
                                                 *NameConvention.Variant,
                                                 *Variant));
-                            if (NameConvention.Variant.Equals(Variant)
-                                || NameConvention.Variant.Equals(NameConvention_DefaultVariant))
+                        if (NameConvention.Variant.Equals(Variant)
+                            || NameConvention.Variant.Equals(NameConvention_DefaultVariant))
+                        {
+                            FString NewName{ OriginalName };
+                            if (!NameConvention.Prefix.IsEmpty() && !NewName.StartsWith(NameConvention.Prefix))
                             {
-                                FString NewName{ OriginalName };
-                                if (!NameConvention.Prefix.IsEmpty() && !NewName.StartsWith(NameConvention.Prefix))
+                                NewName.InsertAt(0, NameConvention.Prefix);
+                            }
+                            if (!NameConvention.Suffix.IsEmpty() && !NewName.EndsWith(NameConvention.Suffix))
+                            {
+                                NewName.Append(NameConvention.Suffix);
+                            }
+                            if (NewName.Equals(OriginalName))
+                            {
+                                LogInfo(Object, TEXT("Object matches naming convention. No action required."));
+                            }
+                            else
+                            {
+                                if (ActionContext->IsDryRun())
                                 {
-                                    NewName.InsertAt(0, NameConvention.Prefix);
-                                }
-                                if (!NameConvention.Suffix.IsEmpty() && !NewName.EndsWith(NameConvention.Suffix))
-                                {
-                                    NewName.Append(NameConvention.Suffix);
-                                }
-                                if (NewName.Equals(OriginalName))
-                                {
-                                    LogInfo(Object, TEXT("Object matches naming convention. No action required."));
+                                    FFormatNamedArguments Arguments;
+                                    Arguments.Add(TEXT("OriginalName"), FText::FromString(OriginalName));
+                                    Arguments.Add(TEXT("NewName"), FText::FromString(NewName));
+                                    const FText Message =
+                                        FText::Format(NSLOCTEXT("RuleRanger",
+                                                                "ObjectRenameOmitted",
+                                                                "Object needs to be renamed from '{OriginalName}' "
+                                                                "to '{NewName}'. Action skipped in DryRun mode"),
+                                                      Arguments);
+
+                                    ActionContext->Warning(Message);
                                 }
                                 else
                                 {
-                                    if (ActionContext->IsDryRun())
+                                    FFormatNamedArguments Arguments;
+                                    Arguments.Add(TEXT("OriginalName"), FText::FromString(OriginalName));
+                                    Arguments.Add(TEXT("NewName"), FText::FromString(NewName));
+                                    const auto Message =
+                                        FText::Format(NSLOCTEXT("RuleRanger",
+                                                                "ObjectRenamed",
+                                                                "Object named {OriginalName} has been renamed "
+                                                                "to {NewName} to match convention."),
+                                                      Arguments);
+
+                                    ActionContext->Info(Message);
+
+                                    if (!FRuleRangerUtilities::RenameAsset(Object, NewName))
                                     {
-                                        FFormatNamedArguments Arguments;
-                                        Arguments.Add(TEXT("OriginalName"), FText::FromString(OriginalName));
-                                        Arguments.Add(TEXT("NewName"), FText::FromString(NewName));
-                                        const FText Message =
+                                        const auto InMessage =
                                             FText::Format(NSLOCTEXT("RuleRanger",
-                                                                    "ObjectRenameOmitted",
-                                                                    "Object needs to be renamed from '{OriginalName}' "
-                                                                    "to '{NewName}'. Action skipped in DryRun mode"),
-                                                          Arguments);
-
-                                        ActionContext->Warning(Message);
-                                    }
-                                    else
-                                    {
-                                        FFormatNamedArguments Arguments;
-                                        Arguments.Add(TEXT("OriginalName"), FText::FromString(OriginalName));
-                                        Arguments.Add(TEXT("NewName"), FText::FromString(NewName));
-                                        const auto Message =
-                                            FText::Format(NSLOCTEXT("RuleRanger",
-                                                                    "ObjectRenamed",
-                                                                    "Object named {OriginalName} has been renamed "
-                                                                    "to {NewName} to match convention."),
-                                                          Arguments);
-
-                                        ActionContext->Info(Message);
-
-                                        if (!FRuleRangerUtilities::RenameAsset(Object, NewName))
-                                        {
-                                            const auto InMessage = FText::Format(
-                                                NSLOCTEXT("RuleRanger",
-                                                          "ObjectRenameFailed",
-                                                          "Attempt to rename object '{0}' to '{1}' failed."),
-                                                FText::FromString(OriginalName),
-                                                FText::FromString(NewName));
-                                            ActionContext->Error(InMessage);
-                                        }
+                                                                    "ObjectRenameFailed",
+                                                                    "Attempt to rename object '{0}' to '{1}' failed."),
+                                                          FText::FromString(OriginalName),
+                                                          FText::FromString(NewName));
+                                        ActionContext->Error(InMessage);
                                     }
                                 }
-                                return;
                             }
+                            return;
                         }
                     }
                 }
+            }
 
-                // Only attempt to apply naming conventions to outermost packages
-                if (const UObject* OutermostObject = Object->GetOutermostObject(); OutermostObject == Object)
+            // Only attempt to apply naming conventions to outermost packages
+            if (const UObject* OutermostObject = Object->GetOutermostObject(); OutermostObject == Object)
+            {
+                const auto Message = FString::Printf(TEXT("Unable to locate naming convention for "
+                                                          "object of type '%ls' and variant '%ls'."),
+                                                     *Object->GetClass()->GetName(),
+                                                     *Variant);
+                if (bNotifyIfNameConventionMissing)
                 {
-                    const auto Message = FString::Printf(TEXT("Unable to locate naming convention for "
-                                                              "object of type '%ls' and variant '%ls'."),
-                                                         *Object->GetClass()->GetName(),
-                                                         *Variant);
-                    if (bNotifyIfNameConventionMissing)
-                    {
-                        ActionContext->Warning(FText::FromString(Message));
-                    }
-                    else
-                    {
-                        LogInfo(Object, Message);
-                    }
+                    ActionContext->Warning(FText::FromString(Message));
+                }
+                else
+                {
+                    LogInfo(Object, Message);
                 }
             }
         }
-        else
-        {
-            LogError(Object, TEXT("Action can not run as hasNameConventionsTables property is empty."));
-        }
+    }
+    else
+    {
+        LogError(Object, TEXT("Action can not run as hasNameConventionsTables property is empty."));
     }
 }
 

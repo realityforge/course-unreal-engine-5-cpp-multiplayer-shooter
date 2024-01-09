@@ -16,32 +16,29 @@
 
 void UCheckFolderNamesAreValidAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
-    if (IsValid(Object))
+    TArray<FString> Folders;
+    Object->GetPathName().ParseIntoArray(Folders, TEXT("/"), true);
+
+    const FRegexPattern Pattern(InvalidFolderRegexPattern,
+                                bCaseSensitive ? ERegexPatternFlags::None : ERegexPatternFlags::CaseInsensitive);
+
+    for (const auto& Folder : Folders)
     {
-        TArray<FString> Folders;
-        Object->GetPathName().ParseIntoArray(Folders, TEXT("/"), true);
-
-        const FRegexPattern Pattern(InvalidFolderRegexPattern,
-                                    bCaseSensitive ? ERegexPatternFlags::None : ERegexPatternFlags::CaseInsensitive);
-
-        for (const auto& Folder : Folders)
+        if (InvalidFolderNames.Contains(Folder)
+            || (!InvalidFolderRegexPattern.IsEmpty() && FRegexMatcher(Pattern, Folder).FindNext()))
         {
-            if (InvalidFolderNames.Contains(Folder)
-                || (!InvalidFolderRegexPattern.IsEmpty() && FRegexMatcher(Pattern, Folder).FindNext()))
+            const auto& ErrorMessage = Message.IsEmpty()
+                ? FString::Printf(TEXT("Asset is contained in a folder '%s' with "
+                                       "an invalid name. Move the asset to a different folder."),
+                                  *Folder)
+                : Message;
+            if (Message.IsEmpty())
             {
-                const auto& ErrorMessage = Message.IsEmpty()
-                    ? FString::Printf(TEXT("Asset is contained in a folder '%s' with "
-                                           "an invalid name. Move the asset to a different folder."),
-                                      *Folder)
-                    : Message;
-                if (Message.IsEmpty())
-                {
-                    ActionContext->Error(FText::FromString(ErrorMessage));
-                }
-                else
-                {
-                    ActionContext->Error(FText::FromString(Message));
-                }
+                ActionContext->Error(FText::FromString(ErrorMessage));
+            }
+            else
+            {
+                ActionContext->Error(FText::FromString(Message));
             }
         }
     }

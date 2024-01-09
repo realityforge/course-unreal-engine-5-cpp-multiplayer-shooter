@@ -1,5 +1,5 @@
 ﻿/*
-* Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,30 +16,29 @@
 
 void UEnsureMaxTextureResolutionAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
-    if (IsValid(Object))
+    if (const auto Texture = Cast<UTexture2D>(Object); !Texture)
     {
-        if (const auto Texture = Cast<UTexture2D>(Object); !Texture)
-        {
-            LogError(Object, TEXT("Attempt to run on Object that is not a Texture2D instance."));
-        }
-        else
-        {
-            const int32 TexSizeX = Texture->GetSizeX();
-            const int32 TexSizeY = Texture->GetSizeY();
+        LogError(Object, TEXT("Attempt to run on Object that is not a Texture2D instance."));
+    }
+    else
+    {
+        const int32 TexSizeX = Texture->GetSizeX();
+        const int32 TexSizeY = Texture->GetSizeY();
 
-            if (TexSizeX > MaxSizeX || TexSizeY > MaxSizeY)
-            {
-                FFormatNamedArguments Arguments;
-                Arguments.Add(TEXT("TexSizeX"), FText::FromString(FString::FromInt(TexSizeX)));
-                Arguments.Add(TEXT("TexSizeY"), FText::FromString(FString::FromInt(TexSizeY)));
-                Arguments.Add(TEXT("MaxSizeX"), FText::FromString(FString::FromInt(MaxSizeX)));
-                Arguments.Add(TEXT("MaxSizeY"), FText::FromString(FString::FromInt(MaxSizeY)));
+        if (TexSizeX > MaxSizeX || TexSizeY > MaxSizeY)
+        {
+            FFormatNamedArguments Arguments;
+            Arguments.Add(TEXT("TexSizeX"), FText::FromString(FString::FromInt(TexSizeX)));
+            Arguments.Add(TEXT("TexSizeY"), FText::FromString(FString::FromInt(TexSizeY)));
+            Arguments.Add(TEXT("MaxSizeX"), FText::FromString(FString::FromInt(MaxSizeX)));
+            Arguments.Add(TEXT("MaxSizeY"), FText::FromString(FString::FromInt(MaxSizeY)));
 
-                ActionContext->Error(FText::Format(NSLOCTEXT("RuleRanger",
-                                                             "EnsureMaxTextureResolutionAction_Error",
-                                                             "Texture dimensions {TexSizeX}x{TexSizeY} exceed the maximum dimensions {MaxSizeX}x{MaxSizeY}."),
-                                                   Arguments));
-            }
+            ActionContext->Error(FText::Format(
+                NSLOCTEXT(
+                    "RuleRanger",
+                    "EnsureMaxTextureResolutionAction_Error",
+                    "Texture dimensions {TexSizeX}x{TexSizeY} exceed the maximum dimensions {MaxSizeX}x{MaxSizeY}."),
+                Arguments));
         }
     }
 }

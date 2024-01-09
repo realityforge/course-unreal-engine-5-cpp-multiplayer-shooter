@@ -31,51 +31,47 @@ void UEnsureActorHasMeshComponentWithNamedSocketAction::EmitErrorMessage(URuleRa
 void UEnsureActorHasMeshComponentWithNamedSocketAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
                                                                              UObject* Object)
 {
-    if (IsValid(Object))
+    if (const auto& Actor = FRuleRangerUtilities::ToObject<AActor>(Object))
     {
-        if (const auto& Actor = FRuleRangerUtilities::ToObject<AActor>(Object))
+        for (const auto Component : Actor->GetComponents())
         {
-            for (const auto Component : Actor->GetComponents())
+            if (Component->GetName().Equals(ComponentName))
             {
-                if (Component->GetName().Equals(ComponentName))
+                if (const auto SkeletalMeshComponent = Cast<USkeletalMeshComponent>(Component))
                 {
-                    if (const auto SkeletalMeshComponent = Cast<USkeletalMeshComponent>(Component))
+                    if (!SkeletalMeshComponent->DoesSocketExist(Socket))
                     {
-                        if (!SkeletalMeshComponent->DoesSocketExist(Socket))
-                        {
-                            EmitErrorMessage(ActionContext, SkeletalMeshComponent->GetSkeletalMeshAsset());
-                        }
+                        EmitErrorMessage(ActionContext, SkeletalMeshComponent->GetSkeletalMeshAsset());
                     }
-                    else if (const auto StaticMeshComponent = Cast<UStaticMeshComponent>(Component))
-                    {
-                        if (!StaticMeshComponent->DoesSocketExist(Socket))
-                        {
-                            EmitErrorMessage(ActionContext, StaticMeshComponent->GetStaticMesh());
-                        }
-                    }
-                    else
-                    {
-                        LogError(
-                            Object,
-                            FString::Printf(TEXT("Action running on class %s that has a component named %s but the "
-                                                 "component is not of the known types SkeletalMeshComponent or "
-                                                 "StaticMeshComponent but is a type %s"),
-                                            *Object->GetClass()->GetName(),
-                                            *ComponentName,
-                                            *Component->GetClass()->GetName()));
-                    }
-                    return;
                 }
+                else if (const auto StaticMeshComponent = Cast<UStaticMeshComponent>(Component))
+                {
+                    if (!StaticMeshComponent->DoesSocketExist(Socket))
+                    {
+                        EmitErrorMessage(ActionContext, StaticMeshComponent->GetStaticMesh());
+                    }
+                }
+                else
+                {
+                    LogError(Object,
+                             FString::Printf(TEXT("Action running on class %s that has a component named %s but the "
+                                                  "component is not of the known types SkeletalMeshComponent or "
+                                                  "StaticMeshComponent but is a type %s"),
+                                             *Object->GetClass()->GetName(),
+                                             *ComponentName,
+                                             *Component->GetClass()->GetName()));
+                }
+                return;
             }
-            LogError(Object,
-                     FString::Printf(TEXT("Action running on class %s has no component "
-                                          "named %s so rule can not run."),
-                                     *Object->GetClass()->GetName(),
-                                     *ComponentName));
         }
-        else
-        {
-            LogError(Object, TEXT("Action running on class that is not an Actor"));
-        }
+        LogError(Object,
+                 FString::Printf(TEXT("Action running on class %s has no component "
+                                      "named %s so rule can not run."),
+                                 *Object->GetClass()->GetName(),
+                                 *ComponentName));
+    }
+    else
+    {
+        LogError(Object, TEXT("Action running on class that is not an Actor"));
     }
 }

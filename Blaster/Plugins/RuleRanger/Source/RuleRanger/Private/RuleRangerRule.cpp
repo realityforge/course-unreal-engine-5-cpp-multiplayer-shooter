@@ -22,23 +22,26 @@ void URuleRangerRule::Apply_Implementation(URuleRangerActionContext* ActionConte
     int32 MatcherIndex = 0;
     for (const TObjectPtr<URuleRangerMatcher> Matcher : Matchers)
     {
-        if (!IsValid(Matcher))
+        if (IsValid(Object))
         {
-            ActionContext->Error(
-                FText::FromString(FString::Printf(TEXT("Invalid Matcher detected at index %d"), MatcherIndex)));
-            return;
-        }
-        else
-        {
-            if (!Matcher->Test(Object))
+            if (!IsValid(Matcher))
             {
-                UE_LOG(RuleRanger,
-                       Verbose,
-                       TEXT("ApplyRule(%s) on rule %s exited early as matcher %s did not match"),
-                       *Object->GetName(),
-                       *GetName(),
-                       *Matcher->GetName());
+                ActionContext->Error(
+                    FText::FromString(FString::Printf(TEXT("Invalid Matcher detected at index %d"), MatcherIndex)));
                 return;
+            }
+            else
+            {
+                if (!Matcher->Test(Object))
+                {
+                    UE_LOG(RuleRanger,
+                           Verbose,
+                           TEXT("ApplyRule(%s) on rule %s exited early as matcher %s did not match"),
+                           *Object->GetName(),
+                           *GetName(),
+                           *Matcher->GetName());
+                    return;
+                }
             }
         }
         MatcherIndex++;
@@ -47,36 +50,41 @@ void URuleRangerRule::Apply_Implementation(URuleRangerActionContext* ActionConte
     int32 ActionIndex = 0;
     for (const TObjectPtr<URuleRangerAction> Action : Actions)
     {
-        if (!IsValid(Action))
+        if (IsValid(Object))
         {
-            ActionContext->Error(FText::FromString(
-                FString::Printf(TEXT("Invalid Action detected at index %d in rule '%s'"), ActionIndex, *GetName())));
-        }
-        else
-        {
-            Action->Apply(ActionContext, Object);
-            const auto State = ActionContext->GetState();
-            if (ERuleRangerActionState::AS_Fatal == State)
+            if (!IsValid(Action))
             {
-                UE_LOG(RuleRanger,
-                       Verbose,
-                       TEXT("ApplyRule(%s) on rule %s applied action %s which resulted in fatal error. "
-                            "Processing rules will not continue."),
-                       *Object->GetName(),
-                       *GetName(),
-                       *Action->GetName());
-                return;
+                ActionContext->Error(
+                    FText::FromString(FString::Printf(TEXT("Invalid Action detected at index %d in rule '%s'"),
+                                                      ActionIndex,
+                                                      *GetName())));
             }
-            else if (!bContinueOnError && ERuleRangerActionState::AS_Error == State)
+            else
             {
-                UE_LOG(RuleRanger,
-                       Verbose,
-                       TEXT("ApplyRule(%s) on rule %s applied action %s which resulted in error. "
-                            "Processing rules will not continue as ContinueOnError=False."),
-                       *Object->GetName(),
-                       *GetName(),
-                       *Action->GetName());
-                return;
+                Action->Apply(ActionContext, Object);
+                const auto State = ActionContext->GetState();
+                if (ERuleRangerActionState::AS_Fatal == State)
+                {
+                    UE_LOG(RuleRanger,
+                           Verbose,
+                           TEXT("ApplyRule(%s) on rule %s applied action %s which resulted in fatal error. "
+                                "Processing rules will not continue."),
+                           *Object->GetName(),
+                           *GetName(),
+                           *Action->GetName());
+                    return;
+                }
+                else if (!bContinueOnError && ERuleRangerActionState::AS_Error == State)
+                {
+                    UE_LOG(RuleRanger,
+                           Verbose,
+                           TEXT("ApplyRule(%s) on rule %s applied action %s which resulted in error. "
+                                "Processing rules will not continue as ContinueOnError=False."),
+                           *Object->GetName(),
+                           *GetName(),
+                           *Action->GetName());
+                    return;
+                }
             }
         }
         ActionIndex++;
