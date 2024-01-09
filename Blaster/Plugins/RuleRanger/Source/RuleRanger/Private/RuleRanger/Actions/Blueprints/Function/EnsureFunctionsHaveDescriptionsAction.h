@@ -14,20 +14,17 @@
 
 #pragma once
 
+#include "BaseAnalyzeFunctionAction.h"
 #include "CoreMinimal.h"
+#include "K2Node_FunctionEntry.h"
 #include "RuleRangerAction.h"
 #include "EnsureFunctionsHaveDescriptionsAction.generated.h"
 
 /**
  * Action to check that the functions defined in the Blueprint have descriptions.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
-class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public URuleRangerAction
+UCLASS(AutoExpandCategories = ("Rule Ranger"))
+class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public UBaseAnalyzeFunctionAction
 {
     GENERATED_BODY()
 
@@ -35,8 +32,9 @@ class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public URule
     UPROPERTY(EditAnywhere, Category = "Rule Ranger")
     bool bCheckProtectedFunctions{ true };
 
-public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-    virtual UClass* GetExpectedType() override;
+protected:
+    virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
+                                 UObject* Object,
+                                 TArray<UK2Node_FunctionEntry*>::ElementType FunctionEntry,
+                                 TObjectPtr<UEdGraph> Graph) override;
 };
