@@ -68,20 +68,19 @@ void UEnsureTextureSubTypePresentAction::Apply_Implementation(URuleRangerActionC
 
         if (!NameConventionsCache.IsEmpty())
         {
-            if (const auto Texture = Cast<UTexture2D>(Object); !Texture)
-            {
-                LogError(Object, TEXT("Attempt to run on Object that is not a Texture2D instance."));
-            }
-            else
-            {
-                ApplyRuleToTexture(ActionContext, Texture);
-            }
+            const auto Texture = CastChecked<UTexture2D>(Object);
+            ApplyRuleToTexture(ActionContext, Texture);
         }
     }
     else
     {
         LogError(Object, TEXT("Action can not run as has not specified NameConventionsTable property."));
     }
+}
+
+UClass* UEnsureTextureSubTypePresentAction::GetExpectedType()
+{
+    return UTexture2D::StaticClass();
 }
 
 void UEnsureTextureSubTypePresentAction::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)

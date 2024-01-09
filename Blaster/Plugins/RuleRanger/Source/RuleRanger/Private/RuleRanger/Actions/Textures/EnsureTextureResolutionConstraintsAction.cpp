@@ -120,19 +120,18 @@ void UEnsureTextureResolutionConstraintsAction::CheckDivisibleConstraint(URuleRa
 void UEnsureTextureResolutionConstraintsAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
                                                                      UObject* Object)
 {
-    if (const auto Texture = Cast<UTexture2D>(Object); !Texture)
+    const auto Texture = CastChecked<UTexture2D>(Object);
+    if (ETextureResolutionConstraint::PowerOfTwo == Constraint)
     {
-        LogError(Object, TEXT("Attempt to run on Object that is not a Texture2D instance."));
+        CheckPowerOfTwo(ActionContext, Texture);
     }
     else
     {
-        if (ETextureResolutionConstraint::PowerOfTwo == Constraint)
-        {
-            CheckPowerOfTwo(ActionContext, Texture);
-        }
-        else
-        {
-            CheckDivisibleConstraint(ActionContext, Texture);
-        }
+        CheckDivisibleConstraint(ActionContext, Texture);
     }
+}
+
+UClass* UEnsureTextureResolutionConstraintsAction::GetExpectedType()
+{
+    return UTexture2D::StaticClass();
 }

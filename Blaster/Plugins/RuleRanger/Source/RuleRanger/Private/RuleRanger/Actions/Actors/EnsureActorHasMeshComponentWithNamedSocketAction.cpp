@@ -75,3 +75,8 @@ void UEnsureActorHasMeshComponentWithNamedSocketAction::Apply_Implementation(URu
         LogError(Object, TEXT("Action running on class that is not an Actor"));
     }
 }
+
+UClass* UEnsureActorHasMeshComponentWithNamedSocketAction::GetExpectedType()
+{
+    return AActor::StaticClass();
+}

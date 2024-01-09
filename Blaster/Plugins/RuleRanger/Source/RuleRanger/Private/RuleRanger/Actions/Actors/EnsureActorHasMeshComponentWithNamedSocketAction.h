@@ -54,4 +54,6 @@ class RULERANGER_API UEnsureActorHasMeshComponentWithNamedSocketAction final : p
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+
+    virtual UClass* GetExpectedType() override;
 };

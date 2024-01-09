@@ -41,4 +41,6 @@ class RULERANGER_API UEnsureSkeletalMeshHasBones final : public URuleRangerActio
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+
+    virtual UClass* GetExpectedType() override;
 };

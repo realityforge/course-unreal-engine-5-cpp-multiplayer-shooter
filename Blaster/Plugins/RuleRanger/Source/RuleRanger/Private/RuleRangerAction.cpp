@@ -17,6 +17,11 @@
 
 void URuleRangerAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) {}
 
+UClass* URuleRangerAction::GetExpectedType()
+{
+    return UObject::StaticClass();
+}
+
 void URuleRangerAction::LogInfo(const UObject* const Object, const FString& Message) const
 {
     UE_LOG(RuleRanger,

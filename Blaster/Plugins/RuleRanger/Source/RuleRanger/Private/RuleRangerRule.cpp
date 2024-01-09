@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #include "RuleRangerRule.h"
+#include "RuleRanger/RuleRangerUtilities.h"
 #include "RuleRangerAction.h"
 #include "RuleRangerActionContext.h"
 #include "RuleRangerLogging.h"
@@ -61,7 +62,17 @@ void URuleRangerRule::Apply_Implementation(URuleRangerActionContext* ActionConte
             }
             else
             {
-                Action->Apply(ActionContext, Object);
+                if (const auto _ = FRuleRangerUtilities::ToObject<UObject>(Object, Action->GetExpectedType()))
+                {
+                    Action->Apply(ActionContext, Object);
+                }
+                else
+                {
+                    Action->LogError(Object,
+                                     FString::Printf(TEXT("Attempt to run on Object that is not an "
+                                                          "instance of the type %s."),
+                                                     *Action->GetExpectedType()->GetName()));
+                }
                 const auto State = ActionContext->GetState();
                 if (ERuleRangerActionState::AS_Fatal == State)
                 {

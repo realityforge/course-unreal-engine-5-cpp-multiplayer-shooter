@@ -66,10 +66,12 @@ class RULERANGER_API UEnsureTextureResolutionConstraintsAction final : public UR
     /** The constraint to check. */
     UPROPERTY(EditAnywhere, Category = "Rule Ranger")
     ETextureResolutionConstraint Constraint{ ETextureResolutionConstraint::PowerOfTwo };
-    
+
     void CheckPowerOfTwo(URuleRangerActionContext* ActionContext, const UTexture2D* Texture) const;
     void CheckDivisibleConstraint(URuleRangerActionContext* ActionContext, const UTexture2D* Texture) const;
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+
+    virtual UClass* GetExpectedType() override;
 };

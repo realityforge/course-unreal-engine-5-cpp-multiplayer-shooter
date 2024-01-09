@@ -18,44 +18,38 @@
 void UEnsureFunctionsHaveDescriptionsAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
                                                                   UObject* Object)
 {
-    if (const auto Blueprint = Cast<UBlueprint>(Object); !Blueprint)
+    const auto Blueprint = CastChecked<UBlueprint>(Object);
+    if (BPTYPE_MacroLibrary == Blueprint->BlueprintType)
     {
-        LogError(Object, TEXT("Attempt to run on Object that is not a Blueprint instance."));
+        LogInfo(Object, TEXT("Object is a MacroLibrary and does not contain any functions."));
     }
     else
     {
-        if (BPTYPE_MacroLibrary == Blueprint->BlueprintType)
+        // For all the function graphs that are not construction scripts
+        for (const auto Graph : Blueprint->FunctionGraphs)
         {
-            LogInfo(Object, TEXT("Object is a MacroLibrary and does not contain any functions."));
-        }
-        else
-        {
-            // For all the function graphs that are not construction scripts
-            for (const auto Graph : Blueprint->FunctionGraphs)
+            if (UEdGraphSchema_K2::FN_UserConstructionScript != Graph->GetFName())
             {
-                if (UEdGraphSchema_K2::FN_UserConstructionScript != Graph->GetFName())
-                {
-                    TArray<UK2Node_FunctionEntry*> EntryNodes;
-                    Graph->GetNodesOfClass(EntryNodes);
+                TArray<UK2Node_FunctionEntry*> EntryNodes;
+                Graph->GetNodesOfClass(EntryNodes);
 
-                    if ((EntryNodes.Num() > 0) && EntryNodes[0]->IsEditable())
+                if ((EntryNodes.Num() > 0) && EntryNodes[0]->IsEditable())
+                {
+                    if (const auto FunctionEntry = EntryNodes[0])
                     {
-                        if (const auto FunctionEntry = EntryNodes[0])
+                        if (FunctionEntry->MetaData.ToolTip.IsEmpty())
                         {
-                            if (FunctionEntry->MetaData.ToolTip.IsEmpty())
+                            const bool bPublic = FUNC_Public & FunctionEntry->GetFunctionFlags();
+                            // ReSharper disable once CppTooWideScopeInitStatement
+                            const bool bProtected = FUNC_Protected & FunctionEntry->GetFunctionFlags();
+                            if (bPublic || (bCheckProtectedFunctions && bProtected))
                             {
-                                const bool bPublic = FUNC_Public & FunctionEntry->GetFunctionFlags();
-                                // ReSharper disable once CppTooWideScopeInitStatement
-                                const bool bProtected = FUNC_Protected & FunctionEntry->GetFunctionFlags();
-                                if (bPublic || (bCheckProtectedFunctions && bProtected))
-                                {
-                                    const auto& ErrorMessage = FString::Printf(
-                                        TEXT(
-                                            "Blueprint contains a %s function named '%s' that is expected to have a description."),
-                                        (bPublic ? TEXT("public") : TEXT("protected")),
-                                        *FunctionEntry->GetNodeTitle(ENodeTitleType::FullTitle).ToString());
-                                    ActionContext->Error(FText::FromString(ErrorMessage));
-                                }
+                                const auto& ErrorMessage = FString::Printf(
+                                    TEXT(
+                                        "Blueprint contains a %s function named '%s' that is expected to have a description."),
+                                    (bPublic ? TEXT("public") : TEXT("protected")),
+                                    *FunctionEntry->GetNodeTitle(ENodeTitleType::FullTitle).ToString());
+                                ActionContext->Error(FText::FromString(ErrorMessage));
                             }
                         }
                     }
@@ -63,4 +57,9 @@ void UEnsureFunctionsHaveDescriptionsAction::Apply_Implementation(URuleRangerAct
             }
         }
     }
+}
+
+UClass* UEnsureFunctionsHaveDescriptionsAction::GetExpectedType()
+{
+    return UBlueprint::StaticClass();
 }

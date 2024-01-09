@@ -34,6 +34,8 @@ class RULERANGER_API UCheckNiagaraSystemCompileStatusAction final : public URule
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
+    virtual UClass* GetExpectedType() override;
+
 private:
     /** Should the action generate an error on "Unknown" Compile Status. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess, ExposeOnSpawn))

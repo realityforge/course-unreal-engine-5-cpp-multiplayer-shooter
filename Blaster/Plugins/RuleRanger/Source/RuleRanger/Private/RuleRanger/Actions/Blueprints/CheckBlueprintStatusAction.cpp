@@ -16,51 +16,50 @@
 
 void UCheckBlueprintStatusAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
-    if (const auto Blueprint = Cast<UBlueprint>(Object); !Blueprint)
+    const auto Blueprint = CastChecked<UBlueprint>(Object);
+    switch (Blueprint->Status)
     {
-        LogError(Object, TEXT("Attempt to run on Object that is not a Blueprint instance."));
-    }
-    else
-    {
-        switch (Blueprint->Status)
-        {
-            case BS_BeingCreated:
-                LogInfo(Object, TEXT("Blueprint status is BeingCreated. Status valid."));
-                return;
+        case BS_BeingCreated:
+            LogInfo(Object, TEXT("Blueprint status is BeingCreated. Status valid."));
+            return;
 
-            case BS_Dirty:
-                ActionContext->Error(FText::FromString("Blueprint is dirty and needs to be recompiled"));
-                return;
+        case BS_Dirty:
+            ActionContext->Error(FText::FromString("Blueprint is dirty and needs to be recompiled"));
+            return;
 
-            case BS_UpToDate:
-                LogInfo(Object, TEXT("Blueprint status is UpToDate. Status valid."));
-                return;
-            case BS_Error:
-                ActionContext->Error(
-                    FText::FromString("Blueprint has an Unknown status. Fix error and recompile Blueprint."));
-                return;
-            case BS_UpToDateWithWarnings:
-                if (bErrorOnUpToDateWithWarnings)
-                {
-                    ActionContext->Error(FText::FromString(
-                        "Blueprint is UpToDate but has warnings. Fix warnings and recompile or set bErrorOnUpToDateWithWarnings=false"));
-                }
-                else
-                {
-                    LogInfo(Object,
-                            TEXT("Blueprint status is Unknown and bErrorOnUpToDateWithWarnings=false. Status valid."));
-                }
-                return;
-            case BS_Unknown:
-            default:
-                if (bErrorOnUnknown)
-                {
-                    ActionContext->Error(FText::FromString("Blueprint has an Unknown status. Recompile Blueprint"));
-                }
-                else
-                {
-                    LogInfo(Object, TEXT("Blueprint status is Unknown and bErrorOnUnknown=false. Status valid."));
-                }
-        }
+        case BS_UpToDate:
+            LogInfo(Object, TEXT("Blueprint status is UpToDate. Status valid."));
+            return;
+        case BS_Error:
+            ActionContext->Error(
+                FText::FromString("Blueprint has an Unknown status. Fix error and recompile Blueprint."));
+            return;
+        case BS_UpToDateWithWarnings:
+            if (bErrorOnUpToDateWithWarnings)
+            {
+                ActionContext->Error(FText::FromString(
+                    "Blueprint is UpToDate but has warnings. Fix warnings and recompile or set bErrorOnUpToDateWithWarnings=false"));
+            }
+            else
+            {
+                LogInfo(Object,
+                        TEXT("Blueprint status is Unknown and bErrorOnUpToDateWithWarnings=false. Status valid."));
+            }
+            return;
+        case BS_Unknown:
+        default:
+            if (bErrorOnUnknown)
+            {
+                ActionContext->Error(FText::FromString("Blueprint has an Unknown status. Recompile Blueprint"));
+            }
+            else
+            {
+                LogInfo(Object, TEXT("Blueprint status is Unknown and bErrorOnUnknown=false. Status valid."));
+            }
     }
+}
+
+UClass* UCheckBlueprintStatusAction::GetExpectedType()
+{
+    return UBlueprint::StaticClass();
 }

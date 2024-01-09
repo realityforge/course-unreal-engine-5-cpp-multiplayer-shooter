@@ -48,4 +48,6 @@ class RULERANGER_API UEnsureMaxTextureResolutionAction final : public URuleRange
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+
+    virtual UClass* GetExpectedType() override;
 };

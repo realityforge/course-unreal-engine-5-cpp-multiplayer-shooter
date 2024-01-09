@@ -36,6 +36,8 @@ class RULERANGER_API UEnsureNoUnlinkedNodesAction final : public URuleRangerActi
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
+    virtual UClass* GetExpectedType() override;
+
 private:
     /** Should the action generate an error on default Event nodes that have not been deleted nor implemented. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess, ExposeOnSpawn))

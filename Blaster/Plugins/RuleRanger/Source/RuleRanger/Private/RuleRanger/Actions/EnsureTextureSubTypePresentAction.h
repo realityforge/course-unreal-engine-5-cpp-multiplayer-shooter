@@ -63,6 +63,8 @@ class RULERANGER_API UEnsureTextureSubTypePresentAction final : public URuleRang
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
+    virtual UClass* GetExpectedType() override;
+
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 protected:

@@ -32,6 +32,8 @@ class RULERANGER_API URuleRangerAction : public UObject
 {
     GENERATED_BODY()
 
+    friend class URuleRangerRule;
+
 public:
     /**
      * Apply the action to the specified object.
@@ -41,6 +43,15 @@ public:
      */
     UFUNCTION(BlueprintNativeEvent, Category = "Rule Ranger")
     void Apply(URuleRangerActionContext* ActionContext, UObject* Object);
+
+    /**
+     * Return the type of the object that this action can run on.
+     * If the object can not be converted to an object of this type then
+     * a error log message is emitted and the action is skipped.
+     *
+     * @return The Class that the Object must be an instance of.
+     */
+    virtual UClass* GetExpectedType();
 
 protected:
     /**
