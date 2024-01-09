@@ -44,5 +44,3 @@ Possible Directory layout:
  `Characters/[CharacterName]/Materials/Layers`
  `Characters/[CharacterName]/Rigs`
  `Characters/[CharacterName]/Textures`
-
-* Remove `if (const auto Blueprint = Cast<UBlueprint>(Object); !Blueprint)` style code from all the rules. By setting type for action ahead of time
