@@ -129,7 +129,7 @@ bool URuleRangerEditorValidator::ProcessRule(TArray<FText>& ValidationErrors, UR
         {
             AssetFails(InObject, ActionContext->GetFatalMessages()[i], ValidationErrors);
         }
-        return ActionContext->GetFatalMessages().Num() > 0 ? false : true;
+        return ActionContext->GetFatalMessages().Num() <= 0;
     }
     else
     {
