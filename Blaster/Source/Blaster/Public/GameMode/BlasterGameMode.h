@@ -19,7 +19,7 @@ class BLASTER_API ABlasterGameMode : public AGameMode
 
 public:
     /**
-     * Invoked when a player is ELiminated/killed.
+     * Invoked when a player is Eliminated/killed.
      *
      * @param Character the Character representing the Player eliminated.
      * @param Controller the PlayerController representing the Player eliminated.
