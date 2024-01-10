@@ -35,6 +35,8 @@ public:
 
     virtual void OnRep_ReplicatedMovement() override;
 
+    void Eliminate();
+
 protected:
     virtual void BeginPlay() override;
 

@@ -8,6 +8,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameMode/BlasterGameMode.h"
 #include "InputMappingContext.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
@@ -130,6 +131,8 @@ void ABlasterCharacter::OnRep_ReplicatedMovement()
     TimeSinceLastMovementReplication = 0.f;
 }
 
+void ABlasterCharacter::Eliminate() {}
+
 void ABlasterCharacter::UpdateHUDHealth() const
 {
     if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
@@ -169,6 +172,16 @@ void ABlasterCharacter::OnTakeDamage([[maybe_unused]] AActor* DamagedActor,
     Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
     UpdateHUDHealth();
     PlayHitReactMontage();
+
+    if (0.f == Health)
+    {
+        if (const auto GameMode = GetWorld()->GetAuthGameMode<ABlasterGameMode>())
+        {
+            const auto BlasterPlayerController = Cast<ABlasterPlayerController>(Controller);
+            const auto AttackerController = Cast<ABlasterPlayerController>(InstigatorController);
+            GameMode->PlayerEliminated(this, BlasterPlayerController, AttackerController);
+        }
+    }
 }
 
 void ABlasterCharacter::MoveInputActionTriggered(const FInputActionValue& Value)
