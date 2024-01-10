@@ -78,8 +78,8 @@ private:
     FRotator RightHandRotation;
 
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-    bool bLocallyControlled;
+    bool bLocallyControlled{ false };
 
     UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-    bool bRotateRootBone;
+    bool bRotateRootBone{ false };
 };
