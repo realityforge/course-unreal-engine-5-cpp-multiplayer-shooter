@@ -21,9 +21,9 @@ public:
     /**
      * Invoked when a player is Eliminated/killed.
      *
-     * @param Character the Character representing the Player eliminated.
-     * @param Controller the PlayerController representing the Player eliminated.
-     * @param Attacker The PlayerController that eliminated the Player.
+     * @param Character the Character representing the Player eliminated/killed.
+     * @param Controller the PlayerController representing the Player eliminated/killed.
+     * @param Attacker The PlayerController that eliminated/killed the Player.
      */
     virtual void PlayerEliminated(ABlasterCharacter* Character,
                                   ABlasterPlayerController* Controller,
