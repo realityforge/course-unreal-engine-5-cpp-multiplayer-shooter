@@ -32,11 +32,13 @@ void UCombatComponent::BeginPlay()
     Super::BeginPlay();
     MirrorWalkSpeedBasedOnState();
     InitDefaultFOV();
+    bCanFire = true;
 }
 
 void UCombatComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
+    bCanFire = true;
     GetWorld()->GetTimerManager().ClearTimer(FireTimer);
 }
 
@@ -80,12 +82,12 @@ void UCombatComponent::Fire()
 
     if (bCanFire)
     {
-        bCanFire = false;
         // Send fire action to the server
         ServerFire(HitTarget);
 
         if (EquippedWeapon)
         {
+            bCanFire = false;
             CrosshairShootingFactor += 0.75f;
             CrosshairShootingFactor = FMath::Min(CrosshairShootingFactor, 1.f);
 
