@@ -35,6 +35,7 @@ public:
 
     virtual void OnRep_ReplicatedMovement() override;
 
+    UFUNCTION(NetMulticast, Reliable)
     void Eliminate();
 
 protected:
@@ -172,6 +173,11 @@ private:
 
     void PlayHitReactMontage() const;
 
+    UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
+    UAnimMontage* EliminationMontage{ nullptr };
+
+    void PlayEliminationMontage() const;
+
     void CalculateAimOffsetPitch();
 
     void SimProxiesTurn();
@@ -200,6 +206,9 @@ private:
 
     UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Health, Category = "Player Stats")
     float Health{ 100.f };
+
+    UPROPERTY(Transient, VisibleInstanceOnly)
+    bool bEliminated;
 
     UFUNCTION()
     void OnRep_Health();
@@ -264,6 +273,7 @@ public:
     FORCEINLINE float GetAimOffsetPitch() const { return AimOffsetPitch; }
     FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
     FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
+    FORCEINLINE bool IsEliminated() const { return bEliminated; }
 
     void SetOverlappingWeapon(AWeapon* Weapon);
 

@@ -45,6 +45,7 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
         AimOffsetPitch = BlasterCharacter->GetAimOffsetPitch();
         TurningInPlace = BlasterCharacter->GetTurningInPlace();
         bRotateRootBone = BlasterCharacter->ShouldRotateRootBone();
+        bEliminated = BlasterCharacter->IsEliminated();
 
         // AimRotation is in world space
         const FRotator AimRotation = BlasterCharacter->GetBaseAimRotation();

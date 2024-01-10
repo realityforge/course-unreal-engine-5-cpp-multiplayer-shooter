@@ -131,7 +131,11 @@ void ABlasterCharacter::OnRep_ReplicatedMovement()
     TimeSinceLastMovementReplication = 0.f;
 }
 
-void ABlasterCharacter::Eliminate() {}
+void ABlasterCharacter::Eliminate_Implementation()
+{
+    bEliminated = true;
+    PlayEliminationMontage();
+}
 
 void ABlasterCharacter::UpdateHUDHealth() const
 {
@@ -290,6 +294,20 @@ void ABlasterCharacter::Jump()
     else
     {
         Super::Jump();
+    }
+}
+
+void ABlasterCharacter::PlayEliminationMontage() const
+{
+    if (IsValid(EliminationMontage))
+    {
+        check(GetMesh());
+        if (const auto AnimInstance = GetMesh()->GetAnimInstance(); IsValid(AnimInstance))
+        {
+            AnimInstance->Montage_Play(EliminationMontage);
+            const FName SectionName("Default");
+            AnimInstance->Montage_JumpToSection(SectionName);
+        }
     }
 }
 
