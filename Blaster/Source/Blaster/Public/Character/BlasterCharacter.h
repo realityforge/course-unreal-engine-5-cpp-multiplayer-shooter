@@ -24,6 +24,7 @@ class ABlasterCharacter : public ACharacter, public IInterfaceWithCrosshair
 public:
     ABlasterCharacter();
 
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
     virtual void Tick(float DeltaTime) override;
 
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
@@ -35,8 +36,10 @@ public:
 
     virtual void OnRep_ReplicatedMovement() override;
 
-    UFUNCTION(NetMulticast, Reliable)
     void Eliminate();
+
+    UFUNCTION(NetMulticast, Reliable)
+    void MulticastEliminate();
 
 protected:
     virtual void BeginPlay() override;
@@ -221,6 +224,15 @@ private:
                       const UDamageType* DamageType,
                       AController* InstigatorController,
                       AActor* DamageCauser);
+
+    FTimerHandle RespawnTimer;
+
+    /** The delay between when the character dies and is respawned. */
+    UPROPERTY(EditDefaultsOnly, Category = "Player Stats")
+    float RespawnDelay{ 3.f };
+
+    void RespawnTimerFinished();
+
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------

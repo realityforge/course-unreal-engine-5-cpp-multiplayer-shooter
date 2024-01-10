@@ -19,6 +19,9 @@ ABlasterCharacter::ABlasterCharacter()
 {
     PrimaryActorTick.bCanEverTick = true;
 
+    // Make sure we always spawn the character, so can not fail to respawn.
+    SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
     CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
     // We attach to the mesh rather than the root component. Because when we
     // crouch the root capsule will change which would mean this boom changed
@@ -69,6 +72,12 @@ ABlasterCharacter::ABlasterCharacter()
     NetUpdateFrequency = 66.f;
     MinNetUpdateFrequency = 33.f;
     NetPriority = 5;
+}
+
+void ABlasterCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    GetWorld()->GetTimerManager().ClearTimer(RespawnTimer);
+    Super::EndPlay(EndPlayReason);
 }
 
 void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -131,7 +140,13 @@ void ABlasterCharacter::OnRep_ReplicatedMovement()
     TimeSinceLastMovementReplication = 0.f;
 }
 
-void ABlasterCharacter::Eliminate_Implementation()
+void ABlasterCharacter::Eliminate()
+{
+    MulticastEliminate();
+    GetWorld()->GetTimerManager().SetTimer(RespawnTimer, this, &ABlasterCharacter::RespawnTimerFinished, RespawnDelay);
+}
+
+void ABlasterCharacter::MulticastEliminate_Implementation()
 {
     bEliminated = true;
     PlayEliminationMontage();
@@ -468,6 +483,14 @@ void ABlasterCharacter::OnRep_Health()
 {
     UpdateHUDHealth();
     PlayHitReactMontage();
+}
+
+void ABlasterCharacter::RespawnTimerFinished()
+{
+    if (const auto GameMode = GetWorld()->GetAuthGameMode<ABlasterGameMode>())
+    {
+        GameMode->RequestRespawn(this, Controller);
+    }
 }
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef

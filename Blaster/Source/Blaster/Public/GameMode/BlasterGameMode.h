@@ -17,6 +17,13 @@ class BLASTER_API ABlasterGameMode : public AGameMode
 {
     GENERATED_BODY()
 
+    /**
+     * Select a player start location.
+     *
+     * @return the start location.
+     */
+    AActor* SelectPlayerStart() const;
+
 public:
     /**
      * Invoked when a player is Eliminated/killed.
@@ -28,4 +35,12 @@ public:
     virtual void PlayerEliminated(ABlasterCharacter* Character,
                                   ABlasterPlayerController* Controller,
                                   ABlasterPlayerController* Attacker);
+
+    /**
+     * Request that the player be respawned.
+     *
+     * @param Character The Character that represented the player.
+     * @param Controller The Player Controller.
+     */
+    virtual void RequestRespawn(ACharacter* Character, AController* Controller);
 };
