@@ -16,6 +16,7 @@
 
 void UCheckBlueprintStatusAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
+    // ReSharper disable once CppTooWideScopeInitStatement
     const auto Blueprint = CastChecked<UBlueprint>(Object);
     switch (Blueprint->Status)
     {
