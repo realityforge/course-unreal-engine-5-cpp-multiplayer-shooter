@@ -164,10 +164,10 @@ private:
 
     ETurningInPlace TurningInPlace{ ETurningInPlace::TIP_NotTurning };
 
-    UPROPERTY(EditAnywhere, Category = Combat)
+    UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
     UAnimMontage* FireWeaponMontage{ nullptr };
 
-    UPROPERTY(EditAnywhere, Category = Combat)
+    UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
     UAnimMontage* HitReactMontage{ nullptr };
 
     void PlayHitReactMontage() const;
