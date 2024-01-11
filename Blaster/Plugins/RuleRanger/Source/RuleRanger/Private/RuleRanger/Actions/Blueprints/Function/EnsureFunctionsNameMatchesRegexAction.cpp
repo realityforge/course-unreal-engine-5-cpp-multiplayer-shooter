@@ -14,11 +14,10 @@
 
 #include "EnsureFunctionsNameMatchesRegexAction.h"
 
-void UEnsureFunctionsNameMatchesRegexAction::AnalyzeFunction(
-    URuleRangerActionContext* ActionContext,
-    UObject* Object,
-    const TArray<UK2Node_FunctionEntry*>::ElementType FunctionEntry,
-    const TObjectPtr<UEdGraph> Graph)
+void UEnsureFunctionsNameMatchesRegexAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
+                                                             UObject* Object,
+                                                             UK2Node_FunctionEntry* FunctionEntry,
+                                                             UEdGraph* Graph)
 {
     const FString& FunctionName = Graph->GetName();
     const FRegexPattern RegexPattern(Pattern,

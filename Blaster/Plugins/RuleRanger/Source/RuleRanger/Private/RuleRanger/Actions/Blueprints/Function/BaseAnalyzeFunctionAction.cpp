@@ -20,8 +20,8 @@ bool UBaseAnalyzeFunctionAction::ShouldAnalyzeGraph(const TObjectPtr<UEdGraph> G
 
 void UBaseAnalyzeFunctionAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                                  UObject* Object,
-                                                 TArray<UK2Node_FunctionEntry*>::ElementType FunctionEntry,
-                                                 TObjectPtr<UEdGraph> Graph)
+                                                 UK2Node_FunctionEntry* FunctionEntry,
+                                                 UEdGraph* Graph)
 {
     LogError(Object, TEXT("Action failed to override AnalyzeFunction."));
 }

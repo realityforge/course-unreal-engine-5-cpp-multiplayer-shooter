@@ -15,11 +15,10 @@
 #include "EnsureFunctionsHaveDescriptionsAction.h"
 #include "K2Node_FunctionEntry.h"
 
-void UEnsureFunctionsHaveDescriptionsAction::AnalyzeFunction(
-    URuleRangerActionContext* ActionContext,
-    UObject* Object,
-    const TArray<UK2Node_FunctionEntry*>::ElementType FunctionEntry,
-    const TObjectPtr<UEdGraph> Graph)
+void UEnsureFunctionsHaveDescriptionsAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
+                                                             UObject* Object,
+                                                             UK2Node_FunctionEntry* FunctionEntry,
+                                                             UEdGraph* Graph)
 {
     if (FunctionEntry->MetaData.ToolTip.IsEmpty())
     {

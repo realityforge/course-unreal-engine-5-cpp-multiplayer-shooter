@@ -53,11 +53,10 @@ bool UEnsureFunctionsMaxNodeCountAction::IsNodeTrivial(const UEdGraphNode* Node)
     }
 }
 
-void UEnsureFunctionsMaxNodeCountAction::AnalyzeFunction(
-    URuleRangerActionContext* ActionContext,
-    UObject* Object,
-    const TArray<UK2Node_FunctionEntry*>::ElementType FunctionEntry,
-    const TObjectPtr<UEdGraph> Graph)
+void UEnsureFunctionsMaxNodeCountAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
+                                                         UObject* Object,
+                                                         UK2Node_FunctionEntry* FunctionEntry,
+                                                         UEdGraph* Graph)
 {
     // Check whether the number of nodes in graph is below limit and if not then count
     // non-trivial nodes and check whether it is below the limit

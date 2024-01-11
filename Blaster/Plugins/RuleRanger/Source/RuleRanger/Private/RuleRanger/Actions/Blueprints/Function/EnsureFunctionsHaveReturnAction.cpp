@@ -23,8 +23,8 @@ bool UEnsureFunctionsHaveReturnAction::ShouldAnalyzeGraph(const TObjectPtr<UEdGr
 
 void UEnsureFunctionsHaveReturnAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                                        UObject* Object,
-                                                       TArray<UK2Node_FunctionEntry*>::ElementType FunctionEntry,
-                                                       TObjectPtr<UEdGraph> Graph)
+                                                       UK2Node_FunctionEntry* FunctionEntry,
+                                                       UEdGraph* Graph)
 {
     // Find the list of result nodes
     TArray<UK2Node_FunctionResult*> ResultNodes;

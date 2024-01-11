@@ -31,8 +31,8 @@ protected:
     virtual bool ShouldAnalyzeGraph(TObjectPtr<UEdGraph> Graph) const;
     virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                  UObject* Object,
-                                 TArray<UK2Node_FunctionEntry*>::ElementType FunctionEntry,
-                                 TObjectPtr<UEdGraph> Graph);
+                                 UK2Node_FunctionEntry* FunctionEntry,
+                                 UEdGraph* Graph);
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
