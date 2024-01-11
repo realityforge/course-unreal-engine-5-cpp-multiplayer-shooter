@@ -22,7 +22,6 @@ void UEnsureFunctionsNameMatchesRegexAction::AnalyzeFunction(URuleRangerActionCo
     const FString& FunctionName = Graph->GetName();
     const FRegexPattern RegexPattern(Pattern,
                                      bCaseSensitive ? ERegexPatternFlags::None : ERegexPatternFlags::CaseInsensitive);
-    LogInfo(Object, FString::Printf(TEXT("Checking function %s matches pattern %s"), *FunctionName, *Pattern));
     // ReSharper disable once CppTooWideScopeInitStatement
     FRegexMatcher Matcher(RegexPattern, FunctionName);
     if (!Matcher.FindNext())
