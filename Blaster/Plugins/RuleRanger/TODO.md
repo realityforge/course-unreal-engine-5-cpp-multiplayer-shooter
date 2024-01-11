@@ -47,4 +47,3 @@ Possible Directory layout:
 
 * Add check that all private Blueprint functions are called
 * Add check that protected Blueprint functions are in non-final blueprint classes?
-* Add check that validates function name against regex (and checks public, protected by default and maybe private?
