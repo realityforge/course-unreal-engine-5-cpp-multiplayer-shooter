@@ -16,13 +16,13 @@
 #include "K2Node_FunctionEntry.h"
 #include "K2Node_FunctionResult.h"
 
-bool UEnsureFunctionsHaveReturnAction::ShouldAnalyzeGraph(const TObjectPtr<UEdGraph> Graph) const
+bool UEnsureFunctionsHaveReturnAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
 {
     return Super::ShouldAnalyzeGraph(Graph) && UEdGraphSchema_K2::GN_AnimGraph != Graph->GetFName();
 }
 
 void UEnsureFunctionsHaveReturnAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                                       UObject* Object,
+                                                       UBlueprint* Blueprint,
                                                        UK2Node_FunctionEntry* FunctionEntry,
                                                        UEdGraph* Graph)
 {

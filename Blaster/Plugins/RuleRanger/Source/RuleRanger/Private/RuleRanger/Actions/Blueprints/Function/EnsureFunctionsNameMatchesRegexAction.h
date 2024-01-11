@@ -36,7 +36,7 @@ class RULERANGER_API UEnsureFunctionsNameMatchesRegexAction final : public UBase
 
 protected:
     virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                 UObject* Object,
+                                 UBlueprint* Blueprint,
                                  UK2Node_FunctionEntry* FunctionEntry,
                                  UEdGraph* Graph) override;
 };

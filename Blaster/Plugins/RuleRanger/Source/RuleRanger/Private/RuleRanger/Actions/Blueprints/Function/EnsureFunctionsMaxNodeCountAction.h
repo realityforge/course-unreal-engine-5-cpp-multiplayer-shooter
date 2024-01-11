@@ -35,7 +35,7 @@ class RULERANGER_API UEnsureFunctionsMaxNodeCountAction final : public UBaseAnal
 
 protected:
     virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                 UObject* Object,
+                                 UBlueprint* Blueprint,
                                  UK2Node_FunctionEntry* FunctionEntry,
                                  UEdGraph* Graph) override;
 };

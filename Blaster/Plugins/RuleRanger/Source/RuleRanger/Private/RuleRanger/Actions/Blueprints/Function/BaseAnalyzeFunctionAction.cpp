@@ -13,17 +13,23 @@
  */
 
 #include "BaseAnalyzeFunctionAction.h"
-bool UBaseAnalyzeFunctionAction::ShouldAnalyzeGraph(const TObjectPtr<UEdGraph> Graph) const
+
+bool UBaseAnalyzeFunctionAction::ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const
+{
+    return true;
+}
+
+bool UBaseAnalyzeFunctionAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
 {
     return UEdGraphSchema_K2::FN_UserConstructionScript != Graph->GetFName();
 }
 
 void UBaseAnalyzeFunctionAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                                 UObject* Object,
+                                                 UBlueprint* Blueprint,
                                                  UK2Node_FunctionEntry* FunctionEntry,
                                                  UEdGraph* Graph)
 {
-    LogError(Object, TEXT("Action failed to override AnalyzeFunction."));
+    LogError(Blueprint, TEXT("Action failed to override AnalyzeFunction."));
 }
 
 void UBaseAnalyzeFunctionAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
@@ -33,6 +39,10 @@ void UBaseAnalyzeFunctionAction::Apply_Implementation(URuleRangerActionContext* 
     if (BPTYPE_MacroLibrary == Blueprint->BlueprintType)
     {
         LogInfo(Object, TEXT("Object is a MacroLibrary and does not contain any functions."));
+    }
+    else if (!ShouldAnalyzeBlueprint(Blueprint))
+    {
+        LogInfo(Object, TEXT("Blueprint not analyzed as ShouldAnalyzeBlueprint() returned false."));
     }
     else
     {
@@ -48,7 +58,7 @@ void UBaseAnalyzeFunctionAction::Apply_Implementation(URuleRangerActionContext* 
                 {
                     if (const auto FunctionEntry = EntryNodes[0])
                     {
-                        AnalyzeFunction(ActionContext, Object, FunctionEntry, Graph);
+                        AnalyzeFunction(ActionContext, Blueprint, FunctionEntry, Graph);
                     }
                 }
             }

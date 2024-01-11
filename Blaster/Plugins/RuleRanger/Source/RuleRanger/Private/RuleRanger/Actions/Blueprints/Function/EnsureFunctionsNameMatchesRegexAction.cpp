@@ -15,7 +15,7 @@
 #include "EnsureFunctionsNameMatchesRegexAction.h"
 
 void UEnsureFunctionsNameMatchesRegexAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                                             UObject* Object,
+                                                             UBlueprint* Blueprint,
                                                              UK2Node_FunctionEntry* FunctionEntry,
                                                              UEdGraph* Graph)
 {
@@ -35,6 +35,6 @@ void UEnsureFunctionsNameMatchesRegexAction::AnalyzeFunction(URuleRangerActionCo
     }
     else
     {
-        LogInfo(Object, FString::Printf(TEXT("Function named %s matches pattern %s"), *FunctionName, *Pattern));
+        LogInfo(Blueprint, FString::Printf(TEXT("Function named %s matches pattern %s"), *FunctionName, *Pattern));
     }
 }

@@ -54,7 +54,7 @@ bool UEnsureFunctionsMaxNodeCountAction::IsNodeTrivial(const UEdGraphNode* Node)
 }
 
 void UEnsureFunctionsMaxNodeCountAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                                         UObject* Object,
+                                                         UBlueprint* Blueprint,
                                                          UK2Node_FunctionEntry* FunctionEntry,
                                                          UEdGraph* Graph)
 {

@@ -28,9 +28,34 @@ class RULERANGER_API UBaseAnalyzeFunctionAction : public URuleRangerAction
     GENERATED_BODY()
 
 protected:
-    virtual bool ShouldAnalyzeGraph(TObjectPtr<UEdGraph> Graph) const;
+    /**
+     * Return true to ensure this particular Blueprint is analyzed.
+     * Useful to return false if a threshold of complexity needs to be reached before the actioin is applied.
+     *
+     * @param Blueprint the Blueprint.
+     * @return true to analyze Blueprint, otherwise false.
+     */
+    virtual bool ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const;
+
+    /**
+     * Return true to analyze the particular Blueprint Graph/Function.
+     * Useful to skip Construction graphs that are automatically created and can not be modified.
+     *
+     * @param Graph the function Graph.
+     * @return true to analyze function, false otherwise.
+     */
+    virtual bool ShouldAnalyzeGraph(UEdGraph* Graph) const;
+
+    /**
+     * Function to override to analyze a particular function.
+     *
+     * @param ActionContext The ActionContext.
+     * @param Object The root object (a.k.a. the Blueprint)
+     * @param FunctionEntry The node representing the function entry point.
+     * @param Graph The Function graph.
+     */
     virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                 UObject* Object,
+                                 UBlueprint* Blueprint,
                                  UK2Node_FunctionEntry* FunctionEntry,
                                  UEdGraph* Graph);
 

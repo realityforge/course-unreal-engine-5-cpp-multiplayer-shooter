@@ -16,7 +16,7 @@
 #include "K2Node_FunctionEntry.h"
 
 void UEnsureFunctionsHaveDescriptionsAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                                             UObject* Object,
+                                                             UBlueprint* Blueprint,
                                                              UK2Node_FunctionEntry* FunctionEntry,
                                                              UEdGraph* Graph)
 {
