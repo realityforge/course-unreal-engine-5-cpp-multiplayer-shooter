@@ -33,7 +33,7 @@ void UEnsureFunctionsHaveReturnAction::AnalyzeFunction(URuleRangerActionContext*
     {
         const auto& ErrorMessage =
             FString::Printf(TEXT("Blueprint contains a function named '%s' that is missing a result node."),
-                            *FunctionEntry->GetNodeTitle(ENodeTitleType::FullTitle).ToString());
+                            *Graph->GetName());
         ActionContext->Error(FText::FromString(ErrorMessage));
     }
 }

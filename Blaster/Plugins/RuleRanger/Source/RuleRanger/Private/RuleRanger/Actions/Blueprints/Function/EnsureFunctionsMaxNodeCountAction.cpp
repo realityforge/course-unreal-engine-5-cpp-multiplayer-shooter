@@ -70,7 +70,7 @@ void UEnsureFunctionsMaxNodeCountAction::AnalyzeFunction(URuleRangerActionContex
             const auto& ErrorMessage =
                 FString::Printf(TEXT("Blueprint contains a function named '%s' that contains %d non-trivial "
                                      "nodes which exceeds the limit of %d non-trivial nodes."),
-                                *FunctionEntry->GetNodeTitle(ENodeTitleType::FullTitle).ToString(),
+                                *Graph->GetName(),
                                 NonTrivialNodeCount,
                                 MaxNonTrivialNodeCount);
             ActionContext->Error(FText::FromString(ErrorMessage));

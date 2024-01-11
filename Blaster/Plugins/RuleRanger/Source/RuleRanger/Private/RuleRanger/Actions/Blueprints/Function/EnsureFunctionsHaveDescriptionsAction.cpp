@@ -31,7 +31,7 @@ void UEnsureFunctionsHaveDescriptionsAction::AnalyzeFunction(
             const auto& ErrorMessage = FString::Printf(
                 TEXT("Blueprint contains a %s function named '%s' that is expected to have a description."),
                 (bPublic ? TEXT("public") : TEXT("protected")),
-                *FunctionEntry->GetNodeTitle(ENodeTitleType::FullTitle).ToString());
+                *Graph->GetName());
             ActionContext->Error(FText::FromString(ErrorMessage));
         }
     }
