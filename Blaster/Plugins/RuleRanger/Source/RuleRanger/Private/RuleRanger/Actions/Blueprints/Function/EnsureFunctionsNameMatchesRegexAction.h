@@ -27,9 +27,9 @@ class RULERANGER_API UEnsureFunctionsNameMatchesRegexAction final : public UBase
 {
     GENERATED_BODY()
 
-    /** The regex pattern that function is expected to match. */
+    /** The regex pattern that the function name is expected to match. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString Pattern{ TEXT("") };
+    FString Pattern{ TEXT("^[A-Z][a-z0-9A-Z_]*$") };
     /** A flag controlling whether matching is Case Sensitive or not. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
     bool bCaseSensitive{ true };
