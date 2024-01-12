@@ -30,7 +30,7 @@ class RULERANGER_API UBaseAnalyzeFunctionAction : public URuleRangerAction
 protected:
     /**
      * Return true to ensure this particular Blueprint is analyzed.
-     * Useful to return false if a threshold of complexity needs to be reached before the actioin is applied.
+     * Useful to return false if a threshold of complexity needs to be reached before the action is applied.
      *
      * @param Blueprint the Blueprint.
      * @return true to analyze Blueprint, otherwise false.
@@ -50,7 +50,7 @@ protected:
      * Function to override to analyze a particular function.
      *
      * @param ActionContext The ActionContext.
-     * @param Object The root object (a.k.a. the Blueprint)
+     * @param Blueprint The root object (a.k.a. the Blueprint)
      * @param FunctionEntry The node representing the function entry point.
      * @param Graph The Function graph.
      */
