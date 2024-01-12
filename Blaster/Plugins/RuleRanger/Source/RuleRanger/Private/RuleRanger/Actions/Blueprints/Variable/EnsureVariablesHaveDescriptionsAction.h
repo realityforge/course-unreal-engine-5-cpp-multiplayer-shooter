@@ -16,7 +16,6 @@
 
 #include "BaseAnalyzeVariableAction.h"
 #include "CoreMinimal.h"
-#include "K2Node_FunctionEntry.h"
 #include "RuleRangerAction.h"
 #include "EnsureVariablesHaveDescriptionsAction.generated.h"
 
