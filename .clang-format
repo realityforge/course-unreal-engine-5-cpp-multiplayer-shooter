@@ -70,6 +70,7 @@ TabWidth: 4
 BinPackParameters: false
 AllowAllParametersOfDeclarationOnNextLine: false
 BinPackArguments: false
+InsertNewlineAtEOF: true
 AllowAllArgumentsOnNextLine: false
 UseTab: Never
 IncludeBlocks:   Merge
