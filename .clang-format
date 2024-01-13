@@ -71,6 +71,7 @@ BinPackParameters: false
 AllowAllParametersOfDeclarationOnNextLine: false
 BinPackArguments: false
 InsertNewlineAtEOF: true
+InsertBraces: true
 AllowAllArgumentsOnNextLine: false
 UseTab: Never
 IncludeBlocks:   Merge
