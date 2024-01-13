@@ -46,7 +46,6 @@ Shorthand notes of where to go next with this experiment:
   * Base it off variants and update texture naming rules to also stamp variants based on source naming or asset naming?
 * Niagara checks:
   * Ensure every Niagara system has an "Effect Type" associated with it.
-  * Ensure that contained emitters are named according to conventions
 * Sound checks:
   * Ensure SoundWave have sample rate
 * Static Mesh checks:
