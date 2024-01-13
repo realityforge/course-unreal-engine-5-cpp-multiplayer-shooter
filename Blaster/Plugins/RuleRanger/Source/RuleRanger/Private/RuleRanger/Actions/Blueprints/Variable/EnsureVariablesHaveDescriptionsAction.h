@@ -44,7 +44,7 @@ class RULERANGER_API UEnsureVariablesHaveDescriptionsAction final : public UBase
     bool bCheckLocalVariables{ true };
 
 protected:
-    virtual bool ShouldAnalyzeGraph(UEdGraph* Graph) const override;
+    virtual bool ShouldAnalyzeFunction(UEdGraph* Graph, UK2Node_FunctionEntry* FunctionEntry) const override;
 
     virtual void AnalyzeVariable(URuleRangerActionContext* ActionContext,
                                  UBlueprint* Blueprint,

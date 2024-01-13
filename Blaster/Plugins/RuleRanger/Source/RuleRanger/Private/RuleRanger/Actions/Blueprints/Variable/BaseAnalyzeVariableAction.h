@@ -42,9 +42,10 @@ protected:
      * Useful to skip Construction graphs that are automatically created and can not be modified.
      *
      * @param Graph the function Graph.
+     * @param FunctionEntry the functionEntry node.
      * @return true to analyze function, false otherwise.
      */
-    virtual bool ShouldAnalyzeGraph(UEdGraph* Graph) const;
+    virtual bool ShouldAnalyzeFunction(UEdGraph* Graph, UK2Node_FunctionEntry* FunctionEntry) const;
 
     /**
      * Function to override to analyze a particular variable.

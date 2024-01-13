@@ -14,7 +14,8 @@
 
 #include "EnsureVariablesHaveDescriptionsAction.h"
 
-bool UEnsureVariablesHaveDescriptionsAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
+bool UEnsureVariablesHaveDescriptionsAction::ShouldAnalyzeFunction(UEdGraph* Graph,
+                                                                   UK2Node_FunctionEntry* FunctionEntry) const
 {
     // Only analyze variables in graphs if we should check local variables
     return bCheckLocalVariables && Super::ShouldAnalyzeFunction(Graph, FunctionEntry);

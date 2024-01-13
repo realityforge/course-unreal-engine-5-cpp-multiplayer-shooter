@@ -55,20 +55,16 @@ void UBaseAnalyzeVariableAction::Apply_Implementation(URuleRangerActionContext* 
         // For all the function graphs that are not construction scripts
         for (const auto Graph : Blueprint->FunctionGraphs)
         {
-            if (ShouldAnalyzeGraph(Graph))
-            {
-                TArray<UK2Node_FunctionEntry*> EntryNodes;
-                Graph->GetNodesOfClass(EntryNodes);
+            TArray<UK2Node_FunctionEntry*> EntryNodes;
+            Graph->GetNodesOfClass(EntryNodes);
 
-                if ((EntryNodes.Num() > 0) && EntryNodes[0]->IsEditable())
+            if ((EntryNodes.Num() > 0) && EntryNodes[0]->IsEditable() && ShouldAnalyzeFunction(Graph, EntryNodes[0]))
+            {
+                // ReSharper disable once CppTooWideScopeInitStatement
+                const auto FunctionEntry = EntryNodes[0];
+                for (auto& Variable : FunctionEntry->LocalVariables)
                 {
-                    if (const auto FunctionEntry = EntryNodes[0])
-                    {
-                        for (auto& Variable : FunctionEntry->LocalVariables)
-                        {
-                            AnalyzeVariable(ActionContext, Blueprint, Variable, FunctionEntry, Graph);
-                        }
-                    }
+                    AnalyzeVariable(ActionContext, Blueprint, Variable, FunctionEntry, Graph);
                 }
             }
         }
