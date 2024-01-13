@@ -17,7 +17,7 @@
 bool UEnsureVariablesHaveDescriptionsAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
 {
     // Only analyze variables in graphs if we should check local variables
-    return Super::ShouldAnalyzeGraph(Graph) && bCheckLocalVariables;
+    return bCheckLocalVariables && Super::ShouldAnalyzeFunction(Graph, FunctionEntry);
 }
 
 void UEnsureVariablesHaveDescriptionsAction::AnalyzeVariable(URuleRangerActionContext* ActionContext,
