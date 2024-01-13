@@ -152,17 +152,6 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
 {
     bEliminated = true;
     PlayEliminationMontage();
-    if (DissolveMaterialInstance)
-    {
-        // We do not need to worry about deallocating the DynamicDissolveMaterialInstance as it happens
-        // just as the character is dying and just before the character id scheduled for destruction and the
-        // PlayerController respawned attached to another Character so it will naturally be deleted
-        DynamicDissolveMaterialInstance = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
-        DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("DissolveAmount"), 0.55f);
-        DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("EmissiveFactor"), 200.f);
-
-        GetMesh()->SetMaterial(0, DynamicDissolveMaterialInstance);
-    }
     StartDissolve();
 }
 
@@ -517,8 +506,19 @@ void ABlasterCharacter::UpdateDissolveMaterial(const float DissolveAmount)
 }
 void ABlasterCharacter::StartDissolve()
 {
-    if (DissolveCurve && DissolveTimeline)
+    if (DissolveCurve)
     {
+        if (DissolveMaterialInstance)
+        {
+            // We do not need to worry about deallocating the DynamicDissolveMaterialInstance as it happens
+            // just as the character is dying and just before the character id scheduled for destruction and the
+            // PlayerController respawned attached to another Character so it will naturally be deleted
+            DynamicDissolveMaterialInstance = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+            DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("DissolveAmount"), 0.55f);
+            DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("EmissiveFactor"), 200.f);
+
+            GetMesh()->SetMaterial(0, DynamicDissolveMaterialInstance);
+        }
         DissolveTrack.BindDynamic(this, &ABlasterCharacter::UpdateDissolveMaterial);
         DissolveTimeline->AddInterpFloat(DissolveCurve, DissolveTrack);
         DissolveTimeline->Play();
