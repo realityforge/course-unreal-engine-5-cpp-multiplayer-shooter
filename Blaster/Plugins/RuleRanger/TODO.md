@@ -25,6 +25,8 @@ Shorthand notes of where to go next with this experiment:
     * Add report to report on licenses of all assets
     * Add action to apply license to entire folder or individual assets or selected assets/folders
     * Add RuleRanger validation to ensure license is set
+* Name checks:
+  * Add regex per-type for nested names? or global regex for internal names?
 * Material checks:
   * Ensure parameters have group/categories
   * Ensure parameters have descriptions
