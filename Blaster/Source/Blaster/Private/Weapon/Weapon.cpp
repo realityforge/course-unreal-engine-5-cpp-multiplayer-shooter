@@ -73,6 +73,15 @@ void AWeapon::OnWeaponStateUpdated() const
     if (EWeaponState::EWS_Equipped == WeaponState)
     {
         ShowPickupWidget(false);
+        WeaponMesh->SetSimulatePhysics(false);
+        WeaponMesh->SetEnableGravity(false);
+        WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    }
+    else if (EWeaponState::EWS_Dropped == WeaponState)
+    {
+        WeaponMesh->SetSimulatePhysics(true);
+        WeaponMesh->SetEnableGravity(true);
+        WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     }
 }
 
@@ -84,10 +93,20 @@ void AWeapon::OnRep_WeaponState() const
 
 void AWeapon::SetWeaponState(const EWeaponState InWeaponState)
 {
-    ensure(HasAuthority());
     WeaponState = InWeaponState;
-    // This is only required on the server
-    AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    if (HasAuthority())
+    {
+        // This is only required on the server as clientside effects handled inOnWeaponStateUpdated
+        // We need this guard because we directly call from client in CombatClient.
+        if (EWeaponState::EWS_Equipped == WeaponState)
+        {
+            AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        }
+        else if (EWeaponState::EWS_Dropped == WeaponState)
+        {
+            AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        }
+    }
     OnWeaponStateUpdated();
 }
 
@@ -110,6 +129,19 @@ void AWeapon::Fire(const FVector& HitTarget)
             }
         }
     }
+}
+
+void AWeapon::Dropped()
+{
+    // Changing the state will transform all the other state elements
+    SetWeaponState(EWeaponState::EWS_Dropped);
+
+    // It is unclear why these following lines are not in state  transition
+
+    // Detach the weapon from the Hand socket
+    WeaponMesh->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+    // Remove ownership from character so other characters can pickup
+    SetOwner(nullptr);
 }
 
 void AWeapon::Tick(const float DeltaTime)

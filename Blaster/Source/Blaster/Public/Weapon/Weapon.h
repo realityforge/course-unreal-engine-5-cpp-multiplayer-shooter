@@ -37,6 +37,11 @@ public:
 
     virtual void Fire(const FVector& HitTarget);
 
+    /**
+     * Called to transition object to dropped state.
+     */
+    void Dropped();
+
 protected:
     virtual void BeginPlay() override;
 

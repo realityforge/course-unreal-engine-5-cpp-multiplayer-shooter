@@ -144,8 +144,32 @@ void ABlasterCharacter::OnRep_ReplicatedMovement()
 
 void ABlasterCharacter::Eliminate()
 {
+    // Drop Weapon
+    if (Combat && Combat->EquippedWeapon)
+    {
+        Combat->EquippedWeapon->Dropped();
+    }
     MulticastEliminate();
     GetWorld()->GetTimerManager().SetTimer(RespawnTimer, this, &ABlasterCharacter::RespawnTimerFinished, RespawnDelay);
+}
+
+void ABlasterCharacter::DisableCharacterMovement()
+{
+    // Disables movement of the character
+    GetCharacterMovement()->DisableMovement();
+    // Disables rotation of character
+    GetCharacterMovement()->StopMovementImmediately();
+    // Disables input (so can not keep firing
+    if (const auto PlayerController = Cast<APlayerController>(Controller))
+    {
+        DisableInput(PlayerController);
+    }
+}
+
+void ABlasterCharacter::DisableCollision() const
+{
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABlasterCharacter::MulticastEliminate_Implementation()
@@ -153,6 +177,8 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
     bEliminated = true;
     PlayEliminationMontage();
     StartDissolve();
+    DisableCharacterMovement();
+    DisableCollision();
 }
 
 void ABlasterCharacter::UpdateHUDHealth() const
@@ -504,6 +530,7 @@ void ABlasterCharacter::UpdateDissolveMaterial(const float DissolveAmount)
         DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("DissolveAmount"), DissolveAmount);
     }
 }
+
 void ABlasterCharacter::StartDissolve()
 {
     if (DissolveCurve)
@@ -524,6 +551,7 @@ void ABlasterCharacter::StartDissolve()
         DissolveTimeline->Play();
     }
 }
+
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const
 {

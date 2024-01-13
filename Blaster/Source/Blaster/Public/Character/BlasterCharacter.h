@@ -199,6 +199,9 @@ private:
 
     float TimeSinceLastMovementReplication{ 0.f };
 
+    void DisableCharacterMovement();
+    void DisableCollision() const;
+
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------

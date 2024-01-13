@@ -13,6 +13,8 @@
 
 #define TARGETING_RANGE 80000.f
 
+static const FName RightHandSocketName("RightHandSocket");
+
 UCombatComponent::UCombatComponent()
 {
     // Enable tick so we can see the temporary debug trace
@@ -72,6 +74,15 @@ void UCombatComponent::OnRep_EquippedWeapon()
 {
     if (IsValid(EquippedWeapon) && IsValid(Character))
     {
+        // Because EquippedWeapon, EquippedWeapon->WeaponState and Actor attachment are replicated variables
+        // and may be replicated separately, it is possible that EquippedWeapon replicates before WeaponState
+        // has been applied. This would result in attachment failing as state needs to be set in
+        // EquippedWeapon->WeaponState before attachment can succeed. So we fake it and also apply it on clientside
+        EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+        if (const auto HandSocket = Character->GetMesh()->GetSocketByName(RightHandSocketName))
+        {
+            HandSocket->AttachActor(EquippedWeapon, Character->GetMesh());
+        }
         StopOrientingRotationToMovement();
     }
 }
@@ -286,8 +297,6 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
     DOREPLIFETIME(UCombatComponent, EquippedWeapon);
     DOREPLIFETIME(UCombatComponent, bAiming);
 }
-
-static const FName RightHandSocketName("RightHandSocket");
 
 void UCombatComponent::UpdateFOV(const float DeltaTime)
 {
