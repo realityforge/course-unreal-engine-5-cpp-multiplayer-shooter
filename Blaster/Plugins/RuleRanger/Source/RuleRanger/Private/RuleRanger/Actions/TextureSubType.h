@@ -45,6 +45,13 @@ enum class ETextureSubType : uint8
  */
 class FTextureSubTypeUtil
 {
+    /**
+     * The metadata key used to store SubTypes.
+     */
+    static const FName MetaDataKey;
+
+    FTextureSubTypeUtil();
+
 public:
     /**
      * Extract the TextureSubTypes MetaData property from the specified object.
@@ -81,14 +88,5 @@ public:
      */
     static FString EncodeSubTypes(const TArray<ETextureSubType>& SubTypes);
 
-private:
-    /**
-     * The metadata key used to store SubTypes.
-     */
-    static const FName MetaDataKey;
-
-    FTextureSubTypeUtil();
-
-public:
     FORCEINLINE static const FName& GetMetaDataKey() { return MetaDataKey; }
 };

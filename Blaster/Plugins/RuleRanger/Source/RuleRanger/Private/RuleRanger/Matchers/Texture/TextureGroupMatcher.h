@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,18 +21,13 @@
 /**
  * Matcher that matches textures that are in one of the specified TextureGroups.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UTextureGroupMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
     /** The TextureGroups to match. */
-    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    UPROPERTY(EditAnywhere)
     TSet<TEnumAsByte<TextureGroup>> TextureGroups;
 
 public:

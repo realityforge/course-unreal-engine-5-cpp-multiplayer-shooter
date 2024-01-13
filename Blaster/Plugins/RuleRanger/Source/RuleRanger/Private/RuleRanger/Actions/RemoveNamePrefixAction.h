@@ -22,24 +22,18 @@
 /**
  * Action to remove a prefix from a name.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API URemoveNamePrefixAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
-public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-private:
     /** The prefix to remove. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     FString Prefix;
     /** A flag controlling whether matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     bool bCaseSensitive{ true };
+
+public:
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 };

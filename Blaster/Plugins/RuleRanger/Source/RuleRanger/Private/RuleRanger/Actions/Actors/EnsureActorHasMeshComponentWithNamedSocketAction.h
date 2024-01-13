@@ -28,26 +28,21 @@
  * - Subclasses of ProjectileWeapon have a mesh with a MuzzleExit socket (To emit particles from)
  * - Subclasses of Weapon have a mesh with a LeftHand socket (To attach hands to using IK etc)
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UEnsureActorHasMeshComponentWithNamedSocketAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
     /** The name of the component that extends UMeshComponent that this rule checks. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     FString ComponentName{ "" };
 
     /** The name of the socket that must exist on mesh. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     FName Socket{ "" };
 
     /** The reason why we must have the socket. Used when emitting an error. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     FString Reason{ "" };
 
     void EmitErrorMessage(URuleRangerActionContext* ActionContext, const TObjectPtr<UObject>& Asset) const;

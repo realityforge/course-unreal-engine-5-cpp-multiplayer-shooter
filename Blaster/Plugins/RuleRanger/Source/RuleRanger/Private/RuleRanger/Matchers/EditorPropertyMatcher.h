@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,29 +21,23 @@
 /**
  * Matcher that returns true if object has and editor property specified name and value
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UEditorPropertyMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
-public:
-    virtual bool Test_Implementation(UObject* Object) override;
-
-private:
     /** The name of the editor property to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     FName Name{ TEXT("") };
 
     /** The value of the editor property to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     FString Value{ TEXT("") };
 
     /** Flag indicating whether the property matcher should look at parent instances. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     bool bTraverseInstanceHierarchy{ true };
+
+public:
+    virtual bool Test_Implementation(UObject* Object) override;
 };

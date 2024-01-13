@@ -28,7 +28,7 @@ class RULERANGER_API UEnsureFunctionsMaxNodeCountAction final : public UBaseAnal
     GENERATED_BODY()
 
     /** Should the action check protected functions. */
-    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    UPROPERTY(EditAnywhere)
     int32 MaxNonTrivialNodeCount{ 50 };
 
     static bool IsNodeTrivial(const UEdGraphNode* Node);

@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,33 +21,21 @@
 /**
  * Matcher that returns true if object has a path that contains a folder matched by one of the rules.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UPathFolderMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
-public:
-    virtual bool Test_Implementation(UObject* Object) override;
-
-private:
     /** The Folders to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     TArray<FString> FolderNames;
     /** The regex pattern to match. */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger|Regex",
-              meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString RegexPattern{ TEXT("") };
+    UPROPERTY(EditAnywhere)
+    FString RegexPattern{ TEXT("^(\\/[a-zA-Z][a-zA-Z0-9_]*)+$") };
     /** A flag controlling whether regex matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger|Regex",
-              meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     bool bCaseSensitive{ true };
+
+public:
+    virtual bool Test_Implementation(UObject* Object) override;
 };

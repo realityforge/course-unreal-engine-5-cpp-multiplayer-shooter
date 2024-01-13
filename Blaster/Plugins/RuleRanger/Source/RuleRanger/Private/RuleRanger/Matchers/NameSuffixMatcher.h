@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,22 +21,17 @@
 /**
  * Matcher that returns true if object has a name with the specified suffix.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UNameSuffixMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
 public:
     /** The suffix to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     FString Suffix;
     /** A flag controlling whether matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     bool bCaseSensitive{ true };
 
     virtual bool Test_Implementation(UObject* Object) override;

@@ -29,7 +29,7 @@ class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public UBase
     GENERATED_BODY()
 
     /** Should the action check protected functions. */
-    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    UPROPERTY(EditAnywhere)
     bool bCheckProtectedFunctions{ true };
 
 protected:

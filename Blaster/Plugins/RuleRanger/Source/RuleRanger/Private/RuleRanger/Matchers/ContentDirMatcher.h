@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,20 +21,15 @@
 /**
  * Matcher that returns true if object has metadata tag with the specified key and value
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UContentDirMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
-public:
     /** The Content directory to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, ContentDir))
+    UPROPERTY(EditAnywhere, meta = (ContentDir))
     FDirectoryPath Dir{ TEXT("") };
 
+public:
     virtual bool Test_Implementation(UObject* Object) override;
 };

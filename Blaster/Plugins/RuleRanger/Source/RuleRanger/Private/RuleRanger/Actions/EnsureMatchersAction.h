@@ -23,31 +23,19 @@
 /**
  * Action that the specified actions are true.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UEnsureMatchersAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
-public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-private:
     /** The custom message to emit if a check fails. */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
+    UPROPERTY(EditAnywhere, meta = (MultiLine))
     FString Message;
 
     /** The matchers to match. */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
+    UPROPERTY(EditAnywhere)
     TArray<URuleRangerMatcher*> Matchers;
+
+public:
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 };

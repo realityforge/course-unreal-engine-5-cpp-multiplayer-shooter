@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,24 +21,15 @@
 /**
  * Matcher that checks whether object matches specified type.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UObjectTypeMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
+    /** The type to match. */
+    UPROPERTY(EditAnywhere, meta = (AllowAbstract = "true"))
+    TSubclassOf<UObject> ObjectType;
+
 public:
     virtual bool Test_Implementation(UObject* Object) override;
-
-private:
-    /** The type to match. */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowAbstract = "true", ExposeOnSpawn, AllowPrivateAccess))
-    TSubclassOf<UObject> ObjectType;
 };

@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,23 +21,18 @@
 /**
  * Matcher that returns true if object has a name with the specified regex pattern.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UNameRegexMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
-public:
     /** The regex pattern to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString RegexPattern{ TEXT("") };
+    UPROPERTY(EditAnywhere)
+    FString RegexPattern{ TEXT("^[a-zA-Z][A-zA-Z0-9_]*$") };
     /** A flag controlling whether matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     bool bCaseSensitive{ true };
 
+public:
     virtual bool Test_Implementation(UObject* Object) override;
 };

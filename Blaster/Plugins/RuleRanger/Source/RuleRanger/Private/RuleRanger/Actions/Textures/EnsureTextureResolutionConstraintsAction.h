@@ -53,18 +53,13 @@ enum class ETextureResolutionConstraint : uint8
 /**
  * Action to check that a Texture dimensions comply with the specified constraint.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UEnsureTextureResolutionConstraintsAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
     /** The constraint to check. */
-    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    UPROPERTY(EditAnywhere)
     ETextureResolutionConstraint Constraint{ ETextureResolutionConstraint::PowerOfTwo };
 
     void CheckPowerOfTwo(URuleRangerActionContext* ActionContext, const UTexture2D* Texture) const;

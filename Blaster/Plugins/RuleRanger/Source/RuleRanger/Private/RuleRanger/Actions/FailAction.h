@@ -24,27 +24,18 @@
  *
  * Useful when using matchers to identify scenarios that you do not want in your codebase.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UFailAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
-public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-private:
     /** The error message to emit */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
+    UPROPERTY(EditAnywhere, meta = (MultiLine))
     FString Message{ "The object was not expected to match" };
     /** Should the error be a fatal error or a regular error */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess, ExposeOnSpawn))
+    UPROPERTY(EditAnywhere)
     bool bFatal{ false };
+
+public:
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 };

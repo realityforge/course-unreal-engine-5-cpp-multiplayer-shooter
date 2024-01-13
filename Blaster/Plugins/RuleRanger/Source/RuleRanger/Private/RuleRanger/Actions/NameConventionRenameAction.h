@@ -61,32 +61,19 @@ struct FNameConvention final : public FTableRowBase
  * Action to rename assets according to naming convention specified in a DataTable.
  * The action may optionally issue warnings if applied to an asset that has no NamingConvention specified.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UNameConventionRenameAction : public URuleRangerAction
 {
     GENERATED_BODY()
 
-public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-
-private:
     /** The array of tables that contains the object naming rules */
     UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (ExposeOnSpawn,
-                      AllowPrivateAccess,
-                      RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.NameConvention"))
+
+              meta = (RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.NameConvention"))
     TArray<UDataTable*> NameConventionsTables;
 
     /** Should the action issue a message log when it attempts to process an object that has no naming convention? */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     bool bNotifyIfNameConventionMissing;
 
     /** Cache for looking up rules. */
@@ -103,4 +90,8 @@ private:
 
     /** Method to build cache if necessary. */
     void RebuildNameConventionsCacheIfNecessary();
+
+public:
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 };

@@ -50,41 +50,18 @@ struct FTextureSubTypeNameConvention final : public FTableRowBase
 /**
  * Action to check that a Texture confirms to desired naming conventions.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UEnsureTextureSubTypePresentAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
-public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-    virtual UClass* GetExpectedType() override;
-
-    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-
-protected:
-    void ApplyRuleToTexture(URuleRangerActionContext* ActionContext, const UTexture2D* Texture);
-    void ApplyRuleToTextureWithSubTypes(URuleRangerActionContext* ActionContext,
-                                        const UTexture2D* Texture,
-                                        const TArray<ETextureSubType>& SubTypes) const;
-
-private:
     /** The table that contains the object naming rules */
     UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (ExposeOnSpawn,
-                      AllowPrivateAccess,
-                      RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.TextureSubTypeNameConvention"))
+              meta = (RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.TextureSubTypeNameConvention"))
     UDataTable* NameConventionsTable{ nullptr };
 
     /** Should the action issue a message log when it attempts to process a Texture that has no naming convention? */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     bool bNotifyIfNameConventionMissing;
 
     /** Cache for looking up rules. */
@@ -103,4 +80,17 @@ private:
     void RebuildNameConventionsCacheIfNecessary();
 
     TArray<ETextureSubType> ExtractSubTypes(const FString& Name);
+
+public:
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+
+    virtual UClass* GetExpectedType() override;
+
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+protected:
+    void ApplyRuleToTexture(URuleRangerActionContext* ActionContext, const UTexture2D* Texture);
+    void ApplyRuleToTextureWithSubTypes(URuleRangerActionContext* ActionContext,
+                                        const UTexture2D* Texture,
+                                        const TArray<ETextureSubType>& SubTypes) const;
 };

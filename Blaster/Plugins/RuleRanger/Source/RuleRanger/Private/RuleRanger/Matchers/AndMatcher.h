@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -21,20 +22,15 @@
  * Matcher that performs a boolean And operation on contained matchers and only returns true if one of the child
  * matchers returns true and stops evaluating at that point.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UAndMatcher final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
-public:
     /** The matchers to perform logical And operation on. */
-    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
+    UPROPERTY(Instanced, EditAnywhere)
     TArray<TObjectPtr<URuleRangerMatcher>> Matchers;
 
+public:
     virtual bool Test_Implementation(UObject* Object) override;
 };

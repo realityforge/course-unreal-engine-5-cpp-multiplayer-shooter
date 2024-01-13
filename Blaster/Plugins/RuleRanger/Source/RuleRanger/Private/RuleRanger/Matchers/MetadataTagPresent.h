@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,21 +21,15 @@
 /**
  * Matcher that returns true if object has metadata tag with the specified key.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UMetadataTagPresent final : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
+    /** The key of the metadata tag to match. */
+    UPROPERTY(EditAnywhere)
+    FName Key{ TEXT("") };
+
 public:
     virtual bool Test_Implementation(UObject* Object) override;
-
-private:
-    /** The key of the metadata tag to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FName Key{ TEXT("") };
 };

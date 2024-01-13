@@ -22,24 +22,15 @@
 /**
  * Action to remove metadata tags with one of the specified keys.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API URemoveMetadataTagsAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
+    /** The metadata keys to remove */
+    UPROPERTY(EditAnywhere, meta = (MultiLine))
+    TArray<FName> Keys;
+
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-private:
-    /** The metadata keys to remove */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
-    TArray<FName> Keys;
 };

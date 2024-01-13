@@ -21,12 +21,7 @@
 /**
  * Action to check that any property with the (boolean) meta property 'RuleRangerRequired' is present on object.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UEnsureRequiredPropertiesPresent final : public URuleRangerAction
 {
     GENERATED_BODY()

@@ -33,58 +33,58 @@ public:
     /**
      * An explanation of the rule.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn))
+    UPROPERTY(EditAnywhere, Category = "Default", meta = (MultiLine))
     FString Description{ TEXT("") };
 
     /**
      * True to apply this rule when importing an asset initially.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn))
+    UPROPERTY(EditAnywhere, Category = "Default")
     bool bApplyOnImport{ true };
 
     /**
      * True to apply this rule when reimporting an asset.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn))
+    UPROPERTY(EditAnywhere, Category = "Default")
     bool bApplyOnReimport{ true };
 
     /**
      * True to apply this rule when the asset is validated.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn))
+    UPROPERTY(EditAnywhere, Category = "Default")
     bool bApplyOnValidate{ true };
 
     /**
      * True to apply this rule when the asset is validated.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn))
+    UPROPERTY(EditAnywhere, Category = "Default")
     bool bApplyOnSave{ true };
 
     /**
      * True to apply this rule when explicitly requested from the editor UI.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn))
+    UPROPERTY(EditAnywhere, Category = "Default")
     bool bApplyOnDemand{ true };
 
     /**
      * A flag that controls whether the presence of an error will result in subsequent actions being skipped if an error
      * is detected.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn))
+    UPROPERTY(EditAnywhere, Category = "Default")
     bool bContinueOnError{ false };
 
     /**
      * Priority used to order rules when multiple apply to the same ObjectType.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (ExposeOnSpawn))
+    UPROPERTY(EditAnywhere, Category = "Default")
     int32 Priority{ 1000 };
 
     /** The matchers that an object MUST match before this rule is applied. */
-    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
+    UPROPERTY(Instanced, EditAnywhere, Category = "Rule Ranger")
     TArray<TObjectPtr<URuleRangerMatcher>> Matchers;
 
     /** The actions that will be applied if the object is matched by the rule. */
-    UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn))
+    UPROPERTY(Instanced, EditAnywhere, Category = "Rule Ranger")
     TArray<TObjectPtr<URuleRangerAction>> Actions;
 
     /**

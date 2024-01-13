@@ -30,7 +30,7 @@ class RULERANGER_API UEnsureFunctionsHaveCategoriesAction final : public UBaseAn
     GENERATED_BODY()
 
     /** The number of functions that triggers requirement that all functions have a category. */
-    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    UPROPERTY(EditAnywhere)
     int32 Threshold{ 5 };
 
 protected:

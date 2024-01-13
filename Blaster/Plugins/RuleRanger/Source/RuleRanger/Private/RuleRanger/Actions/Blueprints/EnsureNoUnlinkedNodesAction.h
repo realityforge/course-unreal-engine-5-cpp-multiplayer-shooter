@@ -23,25 +23,19 @@
  * If the node has exec pins then they MUST have input pins filled. If the node has no exec pins then they MUST
  * have output data pins used.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UEnsureNoUnlinkedNodesAction final : public URuleRangerAction
 {
     GENERATED_BODY()
+
+    /** Should the action generate an error on default Event nodes that have not been deleted nor implemented. */
+    UPROPERTY(EditAnywhere)
+    bool bErrorOnLooseDefaultEvents{ false };
+
+    bool ShouldHaveLinks(const TObjectPtr<UEdGraphNode> Node) const;
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 
     virtual UClass* GetExpectedType() override;
-
-private:
-    /** Should the action generate an error on default Event nodes that have not been deleted nor implemented. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (AllowPrivateAccess, ExposeOnSpawn))
-    bool bErrorOnLooseDefaultEvents{ false };
-
-    bool ShouldHaveLinks(const TObjectPtr<UEdGraphNode> Node) const;
 };

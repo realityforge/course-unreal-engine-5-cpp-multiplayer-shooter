@@ -22,24 +22,15 @@
 /**
  * Action to set one or more metadata tags.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API USetMetadataTagsAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
+    /** The metadata tags to set */
+    UPROPERTY(EditAnywhere)
+    TMap<FName, FString> MetadataTags;
+
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-private:
-    /** The metadata tags to set */
-    UPROPERTY(EditAnywhere,
-              BlueprintReadWrite,
-              Category = "Rule Ranger",
-              meta = (AllowPrivateAccess, ExposeOnSpawn, MultiLine))
-    TMap<FName, FString> MetadataTags;
 };

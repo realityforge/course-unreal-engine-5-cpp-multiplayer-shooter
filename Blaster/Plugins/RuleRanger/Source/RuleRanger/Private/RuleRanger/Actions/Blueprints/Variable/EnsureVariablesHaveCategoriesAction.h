@@ -29,15 +29,15 @@ class RULERANGER_API UEnsureVariablesHaveCategoriesAction final : public UBaseAn
     GENERATED_BODY()
 
     /** The number of functions that triggers requirement that all variables have a category. */
-    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    UPROPERTY(EditAnywhere)
     int32 Threshold{ 5 };
 
     /** Should the action check instance editable variables. */
-    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    UPROPERTY(EditAnywhere)
     bool bCheckInstanceEditableVariables{ true };
 
     /** Should the action check local variables in functions. */
-    UPROPERTY(EditAnywhere, Category = "Rule Ranger")
+    UPROPERTY(EditAnywhere)
     bool bCheckLocalVariables{ true };
 
 protected:

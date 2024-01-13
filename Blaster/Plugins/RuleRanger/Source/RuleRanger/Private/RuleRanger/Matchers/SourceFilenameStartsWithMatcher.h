@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "SourcePathMatcherBase.h"
 #include "UObject/Object.h"
@@ -20,21 +21,15 @@
 /**
  * Match the filename that the asset was imported from if it starts with the specified text.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API USourceFilenameStartsWithMatcher final : public USourcePathMatcherBase
 {
     GENERATED_BODY()
 
+    /** The text to match. */
+    UPROPERTY(EditAnywhere)
+    FString Text;
+
 protected:
     virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
-
-private:
-    /** The text to match. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
-    FString Text;
 };

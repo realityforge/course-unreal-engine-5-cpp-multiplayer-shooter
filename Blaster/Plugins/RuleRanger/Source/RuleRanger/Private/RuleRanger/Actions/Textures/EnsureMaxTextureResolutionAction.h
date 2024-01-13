@@ -22,12 +22,7 @@
 /**
  * Action to check that a Texture dimensions comply with the specified constraint.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS()
 class RULERANGER_API UEnsureMaxTextureResolutionAction final : public URuleRangerAction
 {
     GENERATED_BODY()

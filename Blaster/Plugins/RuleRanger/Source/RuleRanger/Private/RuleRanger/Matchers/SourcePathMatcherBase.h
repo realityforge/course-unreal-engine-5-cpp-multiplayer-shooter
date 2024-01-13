@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #pragma once
+
 #include "CoreMinimal.h"
 #include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
@@ -20,13 +21,7 @@
 /**
  * Abstract matcher for matching against SourcePath.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"),
-       Abstract,
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
+UCLASS(Abstract)
 class RULERANGER_API USourcePathMatcherBase : public URuleRangerMatcher
 {
     GENERATED_BODY()
@@ -35,10 +30,9 @@ public:
     virtual bool Test_Implementation(UObject* Object) override;
 
 protected:
-    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
-
-private:
     /** A flag controlling whether matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rule Ranger", meta = (ExposeOnSpawn, AllowPrivateAccess))
+    UPROPERTY(EditAnywhere)
     bool bCaseSensitive{ false };
+
+    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
 };
