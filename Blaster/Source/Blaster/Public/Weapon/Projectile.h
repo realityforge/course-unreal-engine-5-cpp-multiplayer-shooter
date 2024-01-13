@@ -35,7 +35,7 @@ private:
     UPROPERTY(VisibleAnywhere)
     UProjectileMovementComponent* ProjectileMovementComponent{ nullptr };
 
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditAnywhere, meta = (RuleRangerRequired))
     UParticleSystem* Tracer{ nullptr };
 
     UPROPERTY(VisibleAnywhere)
