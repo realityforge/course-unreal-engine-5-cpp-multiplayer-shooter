@@ -35,7 +35,7 @@ class RULERANGER_API UEnsureVariablesHaveDescriptionsAction final : public UBase
     UPROPERTY(EditAnywhere, Category = "Rule Ranger")
     bool bCheckTransientVariables{ false };
 
-    /** Should the action check instance editable variables. */
+    /** Should the action check private variables. */
     UPROPERTY(EditAnywhere, Category = "Rule Ranger")
     bool bCheckPrivateVariables{ false };
 
