@@ -23,6 +23,7 @@ bool UEnsureVariablesHaveDescriptionsAction::ShouldAnalyzeGraph(UEdGraph* Graph)
 void UEnsureVariablesHaveDescriptionsAction::AnalyzeVariable(URuleRangerActionContext* ActionContext,
                                                              UBlueprint* Blueprint,
                                                              const FBPVariableDescription& Variable,
+                                                             UK2Node_FunctionEntry* FunctionEntry,
                                                              UEdGraph* Graph)
 {
     bool bCheckVariable = true;

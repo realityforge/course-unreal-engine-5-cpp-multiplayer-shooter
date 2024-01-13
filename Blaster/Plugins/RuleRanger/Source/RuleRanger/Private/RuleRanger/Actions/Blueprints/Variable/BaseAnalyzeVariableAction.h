@@ -18,6 +18,7 @@
 #include "RuleRangerAction.h"
 #include "BaseAnalyzeVariableAction.generated.h"
 
+class UK2Node_FunctionEntry;
 /**
  * Base class for analyzing the variables in a Blueprint.
  */
@@ -51,11 +52,13 @@ protected:
      * @param ActionContext The ActionContext.
      * @param Blueprint The root object (a.k.a. the Blueprint)
      * @param Variable The Variable.
+     * @param FunctionEntry The FunctionEntry if a local variable else nullptr.
      * @param Graph The Function graph if a local variable else nullptr.
      */
     virtual void AnalyzeVariable(URuleRangerActionContext* ActionContext,
                                  UBlueprint* Blueprint,
                                  const FBPVariableDescription& Variable,
+                                 UK2Node_FunctionEntry* FunctionEntry,
                                  UEdGraph* Graph);
 
 public:

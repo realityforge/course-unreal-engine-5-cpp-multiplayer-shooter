@@ -49,5 +49,6 @@ protected:
     virtual void AnalyzeVariable(URuleRangerActionContext* ActionContext,
                                  UBlueprint* Blueprint,
                                  const FBPVariableDescription& Variable,
+                                 UK2Node_FunctionEntry* FunctionEntry,
                                  UEdGraph* Graph) override;
 };

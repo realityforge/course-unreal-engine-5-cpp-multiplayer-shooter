@@ -17,6 +17,7 @@
 void UEnsureVariablesNameMatchesRegexAction::AnalyzeVariable(URuleRangerActionContext* ActionContext,
                                                              UBlueprint* Blueprint,
                                                              const FBPVariableDescription& Variable,
+                                                             UK2Node_FunctionEntry* FunctionEntry,
                                                              UEdGraph* Graph)
 {
     const FString& Name = Variable.VarName.ToString();

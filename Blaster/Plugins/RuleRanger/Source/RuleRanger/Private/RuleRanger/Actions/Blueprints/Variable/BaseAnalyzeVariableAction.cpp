@@ -28,6 +28,7 @@ bool UBaseAnalyzeVariableAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
 void UBaseAnalyzeVariableAction::AnalyzeVariable(URuleRangerActionContext* ActionContext,
                                                  UBlueprint* Blueprint,
                                                  const FBPVariableDescription& Variable,
+                                                 UK2Node_FunctionEntry* FunctionEntry,
                                                  UEdGraph* Graph)
 {
     LogError(Blueprint, TEXT("Action failed to override AnalyzeVariable."));
@@ -49,7 +50,7 @@ void UBaseAnalyzeVariableAction::Apply_Implementation(URuleRangerActionContext* 
     {
         for (auto& Variable : Blueprint->NewVariables)
         {
-            AnalyzeVariable(ActionContext, Blueprint, Variable, nullptr);
+            AnalyzeVariable(ActionContext, Blueprint, Variable, nullptr, nullptr);
         }
         // For all the function graphs that are not construction scripts
         for (const auto Graph : Blueprint->FunctionGraphs)
@@ -65,7 +66,7 @@ void UBaseAnalyzeVariableAction::Apply_Implementation(URuleRangerActionContext* 
                     {
                         for (auto& Variable : FunctionEntry->LocalVariables)
                         {
-                            AnalyzeVariable(ActionContext, Blueprint, Variable, Graph);
+                            AnalyzeVariable(ActionContext, Blueprint, Variable, FunctionEntry, Graph);
                         }
                     }
                 }
