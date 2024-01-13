@@ -16,11 +16,8 @@ Shorthand notes of where to go next with this experiment:
 * Add a mechanism for adding an exclude `DataTable` that will will list assets that will ignore specific rules or all rules for specific assets or all assets or all assets that matchers match?
 * Material functions that are Material Layers are prefixed with ML not MF!
 * Retargeters should be named as RTG_\[Source\]_To_\[Target\]
-* Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
-* Add check to ensure every parameter in a Material has a group/description specified.
-* Add check to unreal that verifies every Niagara system has an "Effect Type" associated with it.
-* Add validation to ensure every texture is marked with a TextureGroup
-* Add metadata to assets to track origin. (i.e. What license and where was it sourced from)
+* Add validation of AnimationMontage to ensure it has specific sections:
+  * https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEAnimMontageValidationHelpers.cpp
 * Add ability to add other validators that are invoked on Scan (i.e. no directories without assets)
 * Add tool to record licenses for assets in MetaData
     * A DataTable that indicates the source (Marketplace project name? Some other project tag), description and license
@@ -28,12 +25,33 @@ Shorthand notes of where to go next with this experiment:
     * Add report to report on licenses of all assets
     * Add action to apply license to entire folder or individual assets or selected assets/folders
     * Add RuleRanger validation to ensure license is set
-* Rather than statically defining `ETextureSubType`, define it in a table
-  * Merge `FTextureSubTypeNameConvention` into it
-  * Add component count for each SubType
+* Material checks:
+  * Ensure parameters have group/categories
+  * Ensure parameters have descriptions
+  * Ensure parameters follow naming convention
+* Blueprint checks:
+  * Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
+  * Add check that all private Blueprint functions are called
+  * Add check that protected Blueprint functions are in non-final blueprint classes?
+* Texture checks:
+  * Add default/allowed TextureGroup
   * Add default/allowed modes (Color, Linear Color, Alpha etc)
   * Add default/allowed compressions
-* Look at https://github.com/benui-dev/UE-BUIValidator/blob/main/Source/BUIValidator/Public/BUIValidatorSettings.h and see if it offers anything other than what is already planned.
+  * SRGB required/allowed/disallowed
+  * Streaming allowed?
+  * Mip generation settings?
+  * See https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEEditorValidatorTexturesBase.cpp
+  * See https://github.com/benui-dev/UE-BUIValidator/blob/main/Source/BUIValidator/Public/BUIValidatorSettings.h
+  * Base it off variants and update texture naming rules to also stamp variants based on source naming or asset naming?
+* Niagara checks:
+  * Ensure every Niagara system has an "Effect Type" associated with it.
+  * Ensure that contained emitters are named according to conventions
+* Sound checks:
+  * Ensure SoundWave have sample rate
+* Static Mesh checks:
+  * Ensure StaticMesh has valid/non-overlapping Lightmap UVs
+  * Ensure StaticMesh has NO Lightmap UVs (when not using lightmass)
+  * Ensure StaticMesh has UVs in Channel0 (for when material only uses world space coordinates)
 
 Add Action that applies a layout for textures based on metadata and types? Maybe something like:
 Possible Directory layout:
@@ -44,6 +62,3 @@ Possible Directory layout:
  `Characters/[CharacterName]/Materials/Layers`
  `Characters/[CharacterName]/Rigs`
  `Characters/[CharacterName]/Textures`
-
-* Add check that all private Blueprint functions are called
-* Add check that protected Blueprint functions are in non-final blueprint classes?
