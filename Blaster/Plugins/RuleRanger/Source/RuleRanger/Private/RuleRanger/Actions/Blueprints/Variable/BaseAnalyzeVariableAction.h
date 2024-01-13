@@ -38,6 +38,15 @@ protected:
     virtual bool ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const;
 
     /**
+     * Return true to ensure that the Blueprint level variables are analyzed.
+     * Blueprint level variables can be analyzed without analyzing local variables and vice versa.
+     *
+     * @param Blueprint the Blueprint.
+     * @return true to analyze Blueprint variables, otherwise false.
+     */
+    virtual bool ShouldAnalyzeBlueprintVariables(UBlueprint* Blueprint) const;
+
+    /**
      * Return true to analyze the particular Blueprint Graph/Function.
      * Useful to skip Construction graphs that are automatically created and can not be modified.
      *

@@ -20,7 +20,12 @@ bool UBaseAnalyzeVariableAction::ShouldAnalyzeBlueprint(UBlueprint* Blueprint) c
     return true;
 }
 
-bool UBaseAnalyzeVariableAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
+bool UBaseAnalyzeVariableAction::ShouldAnalyzeBlueprintVariables(UBlueprint* Blueprint) const
+{
+    return true;
+}
+
+bool UBaseAnalyzeVariableAction::ShouldAnalyzeFunction(UEdGraph* Graph, UK2Node_FunctionEntry* FunctionEntry) const
 {
     return UEdGraphSchema_K2::FN_UserConstructionScript != Graph->GetFName();
 }
@@ -48,9 +53,12 @@ void UBaseAnalyzeVariableAction::Apply_Implementation(URuleRangerActionContext* 
     }
     else
     {
-        for (auto& Variable : Blueprint->NewVariables)
+        if (ShouldAnalyzeBlueprintVariables(Blueprint))
         {
-            AnalyzeVariable(ActionContext, Blueprint, Variable, nullptr, nullptr);
+            for (auto& Variable : Blueprint->NewVariables)
+            {
+                AnalyzeVariable(ActionContext, Blueprint, Variable, nullptr, nullptr);
+            }
         }
         // For all the function graphs that are not construction scripts
         for (const auto Graph : Blueprint->FunctionGraphs)
