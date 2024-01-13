@@ -72,6 +72,8 @@ ABlasterCharacter::ABlasterCharacter()
     NetUpdateFrequency = 66.f;
     MinNetUpdateFrequency = 33.f;
     NetPriority = 5;
+
+    DissolveTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DissolveTimelineComponent"));
 }
 
 void ABlasterCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -150,6 +152,18 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
 {
     bEliminated = true;
     PlayEliminationMontage();
+    if (DissolveMaterialInstance)
+    {
+        // We do not need to worry about deallocating the DynamicDissolveMaterialInstance as it happens
+        // just as the character is dying and just before the character id scheduled for destruction and the
+        // PlayerController respawned attached to another Character so it will naturally be deleted
+        DynamicDissolveMaterialInstance = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+        DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("DissolveAmount"), 0.55f);
+        DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("EmissiveFactor"), 200.f);
+
+        GetMesh()->SetMaterial(0, DynamicDissolveMaterialInstance);
+    }
+    StartDissolve();
 }
 
 void ABlasterCharacter::UpdateHUDHealth() const
@@ -493,6 +507,23 @@ void ABlasterCharacter::RespawnTimerFinished()
     }
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ABlasterCharacter::UpdateDissolveMaterial(const float DissolveAmount)
+{
+    if (DynamicDissolveMaterialInstance)
+    {
+        DynamicDissolveMaterialInstance->SetScalarParameterValue(TEXT("DissolveAmount"), DissolveAmount);
+    }
+}
+void ABlasterCharacter::StartDissolve()
+{
+    if (DissolveCurve && DissolveTimeline)
+    {
+        DissolveTrack.BindDynamic(this, &ABlasterCharacter::UpdateDissolveMaterial);
+        DissolveTimeline->AddInterpFloat(DissolveCurve, DissolveTrack);
+        DissolveTimeline->Play();
+    }
+}
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
 void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const
 {

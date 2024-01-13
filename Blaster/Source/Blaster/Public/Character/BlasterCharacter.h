@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Components/TimelineComponent.h"
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/Character.h"
@@ -232,6 +233,33 @@ private:
     float RespawnDelay{ 3.f };
 
     void RespawnTimerFinished();
+
+    //---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
+    // Dissolve Effect
+    //---------------------------------------------------------------------------
+
+    FOnTimelineFloat DissolveTrack;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<UTimelineComponent> DissolveTimeline{ nullptr };
+
+    UPROPERTY(EditDefaultsOnly, Category = "Elimination", meta = (RuleRangerRequired))
+    TObjectPtr<UCurveFloat> DissolveCurve{ nullptr };
+
+    /** The material instance from which dynamic material instance is created. */
+    UPROPERTY(EditDefaultsOnly, Category = "Elimination", meta = (RuleRangerRequired))
+    TObjectPtr<UMaterialInstance> DissolveMaterialInstance{ nullptr };
+
+    /** The dynamic material instance used when dissolving the character. */
+    UPROPERTY(VisibleInstanceOnly, Category = "Elimination")
+    TObjectPtr<UMaterialInstanceDynamic> DynamicDissolveMaterialInstance{ nullptr };
+
+    UFUNCTION()
+    void UpdateDissolveMaterial(float DissolveAmount);
+
+    void StartDissolve();
 
     //---------------------------------------------------------------------------
 
