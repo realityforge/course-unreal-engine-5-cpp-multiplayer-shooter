@@ -14,23 +14,33 @@
 
 #include "CheckFolderNamesAreValidAction.h"
 
+UCheckFolderNamesAreValidAction::UCheckFolderNamesAreValidAction()
+{
+    InvalidNames.Add("New Folder");
+    InvalidNames.Add("Assets");
+    InvalidNames.Add("Asset");
+}
+
 void UCheckFolderNamesAreValidAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     TArray<FString> Folders;
-    Object->GetPathName().ParseIntoArray(Folders, TEXT("/"), true);
+    Object->GetPackage()->GetPathName().ParseIntoArray(Folders, TEXT("/"), true);
 
-    const FRegexPattern Pattern(InvalidFolderRegexPattern,
+    const FRegexPattern Pattern(ValidFolderPattern,
                                 bCaseSensitive ? ERegexPatternFlags::None : ERegexPatternFlags::CaseInsensitive);
 
     for (const auto& Folder : Folders)
     {
-        if (InvalidFolderNames.Contains(Folder)
-            || (!InvalidFolderRegexPattern.IsEmpty() && FRegexMatcher(Pattern, Folder).FindNext()))
+        if (InvalidNames.Contains(Folder) || !FRegexMatcher(Pattern, Folder).FindNext())
         {
             const auto& ErrorMessage = Message.IsEmpty()
-                ? FString::Printf(TEXT("Asset is contained in a folder '%s' with "
-                                       "an invalid name. Move the asset to a different folder."),
-                                  *Folder)
+                ? FString::Printf(TEXT("Asset is contained in a folder named '%s'. "
+                                       "Folder names must match the pattern '%s' and "
+                                       "must not be listed in invalid list: %s. Move "
+                                       "the asset to a different folder."),
+                                  *Folder,
+                                  *ValidFolderPattern,
+                                  *FString::Join(InvalidNames, TEXT(", ")))
                 : Message;
             if (Message.IsEmpty())
             {

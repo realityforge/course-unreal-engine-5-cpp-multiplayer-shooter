@@ -32,14 +32,16 @@ class RULERANGER_API UCheckFolderNamesAreValidAction final : public URuleRangerA
     FString Message;
     /** The Folders names to generate an error on. */
     UPROPERTY(EditAnywhere)
-    TArray<FString> InvalidFolderNames;
+    TArray<FString> InvalidNames;
     /** The regex pattern to match invalid folders. */
     UPROPERTY(EditAnywhere)
-    FString InvalidFolderRegexPattern{ TEXT("") };
+    FString ValidFolderPattern{ TEXT("^[A-Z][a-z0-9A-Z_]*$") };
     /** A flag controlling whether regex matching is Case Sensitive or not. */
     UPROPERTY(EditAnywhere)
     bool bCaseSensitive{ true };
 
 public:
+    UCheckFolderNamesAreValidAction();
+
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
 };
