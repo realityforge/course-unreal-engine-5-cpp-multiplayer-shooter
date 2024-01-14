@@ -24,7 +24,15 @@ UCheckFolderNamesAreValidAction::UCheckFolderNamesAreValidAction()
 void UCheckFolderNamesAreValidAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     TArray<FString> Folders;
-    Object->GetPackage()->GetPathName().ParseIntoArray(Folders, TEXT("/"), true);
+    const FString PathName = Object->GetPackage()->GetPathName();
+    if (PathName.StartsWith(TEXT("/Game/__ExternalActors__/"))
+        || PathName.StartsWith(TEXT("/Game/__ExternalObjects__/")))
+    {
+        // Path is for an asset using OFPA pattern so are not user controller or user visible
+        // and thus no need to verify
+        return;
+    }
+    PathName.ParseIntoArray(Folders, TEXT("/"), true);
 
     const FRegexPattern Pattern(ValidFolderPattern,
                                 bCaseSensitive ? ERegexPatternFlags::None : ERegexPatternFlags::CaseInsensitive);
@@ -34,11 +42,13 @@ void UCheckFolderNamesAreValidAction::Apply_Implementation(URuleRangerActionCont
         if (InvalidNames.Contains(Folder) || !FRegexMatcher(Pattern, Folder).FindNext())
         {
             const auto& ErrorMessage = Message.IsEmpty()
-                ? FString::Printf(TEXT("Asset is contained in a folder named '%s'. "
+                ? FString::Printf(TEXT("Asset is contained in a folder named '%s'"
+                                       " with a full path '%s'. "
                                        "Folder names must match the pattern '%s' and "
                                        "must not be listed in invalid list: %s. Move "
                                        "the asset to a different folder."),
                                   *Folder,
+                                  *PathName,
                                   *ValidFolderPattern,
                                   *FString::Join(InvalidNames, TEXT(", ")))
                 : Message;
