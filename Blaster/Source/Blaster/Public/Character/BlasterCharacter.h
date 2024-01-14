@@ -8,6 +8,7 @@
 #include "interfaces/InterfaceWithCrosshair.h"
 #include "BlasterCharacter.generated.h"
 
+class USoundCue;
 class UCombatComponent;
 class AWeapon;
 class UWidgetComponent;
@@ -41,6 +42,8 @@ public:
 
     UFUNCTION(NetMulticast, Reliable)
     void MulticastEliminate();
+
+    virtual void Destroyed() override;
 
 protected:
     virtual void BeginPlay() override;
@@ -201,6 +204,7 @@ private:
 
     void DisableCharacterMovement();
     void DisableCollision() const;
+    void SpawnEliminationEffect();
 
     //---------------------------------------------------------------------------
 
@@ -263,6 +267,24 @@ private:
     void UpdateDissolveMaterial(float DissolveAmount);
 
     void StartDissolve();
+
+    //---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
+    // Elimination Bot Effect
+    //---------------------------------------------------------------------------
+
+    /** Component created when elimination started */
+    UPROPERTY(VisibleAnywhere, Category = "Elimination")
+    TObjectPtr<UParticleSystemComponent> EliminationBotComponent{ nullptr };
+
+    /** The particle system to trigger on elimination. */
+    UPROPERTY(EditDefaultsOnly, Category = "Elimination", meta = (RuleRangerRequired))
+    TObjectPtr<UParticleSystem> EliminationBotEffect{ nullptr };
+
+    /** The sound emitted during elimination bot partle effect. */
+    UPROPERTY(EditDefaultsOnly, Category = "Elimination", meta = (RuleRangerRequired))
+    TObjectPtr<USoundCue> EliminationBotSound{ nullptr };
 
     //---------------------------------------------------------------------------
 

@@ -10,9 +10,12 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameMode/BlasterGameMode.h"
 #include "InputMappingContext.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "PlayerController/BlasterPlayerController.h"
+#include "Sound/SoundCue.h"
 #include "Weapon/Weapon.h"
 
 ABlasterCharacter::ABlasterCharacter()
@@ -172,6 +175,22 @@ void ABlasterCharacter::DisableCollision() const
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ABlasterCharacter::SpawnEliminationEffect()
+{
+    const auto& Location = GetActorLocation();
+    // Spawn the effect/sound just above the character
+    const FVector SpawnPoint(Location.X, Location.Y, Location.Z + 200.f);
+    if (EliminationBotEffect)
+    {
+        EliminationBotComponent =
+            UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EliminationBotEffect, SpawnPoint, GetActorRotation());
+    }
+    if (EliminationBotSound)
+    {
+        UGameplayStatics::SpawnSoundAtLocation(this, EliminationBotSound, SpawnPoint);
+    }
+}
+
 void ABlasterCharacter::MulticastEliminate_Implementation()
 {
     bEliminated = true;
@@ -179,6 +198,7 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
     StartDissolve();
     DisableCharacterMovement();
     DisableCollision();
+    SpawnEliminationEffect();
 }
 
 void ABlasterCharacter::UpdateHUDHealth() const
@@ -187,6 +207,19 @@ void ABlasterCharacter::UpdateHUDHealth() const
     {
         // Initialize Health on HUD
         PlayerController->SetHUDHealth(Health, MaxHealth);
+    }
+}
+
+void ABlasterCharacter::Destroyed()
+{
+    Super::Destroyed();
+
+    // We need to explicitly destroy component because we dynamically create component
+    // and doing it in destroyed() as it is propagated to all clients which is what we want
+    // as MulticastEliminate is propagated to all clients and that is where we create the component
+    if (EliminationBotComponent)
+    {
+        EliminationBotComponent->DestroyComponent();
     }
 }
 
