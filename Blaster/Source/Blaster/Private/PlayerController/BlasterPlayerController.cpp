@@ -38,8 +38,8 @@ void ABlasterPlayerController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
     // This makes sure we reset the hud on Respawn
-    if (const auto Character = Cast<ABlasterCharacter>(InPawn))
+    if (const auto BlasterCharacter = Cast<ABlasterCharacter>(InPawn))
     {
-        SetHUDHealth(Character->GetHealth(), Character->GetMaxHealth());
+        SetHUDHealth(BlasterCharacter->GetHealth(), BlasterCharacter->GetMaxHealth());
     }
 }
