@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "HUD/CharacterOverlay.h"
 #include "BlasterPlayerController.generated.h"
 
 class ABlasterHUD;
@@ -21,8 +22,12 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
 
 protected:
     virtual void BeginPlay() override;
+    UCharacterOverlay* GetCharacterOverlay();
 
 public:
     void SetHUDHealth(float Health, float MaxHealth);
+    void SetHUDScore(float Score);
+    void SetHUDDefeats(int32 Defeats);
+    void ResetHUD();
     virtual void OnPossess(APawn* InPawn) override;
 };

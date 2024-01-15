@@ -236,7 +236,10 @@ void ABlasterCharacter::BeginPlay()
         }
     }
 
-    UpdateHUDHealth();
+    if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+    {
+        PlayerController->ResetHUD();
+    }
     if (HasAuthority())
     {
         // Where we have authority we make sure we react to damage

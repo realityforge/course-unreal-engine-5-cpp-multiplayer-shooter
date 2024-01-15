@@ -9,9 +9,6 @@
 class UTextBlock;
 class UProgressBar;
 
-/**
- *
- */
 UCLASS(Abstract)
 class BLASTER_API UCharacterOverlay : public UUserWidget
 {
@@ -23,7 +20,15 @@ class BLASTER_API UCharacterOverlay : public UUserWidget
     UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
     TObjectPtr<UTextBlock> HealthText;
 
+    UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
+    TObjectPtr<UTextBlock> ScoreAmount;
+
+    UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
+    TObjectPtr<UTextBlock> DefeatsAmount;
+
 public:
     FORCEINLINE UProgressBar* GetHealthBar() const { return HealthBar; }
     FORCEINLINE UTextBlock* GetHealthText() const { return HealthText; }
+    FORCEINLINE UTextBlock* GetScoreAmount() const { return ScoreAmount; }
+    FORCEINLINE UTextBlock* GetDefeatsAmount() const { return DefeatsAmount; }
 };
