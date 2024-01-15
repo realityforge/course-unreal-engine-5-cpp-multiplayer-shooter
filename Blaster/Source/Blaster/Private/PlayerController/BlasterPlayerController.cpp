@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "PlayerController/BlasterPlayerController.h"
 #include "Character/BlasterCharacter.h"
 #include "Components/ProgressBar.h"
