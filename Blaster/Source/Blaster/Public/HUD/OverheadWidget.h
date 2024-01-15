@@ -6,9 +6,6 @@
 
 class UTextBlock;
 
-/**
- *
- */
 UCLASS()
 class UOverheadWidget : public UUserWidget
 {

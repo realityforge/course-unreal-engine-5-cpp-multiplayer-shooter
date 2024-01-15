@@ -7,9 +7,6 @@
 
 class ABlasterHUD;
 
-/**
- *
- */
 UCLASS(Abstract)
 class BLASTER_API ABlasterPlayerController : public APlayerController
 {

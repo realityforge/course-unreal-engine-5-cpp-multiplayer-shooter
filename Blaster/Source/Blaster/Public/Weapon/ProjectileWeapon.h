@@ -6,9 +6,6 @@
 
 class AProjectile;
 
-/**
- *
- */
 UCLASS(Abstract)
 class BLASTER_API AProjectileWeapon : public AWeapon
 {

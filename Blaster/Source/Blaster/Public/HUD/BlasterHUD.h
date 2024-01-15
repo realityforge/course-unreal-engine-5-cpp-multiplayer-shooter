@@ -29,9 +29,6 @@ struct FHUDPackage
     FLinearColor CrosshairColor{ FLinearColor::White };
 };
 
-/**
- *
- */
 UCLASS(Abstract)
 class BLASTER_API ABlasterHUD : public AHUD
 {

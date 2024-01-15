@@ -7,9 +7,6 @@
 class ABlasterPlayerController;
 class ABlasterCharacter;
 
-/**
- *
- */
 UCLASS()
 class BLASTER_API ABlasterGameMode : public AGameMode
 {
