@@ -282,7 +282,7 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Elimination", meta = (RuleRangerRequired))
     TObjectPtr<UParticleSystem> EliminationBotEffect{ nullptr };
 
-    /** The sound emitted during elimination bot partle effect. */
+    /** The sound emitted during elimination bot particle effect. */
     UPROPERTY(EditDefaultsOnly, Category = "Elimination", meta = (RuleRangerRequired))
     TObjectPtr<USoundCue> EliminationBotSound{ nullptr };
 
