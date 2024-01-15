@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerController/BlasterPlayerController.h"
+#include "Character/BlasterCharacter.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "HUD/BlasterHUD.h"
@@ -30,5 +31,15 @@ void ABlasterPlayerController::SetHUDHealth(const float Health, const float MaxH
         Overlay->GetHealthBar()->SetPercent(Percent);
         const auto HealthText = FString::Printf(TEXT("%d/%d"), FMath::CeilToInt(Health), FMath::CeilToInt(MaxHealth));
         Overlay->GetHealthText()->SetText(FText::FromString(HealthText));
+    }
+}
+
+void ABlasterPlayerController::OnPossess(APawn* InPawn)
+{
+    Super::OnPossess(InPawn);
+    // This makes sure we reset the hud on Respawn
+    if (const auto Character = Cast<ABlasterCharacter>(InPawn))
+    {
+        SetHUDHealth(Character->GetHealth(), Character->GetMaxHealth());
     }
 }

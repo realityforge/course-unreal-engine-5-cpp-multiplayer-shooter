@@ -24,4 +24,5 @@ protected:
 
 public:
     void SetHUDHealth(float Health, float MaxHealth);
+    virtual void OnPossess(APawn* InPawn) override;
 };
