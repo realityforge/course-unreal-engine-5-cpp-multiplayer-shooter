@@ -13,7 +13,7 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
     GENERATED_BODY()
 
     UPROPERTY(Transient)
-    TObjectPtr<ABlasterHUD> BlasterHUD;
+    TObjectPtr<ABlasterHUD> BlasterHUD{ nullptr };
 
 protected:
     virtual void BeginPlay() override;

@@ -7,13 +7,13 @@
 class UTextBlock;
 
 UCLASS()
-class UOverheadWidget : public UUserWidget
+class UOverheadWidget final : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
     UPROPERTY(meta = (BindWidget))
-    UTextBlock* DisplayText;
+    TObjectPtr<UTextBlock> DisplayText{ nullptr };
 
     /**
      * Set the text on DisplayText widget to supplied value.

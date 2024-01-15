@@ -9,7 +9,7 @@ class AWeapon;
 class ABlasterCharacter;
 
 UCLASS()
-class UBlasterAnimInstance : public UAnimInstance
+class UBlasterAnimInstance final : public UAnimInstance
 {
     GENERATED_BODY()
 

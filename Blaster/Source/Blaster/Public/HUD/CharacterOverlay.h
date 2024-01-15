@@ -8,21 +8,21 @@ class UTextBlock;
 class UProgressBar;
 
 UCLASS(Abstract)
-class BLASTER_API UCharacterOverlay : public UUserWidget
+class BLASTER_API UCharacterOverlay final : public UUserWidget
 {
     GENERATED_BODY()
 
     UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
-    TObjectPtr<UProgressBar> HealthBar;
+    TObjectPtr<UProgressBar> HealthBar{ nullptr };
 
     UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
-    TObjectPtr<UTextBlock> HealthText;
+    TObjectPtr<UTextBlock> HealthText{ nullptr };
 
     UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
-    TObjectPtr<UTextBlock> ScoreAmount;
+    TObjectPtr<UTextBlock> ScoreAmount{ nullptr };
 
     UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
-    TObjectPtr<UTextBlock> DefeatsAmount;
+    TObjectPtr<UTextBlock> DefeatsAmount{ nullptr };
 
 public:
     FORCEINLINE UProgressBar* GetHealthBar() const { return HealthBar; }

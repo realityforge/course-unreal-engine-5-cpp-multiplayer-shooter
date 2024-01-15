@@ -59,10 +59,10 @@ protected:
 
 private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
-    TObjectPtr<USkeletalMeshComponent> WeaponMesh;
+    TObjectPtr<USkeletalMeshComponent> WeaponMesh{ nullptr };
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon Properties", meta = (AllowPrivateAccess))
-    TObjectPtr<USphereComponent> AreaSphere;
+    TObjectPtr<USphereComponent> AreaSphere{ nullptr };
 
     UPROPERTY(ReplicatedUsing = OnRep_WeaponState,
               VisibleAnywhere,

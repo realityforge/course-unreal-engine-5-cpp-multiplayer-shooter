@@ -11,7 +11,7 @@ class ABlasterCharacter;
 class AWeapon;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class UCombatComponent : public UActorComponent
+class UCombatComponent final : public UActorComponent
 {
     GENERATED_BODY()
 
@@ -57,17 +57,17 @@ protected:
 
 private:
     UPROPERTY(Transient)
-    TObjectPtr<ABlasterCharacter> Character;
+    TObjectPtr<ABlasterCharacter> Character{ nullptr };
     UPROPERTY(Transient)
-    TObjectPtr<ABlasterPlayerController> Controller;
+    TObjectPtr<ABlasterPlayerController> Controller{ nullptr };
     UPROPERTY(Transient)
-    TObjectPtr<ABlasterHUD> HUD;
+    TObjectPtr<ABlasterHUD> HUD{ nullptr };
     UPROPERTY(Transient)
     FHUDPackage HUDPackage;
 
     /** The currently equipped weapon. */
     UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon)
-    TObjectPtr<AWeapon> EquippedWeapon;
+    TObjectPtr<AWeapon> EquippedWeapon{ nullptr };
 
     /** Is the character currently aiming. */
     UPROPERTY(Replicated)

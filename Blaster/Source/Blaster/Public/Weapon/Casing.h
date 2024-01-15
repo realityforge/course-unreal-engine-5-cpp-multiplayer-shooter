@@ -7,7 +7,7 @@
 class USoundCue;
 
 UCLASS(Abstract)
-class BLASTER_API ACasing : public AActor
+class BLASTER_API ACasing final : public AActor
 {
     GENERATED_BODY()
 

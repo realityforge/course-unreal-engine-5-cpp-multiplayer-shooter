@@ -13,6 +13,4 @@ class UInterfaceWithCrosshair : public UInterface
 class BLASTER_API IInterfaceWithCrosshair
 {
     GENERATED_BODY()
-
-public:
 };

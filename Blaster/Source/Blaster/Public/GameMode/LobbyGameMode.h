@@ -5,7 +5,7 @@
 #include "LobbyGameMode.generated.h"
 
 UCLASS()
-class ALobbyGameMode : public AGameMode
+class ALobbyGameMode final : public AGameMode
 {
     GENERATED_BODY()
 

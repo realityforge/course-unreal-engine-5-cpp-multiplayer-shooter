@@ -5,7 +5,7 @@
 #include "ProjectileBullet.generated.h"
 
 UCLASS()
-class BLASTER_API AProjectileBullet : public AProjectile
+class BLASTER_API AProjectileBullet final : public AProjectile
 {
     GENERATED_BODY()
 

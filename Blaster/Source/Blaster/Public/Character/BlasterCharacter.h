@@ -19,7 +19,7 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class ABlasterCharacter : public ACharacter, public IInterfaceWithCrosshair
+class ABlasterCharacter final : public ACharacter, public IInterfaceWithCrosshair
 {
     GENERATED_BODY()
 
@@ -219,7 +219,7 @@ private:
     float Health{ 100.f };
 
     UPROPERTY(Transient, VisibleInstanceOnly)
-    bool bEliminated;
+    bool bEliminated{ false };
 
     UFUNCTION()
     void OnRep_Health();
@@ -294,7 +294,7 @@ private:
 
     // The reference to the weapon we are overlapping
     UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
-    TObjectPtr<AWeapon> OverlappingWeapon;
+    TObjectPtr<AWeapon> OverlappingWeapon{ nullptr };
 
     UFUNCTION()
     void OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const;
@@ -324,7 +324,7 @@ private:
 
     /** The distance from the camera where the camera will disappear */
     UPROPERTY(EditDefaultsOnly)
-    float CameraThreshold = 200.f;
+    float CameraThreshold{ 200.f };
 
     float CalculateSpeed() const;
 

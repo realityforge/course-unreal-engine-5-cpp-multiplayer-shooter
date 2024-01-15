@@ -30,7 +30,7 @@ struct FHUDPackage
 };
 
 UCLASS(Abstract)
-class BLASTER_API ABlasterHUD : public AHUD
+class BLASTER_API ABlasterHUD final : public AHUD
 {
     GENERATED_BODY()
 
