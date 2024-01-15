@@ -3,7 +3,7 @@
 Shorthand notes of where to go next with this experiment:
 
 * Consider using a separate Plugin+module for Niagara checks so we can have a clean dependency tree.
-* Add rules so that we can enforce constraints about directories.
+* Add rules so that we can enforce constraints about asset referencing.
   * Rules stored in DataTable.
   * What color should the folder appear in Content Browser!
   * Rules can apply to a folder or all sub-folders.
