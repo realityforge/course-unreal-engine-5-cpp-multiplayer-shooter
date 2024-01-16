@@ -341,7 +341,7 @@ void UCombatComponent::FireTimerFinished()
     }
 }
 
-bool UCombatComponent::CanFire()
+bool UCombatComponent::CanFire() const
 {
     return bCanFire && EquippedWeapon && EquippedWeapon->HasAmmo();
 }

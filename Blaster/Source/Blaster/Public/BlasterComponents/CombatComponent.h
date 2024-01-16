@@ -131,5 +131,5 @@ private:
     void StartFireTimer();
     void FireTimerFinished();
 
-    bool CanFire();
+    bool CanFire() const;
 };
