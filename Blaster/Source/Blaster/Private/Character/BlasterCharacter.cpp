@@ -191,6 +191,16 @@ void ABlasterCharacter::SpawnEliminationEffect()
     }
 }
 
+void ABlasterCharacter::ZeroHUDAmmo()
+{
+    if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+    {
+        // Zero the Ammo on HUD
+        PlayerController->SetHUDWeaponAmmo(0);
+        ;
+    }
+}
+
 void ABlasterCharacter::MulticastEliminate_Implementation()
 {
     bEliminated = true;
@@ -199,6 +209,7 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
     DisableCharacterMovement();
     DisableCollision();
     SpawnEliminationEffect();
+    ZeroHUDAmmo();
 }
 
 void ABlasterCharacter::UpdateHUDHealth() const

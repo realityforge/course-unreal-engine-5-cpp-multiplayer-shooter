@@ -4,6 +4,7 @@
 #include "Components/WidgetComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Net/UnrealNetwork.h"
+#include "PlayerController/BlasterPlayerController.h"
 #include "Weapon/Casing.h"
 
 AWeapon::AWeapon()
@@ -129,6 +130,64 @@ void AWeapon::Fire(const FVector& HitTarget)
             }
         }
     }
+    UseAmmo();
+}
+
+void AWeapon::OnRep_Ammo()
+{
+    UpdateHUDAmmo();
+}
+void AWeapon::UseAmmo()
+{
+    Ammo = FMath::Max(Ammo - 1, 0);
+    UpdateHUDAmmo();
+}
+
+ABlasterCharacter* AWeapon::GetOwnerCharacter()
+{
+    return OwnerCharacter ? OwnerCharacter : (OwnerCharacter = Cast<ABlasterCharacter>(GetOwner()));
+}
+
+ABlasterPlayerController* AWeapon::GetOwnerController()
+{
+    if (OwnerController)
+    {
+        return OwnerController;
+    }
+    else
+    {
+        if (const auto BlasterCharacter = GetOwnerCharacter(); BlasterCharacter && BlasterCharacter->Controller)
+        {
+            OwnerController = Cast<ABlasterPlayerController>(BlasterCharacter->Controller);
+        }
+        return OwnerController;
+    }
+}
+
+void AWeapon::UpdateHUDAmmo()
+{
+    if (const auto PlayerController = GetOwnerController())
+    {
+        // Initialize Health on HUD
+        PlayerController->SetHUDWeaponAmmo(Ammo);
+    }
+}
+
+void AWeapon::ClearCachedOwnerProperties()
+{
+    // Clear the cached values from Owner as Owner has changed
+    OwnerCharacter = nullptr;
+    OwnerController = nullptr;
+}
+
+void AWeapon::OnRep_Owner()
+{
+    Super::OnRep_Owner();
+
+    ClearCachedOwnerProperties();
+    // If we have have an owner then the next call will recache and update HUD
+    // otherwise out Owner is now nullptr and thus no HUD to update
+    UpdateHUDAmmo();
 }
 
 void AWeapon::Dropped()
@@ -136,12 +195,15 @@ void AWeapon::Dropped()
     // Changing the state will transform all the other state elements
     SetWeaponState(EWeaponState::EWS_Dropped);
 
-    // It is unclear why these following lines are not in state  transition
+    // It is unclear why these following lines are not in a state transition for dropped
 
     // Detach the weapon from the Hand socket
     WeaponMesh->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
     // Remove ownership from character so other characters can pickup
     SetOwner(nullptr);
+    // Reset properties that are cached values derived from Owner
+    // This happens on the server while OnRep_Owner() does the same on clients
+    ClearCachedOwnerProperties();
 }
 
 void AWeapon::Tick(const float DeltaTime)
@@ -154,6 +216,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME(AWeapon, WeaponState);
+    DOREPLIFETIME(AWeapon, Ammo);
 }
 
 void AWeapon::ShowPickupWidget(const bool bShowWidget) const

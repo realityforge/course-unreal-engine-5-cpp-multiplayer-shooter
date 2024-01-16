@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Character/BlasterCharacter.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+class ABlasterPlayerController;
 class ACasing;
 class UWidgetComponent;
 class USphereComponent;
@@ -35,6 +37,13 @@ public:
 
     virtual void Fire(const FVector& HitTarget);
 
+    void UpdateHUDAmmo();
+    void ClearCachedOwnerProperties();
+
+protected:
+    virtual void OnRep_Owner() override;
+
+public:
     /**
      * Called to transition object to dropped state.
      */
@@ -128,6 +137,39 @@ private:
 
     UPROPERTY(EditAnywhere, Category = "Combat")
     bool bAutomaticFire{ true };
+
+    //---------------------------------------------------------------------------
+    // Ammo Management
+    //---------------------------------------------------------------------------
+
+    /** The maximum amount of ammo that a weapon can contain. */
+    UPROPERTY(EditDefaultsOnly, Category = "Combat")
+    int32 MaxAmmoCapacity{ 10 };
+
+    /** The amount of Ammo that is currently available. */
+    UPROPERTY(EditAnywhere, ReplicatedUsing = OnRep_Ammo, Category = "Combat")
+    int32 Ammo{ 10 };
+
+    UFUNCTION()
+    void OnRep_Ammo();
+
+    void UseAmmo();
+
+    //---------------------------------------------------------------------------
+    // Cached Reference Management. (Shouldn't be needed if was designed better).
+    //---------------------------------------------------------------------------
+
+    UPROPERTY(Transient)
+    TObjectPtr<ABlasterCharacter> OwnerCharacter{ nullptr };
+
+    UPROPERTY(Transient)
+    TObjectPtr<ABlasterPlayerController> OwnerController{ nullptr };
+
+    /** Cache and retrieve Character. */
+    ABlasterCharacter* GetOwnerCharacter();
+
+    /** Cache and retrieve Controller. */
+    ABlasterPlayerController* GetOwnerController();
 
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };

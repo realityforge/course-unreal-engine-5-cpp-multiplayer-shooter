@@ -60,6 +60,17 @@ void ABlasterPlayerController::SetHUDDefeats(const int32 Defeats)
     }
 }
 
+void ABlasterPlayerController::SetHUDWeaponAmmo(const int32 Ammo)
+{
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const auto& Overlay = GetCharacterOverlay();
+    if (Overlay && Overlay->GetAmmoAmount())
+    {
+        const auto& Text = FString::Printf(TEXT("%d"), Ammo);
+        Overlay->GetAmmoAmount()->SetText(FText::FromString(Text));
+    }
+}
+
 void ABlasterPlayerController::ResetHUD()
 {
     if (const auto BlasterCharacter = Cast<ABlasterCharacter>(GetPawn()))
@@ -69,6 +80,9 @@ void ABlasterPlayerController::ResetHUD()
         {
             SetHUDScore(BlasterPlayerState->GetScore());
             SetHUDDefeats(BlasterPlayerState->GetDefeats());
+            // Should we derive this from equipped weapon just in case we
+            // respawn with a weapon equipped?
+            SetHUDWeaponAmmo(0);
         }
     }
 }

@@ -205,6 +205,7 @@ private:
     void DisableCharacterMovement();
     void DisableCollision() const;
     void SpawnEliminationEffect();
+    void ZeroHUDAmmo();
 
     //---------------------------------------------------------------------------
 

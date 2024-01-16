@@ -353,6 +353,7 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
         }
         // Make sure we set owner of weapon so that weapon will be replicated wih player pawn
         EquippedWeapon->SetOwner(Character);
+        EquippedWeapon->UpdateHUDAmmo();
         EquippedWeapon->ShowPickupWidget(false);
 
         StopOrientingRotationToMovement();
