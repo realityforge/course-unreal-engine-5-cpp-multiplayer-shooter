@@ -24,6 +24,7 @@ public:
     void SetHUDScore(float Score);
     void SetHUDDefeats(int32 Defeats);
     void SetHUDWeaponAmmo(int32 Ammo);
+    void SetHUDCarriedAmmo(int32 CarriedAmmo);
     void ResetHUD();
     virtual void OnPossess(APawn* InPawn) override;
 };

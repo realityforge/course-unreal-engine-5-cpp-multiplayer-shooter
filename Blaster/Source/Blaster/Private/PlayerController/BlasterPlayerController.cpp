@@ -71,6 +71,17 @@ void ABlasterPlayerController::SetHUDWeaponAmmo(const int32 Ammo)
     }
 }
 
+void ABlasterPlayerController::SetHUDCarriedAmmo(const int32 CarriedAmmo)
+{
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const auto& Overlay = GetCharacterOverlay();
+    if (Overlay && Overlay->GetCarriedAmmoAmount())
+    {
+        const auto& Text = FString::Printf(TEXT("%d"), CarriedAmmo);
+        Overlay->GetCarriedAmmoAmount()->SetText(FText::FromString(Text));
+    }
+}
+
 void ABlasterPlayerController::ResetHUD()
 {
     if (const auto BlasterCharacter = Cast<ABlasterCharacter>(GetPawn()))
@@ -83,6 +94,8 @@ void ABlasterPlayerController::ResetHUD()
             // Should we derive this from equipped weapon just in case we
             // respawn with a weapon equipped?
             SetHUDWeaponAmmo(0);
+            // Also what happens if we respawn with ammo?
+            SetHUDCarriedAmmo(0);
         }
     }
 }

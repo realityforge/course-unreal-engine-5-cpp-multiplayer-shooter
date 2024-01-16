@@ -3,6 +3,7 @@
 #include "Character/BlasterCharacter.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WeaponTypes.h"
 #include "Weapon.generated.h"
 
 class ABlasterPlayerController;
@@ -101,6 +102,9 @@ private:
               meta = (AllowAbstract = "false", AllowPrivateAccess, RuleRangerRequired))
     TSubclassOf<ACasing> CasingClass{ nullptr };
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
+    EWeaponType WeaponType{ EWeaponType::AssaultRifle };
+
     //---------------------------------------------------------------------------
     // Textures for the Crosshairs
     //---------------------------------------------------------------------------
@@ -183,4 +187,5 @@ public:
     FORCEINLINE float GetFireDelay() const { return FireDelay; }
     FORCEINLINE bool IsAutomaticFire() const { return bAutomaticFire; }
     FORCEINLINE bool HasAmmo() const { return Ammo > 0; }
+    FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
 };

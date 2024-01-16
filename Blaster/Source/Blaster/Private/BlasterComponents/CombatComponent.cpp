@@ -17,6 +17,7 @@ UCombatComponent::UCombatComponent()
 {
     // Enable tick so we can see the temporary debug trace
     PrimaryComponentTick.bCanEverTick = true;
+    InitializeCarriedAmmo();
 }
 
 void UCombatComponent::InitDefaultFOV()
@@ -32,6 +33,10 @@ void UCombatComponent::BeginPlay()
     Super::BeginPlay();
     MirrorWalkSpeedBasedOnState();
     InitDefaultFOV();
+    if (Character->HasAuthority())
+    {
+        InitializeCarriedAmmo();
+    }
     bCanFire = true;
 }
 
@@ -294,6 +299,7 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
     DOREPLIFETIME(UCombatComponent, EquippedWeapon);
     DOREPLIFETIME(UCombatComponent, bAiming);
+    DOREPLIFETIME_CONDITION(UCombatComponent, CarriedAmmo, COND_OwnerOnly);
 }
 
 void UCombatComponent::UpdateFOV(const float DeltaTime)
@@ -346,6 +352,28 @@ bool UCombatComponent::CanFire() const
     return bCanFire && EquippedWeapon && EquippedWeapon->HasAmmo();
 }
 
+void UCombatComponent::UpdateHUDCarriedAmmo()
+{
+    if (UNLIKELY(!Controller))
+    {
+        Controller = Cast<ABlasterPlayerController>(Character->Controller);
+    }
+    if (LIKELY(Controller))
+    {
+        Controller->SetHUDCarriedAmmo(CarriedAmmo);
+    }
+}
+
+void UCombatComponent::OnRep_CarriedAmmo()
+{
+    UpdateHUDCarriedAmmo();
+}
+
+void UCombatComponent::InitializeCarriedAmmo()
+{
+    CarriedAmmoMap.Add(EWeaponType::AssaultRifle, InitialAssaultRifleAmmo);
+}
+
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
     if (IsValid(Character) && IsValid(WeaponToEquip))
@@ -353,7 +381,8 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
         if (EquippedWeapon)
         {
             // If we are holding a weapon and try to pick up another then drop
-            // current weapon
+            // current weapon and store the current Ammo in map
+            CarriedAmmoMap[EquippedWeapon->GetWeaponType()] = CarriedAmmo;
             EquippedWeapon->Dropped();
         }
         EquippedWeapon = WeaponToEquip;
@@ -366,6 +395,16 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
         EquippedWeapon->SetOwner(Character);
         EquippedWeapon->UpdateHUDAmmo();
         EquippedWeapon->ShowPickupWidget(false);
+
+        if (CarriedAmmoMap.Contains(EquippedWeapon->GetWeaponType()))
+        {
+            CarriedAmmo = CarriedAmmoMap[EquippedWeapon->GetWeaponType()];
+        }
+        else
+        {
+            CarriedAmmo = 0;
+        }
+        UpdateHUDCarriedAmmo();
 
         StopOrientingRotationToMovement();
     }

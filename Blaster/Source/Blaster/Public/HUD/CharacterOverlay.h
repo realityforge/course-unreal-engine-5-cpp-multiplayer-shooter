@@ -27,10 +27,14 @@ class BLASTER_API UCharacterOverlay final : public UUserWidget
     UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
     TObjectPtr<UTextBlock> AmmoAmount{ nullptr };
 
+    UPROPERTY(VisibleAnywhere, meta = (BindWidget, AllowPrivateAccess))
+    TObjectPtr<UTextBlock> CarriedAmmoAmount{ nullptr };
+
 public:
     FORCEINLINE UProgressBar* GetHealthBar() const { return HealthBar; }
     FORCEINLINE UTextBlock* GetHealthText() const { return HealthText; }
     FORCEINLINE UTextBlock* GetScoreAmount() const { return ScoreAmount; }
     FORCEINLINE UTextBlock* GetDefeatsAmount() const { return DefeatsAmount; }
     FORCEINLINE UTextBlock* GetAmmoAmount() const { return AmmoAmount; }
+    FORCEINLINE UTextBlock* GetCarriedAmmoAmount() const { return CarriedAmmoAmount; }
 };

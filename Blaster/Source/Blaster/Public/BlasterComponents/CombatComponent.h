@@ -5,6 +5,7 @@
 #include "HUD/BlasterHUD.h"
 #include "CombatComponent.generated.h"
 
+enum class EWeaponType : uint8;
 class ABlasterHUD;
 class ABlasterPlayerController;
 class ABlasterCharacter;
@@ -132,4 +133,28 @@ private:
     void FireTimerFinished();
 
     bool CanFire() const;
+    void UpdateHUDCarriedAmmo();
+
+    //---------------------------------------------------------------------------
+    // Carried Ammo
+    //---------------------------------------------------------------------------
+
+    /** Carried Ammo for the current weapon. */
+    UPROPERTY(VisibleInstanceOnly,
+              ReplicatedUsing = OnRep_CarriedAmmo,
+              Category = "Combat",
+              meta = (AllowPrivateAccess))
+    int32 CarriedAmmo;
+
+    UFUNCTION()
+    void OnRep_CarriedAmmo();
+
+    /** The map of ammo carried for each weapon type.*/
+    UPROPERTY(VisibleInstanceOnly)
+    TMap<EWeaponType, int32> CarriedAmmoMap;
+
+    UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
+    int32 InitialAssaultRifleAmmo{ 30 };
+
+    void InitializeCarriedAmmo();
 };
