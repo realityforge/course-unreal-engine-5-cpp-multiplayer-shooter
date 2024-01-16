@@ -104,35 +104,35 @@ private:
     // User Inputs Section
     //---------------------------------------------------------------------------
 
-    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TSoftObjectPtr<UInputMappingContext> InputMapping{ nullptr };
 
     /** Jump Input Action */
-    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> JumpAction{ nullptr };
 
     /** Move Input Action */
-    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> MoveAction{ nullptr };
 
     /** Look Input Action */
-    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> LookAction{ nullptr };
 
     /** Equip Input Action */
-    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> EquipAction{ nullptr };
 
     /** Crouch Input Action */
-    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> CrouchAction{ nullptr };
 
     /** Crouch Input Action */
-    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> AimAction{ nullptr };
 
     /** Fire Input Action */
-    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> FireAction{ nullptr };
 
     //---------------------------------------------------------------------------
