@@ -173,15 +173,16 @@ private:
     ETurningInPlace TurningInPlace{ ETurningInPlace::TIP_NotTurning };
 
     UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
-    UAnimMontage* FireWeaponMontage{ nullptr };
+    TObjectPtr<UAnimMontage> FireWeaponMontage{ nullptr };
 
     UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
-    UAnimMontage* HitReactMontage{ nullptr };
+    TObjectPtr<UAnimMontage> ReloadMontage;
+
 
     void PlayHitReactMontage() const;
 
     UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
-    UAnimMontage* EliminationMontage{ nullptr };
+    TObjectPtr<UAnimMontage> EliminationMontage{ nullptr };
 
     void PlayEliminationMontage() const;
 
