@@ -191,13 +191,13 @@ void ABlasterCharacter::SpawnEliminationEffect()
     }
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::ZeroHUDAmmo()
 {
     if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
     {
         // Zero the Ammo on HUD
         PlayerController->SetHUDWeaponAmmo(0);
-        ;
     }
 }
 
