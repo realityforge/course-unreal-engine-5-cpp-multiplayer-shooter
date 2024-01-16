@@ -328,6 +328,11 @@ void ABlasterCharacter::EquipInputActionTriggered()
     }
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ABlasterCharacter::ReloadInputActionTriggered()
+{
+}
+
 void ABlasterCharacter::OnCrouchInputActionStarted()
 {
     Crouch();
@@ -764,6 +769,12 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
                        EquipAction,
                        ETriggerEvent::Triggered,
                        &ABlasterCharacter::EquipInputActionTriggered);
+
+        SafeBindAction(Input,
+                       TEXT("ReloadAction"),
+                       ReloadAction,
+                       ETriggerEvent::Triggered,
+                       &ABlasterCharacter::ReloadInputActionTriggered);
 
         // Bind crouching actions
         SafeBindAction(Input,

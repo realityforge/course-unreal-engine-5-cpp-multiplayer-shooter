@@ -61,6 +61,9 @@ protected:
     /** Called for attempting to equip an item */
     void EquipInputActionTriggered();
 
+    /** Called for attempting to reload the current weapon */
+    void ReloadInputActionTriggered();
+
     /** Called when player start to crouch */
     void OnCrouchInputActionStarted();
 
@@ -122,6 +125,10 @@ private:
     /** Equip Input Action */
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> EquipAction{ nullptr };
+
+    /** Reload Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
+    TObjectPtr<UInputAction> ReloadAction{ nullptr };
 
     /** Crouch Input Action */
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
