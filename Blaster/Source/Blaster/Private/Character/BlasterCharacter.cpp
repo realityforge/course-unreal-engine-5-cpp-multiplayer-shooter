@@ -393,6 +393,26 @@ void ABlasterCharacter::Jump()
     }
 }
 
+void ABlasterCharacter::PlayReloadMontage() const
+{
+    if (IsValid(ReloadMontage) && Combat && Combat->EquippedWeapon)
+    {
+        check(GetMesh());
+        if (const auto AnimInstance = GetMesh()->GetAnimInstance(); IsValid(AnimInstance))
+        {
+            AnimInstance->Montage_Play(ReloadMontage);
+
+            const EWeaponType WeaponType = Combat->EquippedWeapon->GetWeaponType();
+            FName SectionName;
+            if (EWeaponType::AssaultRifle == WeaponType)
+            {
+                SectionName = FName("Rifle");
+            }
+            AnimInstance->Montage_JumpToSection(SectionName);
+        }
+    }
+}
+
 void ABlasterCharacter::PlayEliminationMontage() const
 {
     if (IsValid(EliminationMontage))

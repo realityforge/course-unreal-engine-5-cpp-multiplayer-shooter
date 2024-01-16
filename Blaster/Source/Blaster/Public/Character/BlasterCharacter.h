@@ -36,6 +36,8 @@ public:
 
     void PlayFireMontage(bool bAiming);
 
+    void PlayReloadMontage() const;
+
     virtual void OnRep_ReplicatedMovement() override;
 
     void Eliminate();
@@ -185,6 +187,8 @@ private:
     UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
     TObjectPtr<UAnimMontage> ReloadMontage;
 
+    UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
+    TObjectPtr<UAnimMontage> HitReactMontage{ nullptr };
 
     void PlayHitReactMontage() const;
 
