@@ -29,6 +29,7 @@ public:
     friend class ABlasterCharacter;
 
     void EquipWeapon(AWeapon* WeaponToEquip);
+    void Reload();
 
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -157,4 +158,7 @@ private:
     int32 InitialAssaultRifleAmmo{ 30 };
 
     void InitializeCarriedAmmo();
+
+    UFUNCTION(Server, Reliable)
+    void ServerReload();
 };

@@ -8,6 +8,7 @@
 #include "Net/UnrealNetwork.h"
 #include "PlayerController/BlasterPlayerController.h"
 #include "Weapon/Weapon.h"
+#include "Weapon/WeaponTypes.h"
 
 #define TARGETING_RANGE 80000.f
 
@@ -374,6 +375,14 @@ void UCombatComponent::InitializeCarriedAmmo()
     CarriedAmmoMap.Add(EWeaponType::AssaultRifle, InitialAssaultRifleAmmo);
 }
 
+void UCombatComponent::ServerReload_Implementation()
+{
+    if (Character)
+    {
+        Character->PlayReloadMontage();
+    }
+}
+
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
     if (IsValid(Character) && IsValid(WeaponToEquip))
@@ -407,5 +416,14 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
         UpdateHUDCarriedAmmo();
 
         StopOrientingRotationToMovement();
+    }
+}
+
+void UCombatComponent::Reload()
+{
+    // Check CarriedAmmo so we are not spamming server with RPC when not necessary
+    if (CarriedAmmo > 0)
+    {
+        ServerReload();
     }
 }

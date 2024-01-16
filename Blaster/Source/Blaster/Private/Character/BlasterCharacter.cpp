@@ -331,6 +331,10 @@ void ABlasterCharacter::EquipInputActionTriggered()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::ReloadInputActionTriggered()
 {
+    if (IsValid(Combat))
+    {
+        Combat->Reload();
+    }
 }
 
 void ABlasterCharacter::OnCrouchInputActionStarted()
