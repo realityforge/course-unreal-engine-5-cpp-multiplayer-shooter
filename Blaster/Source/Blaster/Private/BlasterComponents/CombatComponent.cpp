@@ -89,7 +89,7 @@ void UCombatComponent::Fire()
 {
     verify(Character->IsLocallyControlled());
 
-    if (bCanFire)
+    if (CanFire())
     {
         // Send fire action to the server
         ServerFire(HitTarget);
@@ -339,6 +339,11 @@ void UCombatComponent::FireTimerFinished()
     {
         Fire();
     }
+}
+
+bool UCombatComponent::CanFire()
+{
+    return bCanFire && EquippedWeapon && EquippedWeapon->HasAmmo();
 }
 
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)

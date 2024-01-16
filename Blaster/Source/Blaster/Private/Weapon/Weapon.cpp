@@ -139,7 +139,7 @@ void AWeapon::OnRep_Ammo()
 }
 void AWeapon::UseAmmo()
 {
-    Ammo = FMath::Max(Ammo - 1, 0);
+    Ammo = FMath::Clamp(Ammo - 1, 0, MaxAmmoCapacity);
     UpdateHUDAmmo();
 }
 

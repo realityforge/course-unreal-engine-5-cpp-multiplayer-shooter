@@ -182,4 +182,5 @@ public:
     FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
     FORCEINLINE float GetFireDelay() const { return FireDelay; }
     FORCEINLINE bool IsAutomaticFire() const { return bAutomaticFire; }
+    FORCEINLINE bool HasAmmo() const { return Ammo > 0; }
 };
