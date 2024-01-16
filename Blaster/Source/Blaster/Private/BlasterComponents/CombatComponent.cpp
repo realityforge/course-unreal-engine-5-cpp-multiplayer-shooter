@@ -345,6 +345,12 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
     if (IsValid(Character) && IsValid(WeaponToEquip))
     {
+        if (EquippedWeapon)
+        {
+            // If we are holding a weapon and try to pick up another then drop
+            // current weapon
+            EquippedWeapon->Dropped();
+        }
         EquippedWeapon = WeaponToEquip;
         EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
         if (const auto HandSocket = Character->GetMesh()->GetSocketByName(RightHandSocketName))
