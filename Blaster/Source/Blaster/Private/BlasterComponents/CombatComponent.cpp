@@ -414,7 +414,7 @@ void UCombatComponent::HandleReload()
 
 void UCombatComponent::ServerReload_Implementation()
 {
-    if (Character)
+    if (Character && EquippedWeapon)
     {
         CombatState = ECombatState::Reloading;
         // Trigger reload on server
