@@ -266,7 +266,10 @@ void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& Trac
 
 void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
 {
-    if (IsValid(Character) && IsValid(EquippedWeapon))
+    // We can not interrupt a reload animation otherwise we will not get the notify that calls
+    // FinishReloading() which will continue firing (and also update state etc). So we will get
+    // permanently locked in reloading state which is bad
+    if (Character && EquippedWeapon && ECombatState::Unoccupied == CombatState)
     {
         Character->PlayFireMontage(bAiming);
         EquippedWeapon->Fire(TraceHitTarget);
@@ -351,7 +354,10 @@ void UCombatComponent::FireTimerFinished()
 
 bool UCombatComponent::CanFire() const
 {
-    return bCanFire && EquippedWeapon && EquippedWeapon->HasAmmo();
+    // bCanFire is true when automatic delay has been satisfied
+    // Can not fire while reloading
+    // Can not fire if we do not have a weapon with ammo
+    return bCanFire && ECombatState::Unoccupied == CombatState && EquippedWeapon && EquippedWeapon->HasAmmo();
 }
 
 void UCombatComponent::UpdateHUDCarriedAmmo()
@@ -385,6 +391,15 @@ void UCombatComponent::OnRep_CombatState()
         {
             // Trigger reload on client
             HandleReload();
+        }
+        else if (ECombatState::Unoccupied == CombatState)
+        {
+            // If we have finish reloading and we are still
+            // holding the fire button then keep firing
+            if (bFireButtonPressed)
+            {
+                Fire();
+            }
         }
     }
 }
@@ -459,5 +474,9 @@ void UCombatComponent::FinishReloading()
     if (Character && Character->HasAuthority())
     {
         CombatState = ECombatState::Unoccupied;
+    }
+    if (bFireButtonPressed)
+    {
+        Fire();
     }
 }
