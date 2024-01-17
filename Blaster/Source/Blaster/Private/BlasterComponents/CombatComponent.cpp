@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "PlayerController/BlasterPlayerController.h"
+#include "Sound/SoundCue.h"
 #include "Weapon/Weapon.h"
 #include "Weapon/WeaponTypes.h"
 
@@ -73,6 +74,14 @@ void UCombatComponent::ServerSetAiming_Implementation(bool bInAiming)
     MirrorWalkSpeedBasedOnState();
 }
 
+void UCombatComponent::PlayEquipSound() const
+{
+    if (const auto& Sound = EquippedWeapon->GetEquipSound())
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, Sound, Character->GetActorLocation());
+    }
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 void UCombatComponent::OnRep_EquippedWeapon()
 {
@@ -88,6 +97,8 @@ void UCombatComponent::OnRep_EquippedWeapon()
             HandSocket->AttachActor(EquippedWeapon, Character->GetMesh());
         }
         StopOrientingRotationToMovement();
+
+        PlayEquipSound();
     }
 }
 
@@ -468,6 +479,7 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
         UpdateHUDCarriedAmmo();
 
         StopOrientingRotationToMovement();
+        PlayEquipSound();
     }
 }
 

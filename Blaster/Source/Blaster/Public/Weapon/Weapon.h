@@ -113,6 +113,10 @@ private:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     EWeaponType WeaponType{ EWeaponType::AssaultRifle };
 
+    /** Sound effect when we equip the weapon. */
+    UPROPERTY(EditDefaultsOnly, Category = "Weapon Properties", meta = (RuleRangerRequired))
+    TObjectPtr<USoundCue> EquipSound;
+
     //---------------------------------------------------------------------------
     // Textures for the Crosshairs
     //---------------------------------------------------------------------------
@@ -190,6 +194,7 @@ public:
     FORCEINLINE UTexture2D* GetCrosshairsRight() const { return CrosshairsRight; };
     FORCEINLINE UTexture2D* GetCrosshairsTop() const { return CrosshairsTop; };
     FORCEINLINE UTexture2D* GetCrosshairsBottom() const { return CrosshairsBottom; };
+    FORCEINLINE USoundCue* GetEquipSound() const { return EquipSound; };
     FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
     FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
     FORCEINLINE float GetFireDelay() const { return FireDelay; }

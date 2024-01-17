@@ -46,6 +46,7 @@ protected:
     UFUNCTION(Server, Reliable)
     void ServerSetAiming(bool bInAiming);
 
+    void PlayEquipSound() const;
     UFUNCTION()
     void OnRep_EquippedWeapon();
 
