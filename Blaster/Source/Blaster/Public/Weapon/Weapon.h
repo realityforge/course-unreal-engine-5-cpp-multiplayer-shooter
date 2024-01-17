@@ -50,6 +50,14 @@ public:
      */
     void Dropped();
 
+    /**
+     * Add Ammo to the current Ammo.
+     * The result current Ammo has a max value and if Add exceeds it we will ignore additional values.
+     *
+     * @param InAmmo The amount of Ammo to add.
+     */
+    void AddAmmo(int32 InAmmo);
+
 protected:
     virtual void BeginPlay() override;
 

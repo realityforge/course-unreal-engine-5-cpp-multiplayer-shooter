@@ -206,6 +206,14 @@ void AWeapon::Dropped()
     ClearCachedOwnerProperties();
 }
 
+void AWeapon::AddAmmo(const int32 InAmmo)
+{
+    check(InAmmo > 0);
+    // Ignore excess Ammo
+    Ammo = FMath::Clamp(Ammo - InAmmo, 0, MaxAmmoCapacity);
+    UpdateHUDAmmo();
+}
+
 void AWeapon::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
