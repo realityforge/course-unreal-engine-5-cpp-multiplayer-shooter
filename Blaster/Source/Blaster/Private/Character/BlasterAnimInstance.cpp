@@ -136,5 +136,8 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
         }
         // We skip FABRIK when reloading as the montage already positions the hand correctly
         bUseFABRIK = ECombatState::Reloading != BlasterCharacter->GetCombatState();
+        // Skip aim offsets when reloading otherwise hand will not pull mag from correct location
+        bUseAimOffsets = ECombatState::Reloading != BlasterCharacter->GetCombatState();
+        bTransformRightHand = ECombatState::Reloading != BlasterCharacter->GetCombatState();
     }
 }
