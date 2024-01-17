@@ -382,6 +382,25 @@ void UCombatComponent::InitializeCarriedAmmo()
     CarriedAmmoMap.Add(EWeaponType::AssaultRifle, InitialAssaultRifleAmmo);
 }
 
+int32 UCombatComponent::AmmoSlotsToReload()
+{
+    check(EquippedWeapon);
+
+    const int32 EmptyAmmoSlotsInWeapon = EquippedWeapon->GetMaxAmmoCapacity() - EquippedWeapon->GetAmmo();
+
+    if (const EWeaponType WeaponType = EquippedWeapon->GetWeaponType(); CarriedAmmoMap.Contains(WeaponType))
+    {
+        const int32 AmmoAvailable = CarriedAmmoMap[WeaponType];
+        const int32 AmmoToAdd = FMath::Min(EmptyAmmoSlotsInWeapon, AmmoAvailable);
+        // Perform a clamp ... just to ensure valid value if MaxAmmoCapacity is configured poorly
+        return FMath::Clamp(EmptyAmmoSlotsInWeapon, 0, AmmoToAdd);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 void UCombatComponent::OnRep_CombatState()
 {
     if (Character)
@@ -468,6 +487,16 @@ void UCombatComponent::FinishReloading()
     if (Character && Character->HasAuthority())
     {
         CombatState = ECombatState::Unoccupied;
+        if (const int32 SlotsToReload = AmmoSlotsToReload(); SlotsToReload > 0)
+        {
+            const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
+            check(CarriedAmmoMap.Contains(WeaponType));
+            CarriedAmmoMap[WeaponType] -= SlotsToReload;
+            // Update cached value as well
+            CarriedAmmo = CarriedAmmoMap[WeaponType];
+            UpdateHUDCarriedAmmo();
+            EquippedWeapon->AddAmmo(SlotsToReload);
+        }
     }
     if (bFireButtonPressed)
     {
