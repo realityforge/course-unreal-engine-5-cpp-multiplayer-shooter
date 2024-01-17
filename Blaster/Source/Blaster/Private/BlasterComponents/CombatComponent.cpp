@@ -444,14 +444,8 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
         EquippedWeapon->UpdateHUDAmmo();
         EquippedWeapon->ShowPickupWidget(false);
 
-        if (CarriedAmmoMap.Contains(EquippedWeapon->GetWeaponType()))
-        {
-            CarriedAmmo = CarriedAmmoMap[EquippedWeapon->GetWeaponType()];
-        }
-        else
-        {
-            CarriedAmmo = 0;
-        }
+        const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
+        CarriedAmmo = CarriedAmmoMap.Contains(WeaponType) ? CarriedAmmoMap[WeaponType] : 0;
         UpdateHUDCarriedAmmo();
 
         StopOrientingRotationToMovement();
