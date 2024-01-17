@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Character/CombatState.h"
 #include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
 #include "HUD/BlasterHUD.h"
@@ -30,6 +31,9 @@ public:
 
     void EquipWeapon(AWeapon* WeaponToEquip);
     void Reload();
+
+    UFUNCTION(BlueprintCallable)
+    void FinishReloading();
 
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -161,4 +165,20 @@ private:
 
     UFUNCTION(Server, Reliable)
     void ServerReload();
+
+    //---------------------------------------------------------------------------
+    // Combat STate
+    //---------------------------------------------------------------------------
+
+    UPROPERTY(VisibleInstanceOnly,
+              ReplicatedUsing = OnRep_CombatState,
+              Category = "Combat",
+              meta = (AllowPrivateAccess))
+    ECombatState CombatState{ ECombatState::Unoccupied };
+
+    UFUNCTION()
+    void OnRep_CombatState();
+
+    /** Function called on both the client and server to do reload. */
+    void HandleReload();
 };

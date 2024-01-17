@@ -300,6 +300,7 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
     DOREPLIFETIME(UCombatComponent, EquippedWeapon);
     DOREPLIFETIME(UCombatComponent, bAiming);
+    DOREPLIFETIME(UCombatComponent, CombatState);
     DOREPLIFETIME_CONDITION(UCombatComponent, CarriedAmmo, COND_OwnerOnly);
 }
 
@@ -375,11 +376,34 @@ void UCombatComponent::InitializeCarriedAmmo()
     CarriedAmmoMap.Add(EWeaponType::AssaultRifle, InitialAssaultRifleAmmo);
 }
 
-void UCombatComponent::ServerReload_Implementation()
+void UCombatComponent::OnRep_CombatState()
+{
+    if (Character)
+    {
+        check(!Character->HasAuthority());
+        if (ECombatState::Reloading == CombatState)
+        {
+            // Trigger reload on client
+            HandleReload();
+        }
+    }
+}
+
+void UCombatComponent::HandleReload()
 {
     if (Character)
     {
         Character->PlayReloadMontage();
+    }
+}
+
+void UCombatComponent::ServerReload_Implementation()
+{
+    if (Character)
+    {
+        CombatState = ECombatState::Reloading;
+        // Trigger reload on server
+        HandleReload();
     }
 }
 
@@ -422,8 +446,18 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 void UCombatComponent::Reload()
 {
     // Check CarriedAmmo so we are not spamming server with RPC when not necessary
-    if (CarriedAmmo > 0)
+    // We also can not reload while reload in progress
+    if (CarriedAmmo > 0 && ECombatState::Reloading != CombatState)
     {
         ServerReload();
+    }
+}
+
+void UCombatComponent::FinishReloading()
+{
+    // Only change state on the server and wait for it to be replicated to the client
+    if (Character && Character->HasAuthority())
+    {
+        CombatState = ECombatState::Unoccupied;
     }
 }

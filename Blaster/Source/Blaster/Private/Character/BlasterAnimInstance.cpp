@@ -1,5 +1,6 @@
 #include "Character/BlasterAnimInstance.h"
 #include "Character/BlasterCharacter.h"
+#include "Character/CombatState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Weapon/Weapon.h"
@@ -133,5 +134,7 @@ void UBlasterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
                 // DrawDebugLine(GetWorld(), MuzzleFlashTransform.GetLocation(), HitTarget, FColor::Orange);
             }
         }
+        // We skip FABRIK when reloading as the montage already positions the hand correctly
+        bUseFABRIK = ECombatState::Reloading != BlasterCharacter->GetCombatState();
     }
 }

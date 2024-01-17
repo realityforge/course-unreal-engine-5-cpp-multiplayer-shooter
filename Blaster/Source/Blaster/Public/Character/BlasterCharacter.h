@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BlasterComponents/CombatComponent.h"
 #include "Components/TimelineComponent.h"
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
@@ -312,7 +313,7 @@ private:
     UFUNCTION()
     void OnRep_OverlappingWeapon(AWeapon* OldOverlappingWeapon) const;
 
-    UPROPERTY(VisibleAnywhere, Category = "Camera")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UCombatComponent> Combat{ nullptr };
 
     UFUNCTION(Server, Reliable)
@@ -354,6 +355,7 @@ public:
     FORCEINLINE bool IsEliminated() const { return bEliminated; }
     FORCEINLINE float GetHealth() const { return Health; }
     FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+    FORCEINLINE ECombatState GetCombatState() const { return Combat ? Combat->CombatState : ECombatState::Unoccupied; };
 
     void SetOverlappingWeapon(AWeapon* Weapon);
 
