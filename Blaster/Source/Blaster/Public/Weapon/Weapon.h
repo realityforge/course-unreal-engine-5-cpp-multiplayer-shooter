@@ -187,5 +187,7 @@ public:
     FORCEINLINE float GetFireDelay() const { return FireDelay; }
     FORCEINLINE bool IsAutomaticFire() const { return bAutomaticFire; }
     FORCEINLINE bool HasAmmo() const { return Ammo > 0; }
+    FORCEINLINE int32 GetAmmo() const { return Ammo; }
+    FORCEINLINE int32 GetMaxAmmoCapacity() const { return MaxAmmoCapacity; }
     FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
 };
