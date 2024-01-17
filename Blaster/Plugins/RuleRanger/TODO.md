@@ -37,7 +37,6 @@ Shorthand notes of where to go next with this experiment:
   * Add check that all private Blueprint functions are called
   * Add check that protected Blueprint functions are in non-final blueprint classes?
 * Texture checks:
-  * Add default/allowed TextureGroup
   * Add default/allowed modes (Color, Linear Color, Alpha etc)
   * Add default/allowed compressions
   * SRGB required/allowed/disallowed
@@ -46,6 +45,12 @@ Shorthand notes of where to go next with this experiment:
   * See https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEEditorValidatorTexturesBase.cpp
   * See https://github.com/benui-dev/UE-BUIValidator/blob/main/Source/BUIValidator/Public/BUIValidatorSettings.h
   * Base it off variants and update texture naming rules to also stamp variants based on source naming or asset naming?
+  * Add rules for well known texture variants:
+    * Normal
+    * Base Color
+    * Emissive
+    * AORMT
+    * Other?
 * Niagara checks:
   * Ensure every Niagara system has an "Effect Type" associated with it.
 * Sound checks:
