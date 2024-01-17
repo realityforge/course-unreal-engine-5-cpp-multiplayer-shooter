@@ -423,7 +423,7 @@ void UCombatComponent::OnRep_CombatState()
     }
 }
 
-void UCombatComponent::HandleReload()
+void UCombatComponent::HandleReload() const
 {
     if (Character)
     {

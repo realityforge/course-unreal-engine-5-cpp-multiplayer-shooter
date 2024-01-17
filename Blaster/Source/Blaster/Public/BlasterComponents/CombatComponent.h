@@ -182,5 +182,5 @@ private:
     void OnRep_CombatState();
 
     /** Function called on both the client and server to do reload. */
-    void HandleReload();
+    void HandleReload() const;
 };
