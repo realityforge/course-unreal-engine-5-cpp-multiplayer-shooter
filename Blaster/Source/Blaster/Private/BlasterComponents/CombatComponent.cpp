@@ -495,6 +495,7 @@ void UCombatComponent::Reload()
 
 void UCombatComponent::FinishReloading()
 {
+    check(EquippedWeapon);
     // Only change state on the server and wait for it to be replicated to the client
     if (Character && Character->HasAuthority())
     {
