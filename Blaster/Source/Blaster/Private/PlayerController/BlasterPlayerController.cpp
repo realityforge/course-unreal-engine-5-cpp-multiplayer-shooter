@@ -24,7 +24,7 @@ UCharacterOverlay* ABlasterPlayerController::GetCharacterOverlay()
     return BlasterHUD ? BlasterHUD->GetCharacterOverlay() : nullptr;
 }
 
-void ABlasterPlayerController::Tick(float DeltaSeconds)
+void ABlasterPlayerController::Tick(const float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
