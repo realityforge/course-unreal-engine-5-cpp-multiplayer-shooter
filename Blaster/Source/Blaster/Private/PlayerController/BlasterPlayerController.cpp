@@ -24,6 +24,13 @@ UCharacterOverlay* ABlasterPlayerController::GetCharacterOverlay()
     return BlasterHUD ? BlasterHUD->GetCharacterOverlay() : nullptr;
 }
 
+void ABlasterPlayerController::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    UpdateHUDCountDown();
+}
+
 void ABlasterPlayerController::SetHUDHealth(const float Health, const float MaxHealth)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
@@ -79,6 +86,32 @@ void ABlasterPlayerController::SetHUDCarriedAmmo(const int32 CarriedAmmo)
     {
         const auto& Text = FString::Printf(TEXT("%d"), CarriedAmmo);
         Overlay->GetCarriedAmmoAmount()->SetText(FText::FromString(Text));
+    }
+}
+
+void ABlasterPlayerController::SetHUDCountDown(const int32 MatchTimeRemaining)
+{
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const auto& Overlay = GetCharacterOverlay();
+    if (Overlay && Overlay->GetCountDown())
+    {
+        const int32 Minutes = MatchTimeRemaining / 60;
+        const int32 Seconds = MatchTimeRemaining % 60;
+        const auto& Text = FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
+        Overlay->GetCountDown()->SetText(FText::FromString(Text));
+    }
+}
+
+void ABlasterPlayerController::UpdateHUDCountDown()
+{
+    const double MatchStartTime = GetWorld()->GetTimeSeconds();
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const int32 MatchTimeRemaining = FMath::FloorToInt32(MatchDuration - MatchStartTime);
+    if (LastMatchTimeRemaining != MatchTimeRemaining)
+    {
+        // Only update the UI when the text will change
+        SetHUDCountDown(MatchTimeRemaining);
+        LastMatchTimeRemaining = MatchTimeRemaining;
     }
 }
 
