@@ -6,6 +6,42 @@
 #include "HUD/CharacterOverlay.h"
 #include "PlayerState/BlasterPlayerState.h"
 
+void ABlasterPlayerController::ServerRequestServerTime_Implementation(const float TimeOfClientRequest)
+{
+    check(HasAuthority());
+    ClientReportServerTime(TimeOfClientRequest, GetWorld()->GetTimeSeconds());
+}
+
+void ABlasterPlayerController::ClientReportServerTime_Implementation(const float TimeOfClientRequest,
+                                                                     const float TimeServerReceivedClientRequest)
+{
+    const float RoundTripTime = GetWorld()->GetTimeSeconds() - TimeOfClientRequest;
+    // Guestimate that the RoundTrip spent 50% of time on message being transported to server
+    // and 50% of time being sent back to client which is wrong as most connections have asymmetrical
+    // connection speeds. But it is accurate enough for our purposes.
+    const float CurrentServerTime = TimeServerReceivedClientRequest + (0.5f * RoundTripTime);
+    ClientServerTimeDelta = CurrentServerTime - GetWorld()->GetTimeSeconds();
+}
+
+float ABlasterPlayerController::GetServerTime() const
+{
+    const double WorldTime = GetWorld()->GetTimeSeconds();
+    return HasAuthority() ? WorldTime : WorldTime + ClientServerTimeDelta;
+}
+
+void ABlasterPlayerController::CheckTimeSync(const float DeltaTime)
+{
+    if (IsLocalController())
+    {
+        TimeSinceLastTimeSync += DeltaTime;
+        if (TimeSinceLastTimeSync > TimeSyncFrequency)
+        {
+            ServerRequestServerTime(GetWorld()->GetTimeSeconds());
+            TimeSinceLastTimeSync = 0.f;
+        }
+    }
+}
+
 void ABlasterPlayerController::BeginPlay()
 {
     Super::BeginPlay();
@@ -29,6 +65,17 @@ void ABlasterPlayerController::Tick(const float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 
     UpdateHUDCountDown();
+    CheckTimeSync(DeltaSeconds);
+}
+
+void ABlasterPlayerController::ReceivedPlayer()
+{
+    Super::ReceivedPlayer();
+    // Sync with server clock as soon as possible
+    if (IsLocalController())
+    {
+        ServerRequestServerTime(GetWorld()->GetTimeSeconds());
+    }
 }
 
 void ABlasterPlayerController::SetHUDHealth(const float Health, const float MaxHealth)
