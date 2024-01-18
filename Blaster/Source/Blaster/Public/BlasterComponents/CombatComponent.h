@@ -167,6 +167,8 @@ private:
     UFUNCTION(Server, Reliable)
     void ServerReload();
 
+    void ReloadIfEmpty();
+
     int32 AmmoSlotsToReload();
 
     //---------------------------------------------------------------------------

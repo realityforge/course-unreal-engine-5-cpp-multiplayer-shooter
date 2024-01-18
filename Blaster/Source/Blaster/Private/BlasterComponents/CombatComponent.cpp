@@ -357,9 +357,13 @@ void UCombatComponent::StartFireTimer()
 void UCombatComponent::FireTimerFinished()
 {
     bCanFire = true;
-    if (bFireButtonPressed && EquippedWeapon && EquippedWeapon->IsAutomaticFire())
+    if (EquippedWeapon)
     {
-        Fire();
+        if (bFireButtonPressed && EquippedWeapon->IsAutomaticFire())
+        {
+            Fire();
+        }
+        ReloadIfEmpty();
     }
 }
 
@@ -480,6 +484,7 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 
         StopOrientingRotationToMovement();
         PlayEquipSound();
+        ReloadIfEmpty();
     }
 }
 
@@ -490,6 +495,16 @@ void UCombatComponent::Reload()
     if (CarriedAmmo > 0 && ECombatState::Reloading != CombatState)
     {
         ServerReload();
+    }
+}
+
+void UCombatComponent::ReloadIfEmpty()
+{
+    check(EquippedWeapon);
+    if (!EquippedWeapon->HasAmmo())
+    {
+        // If we pick up an empty weapon then try to reload
+        Reload();
     }
 }
 
