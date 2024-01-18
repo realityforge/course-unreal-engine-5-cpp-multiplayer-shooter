@@ -2,6 +2,7 @@
 #include "Character/BlasterCharacter.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "EnhancedInputSubsystems.h"
 #include "HUD/BlasterHUD.h"
 #include "HUD/CharacterOverlay.h"
 #include "PlayerState/BlasterPlayerState.h"
@@ -185,4 +186,11 @@ void ABlasterPlayerController::OnPossess(APawn* InPawn)
     Super::OnPossess(InPawn);
     // This makes sure we reset the hud on Respawn
     ResetHUD();
+
+    // Bit of an ugly hack because we delay match start which means
+    // that we do not have controller when character BeginPlay is called
+    if (const auto BlasterCharacter = Cast<ABlasterCharacter>(GetPawn()))
+    {
+        BlasterCharacter->RegisterPlayerInputMapping(this);
+    }
 }

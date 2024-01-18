@@ -48,6 +48,9 @@ public:
 
     virtual void Destroyed() override;
 
+    // Because we delay match start we need to call this from OnPossess
+    void RegisterPlayerInputMapping(const APlayerController* PlayerController);
+
 protected:
     virtual void BeginPlay() override;
 
@@ -144,6 +147,9 @@ private:
     /** Fire Input Action */
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> FireAction{ nullptr };
+
+    // Ugly hack to stop multiple registrations
+    bool bInputMappingRegistered{ false };
 
     //---------------------------------------------------------------------------
 

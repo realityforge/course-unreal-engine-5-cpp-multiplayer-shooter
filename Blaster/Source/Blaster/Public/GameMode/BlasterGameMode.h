@@ -12,6 +12,14 @@ class BLASTER_API ABlasterGameMode final : public AGameMode
 {
     GENERATED_BODY()
 
+    /** The duration that the match will stay in the Warmup phase. */
+    UPROPERTY(EditDefaultsOnly)
+    float WarmupDuration{ 10.f };
+
+    /** The time at which the level started. */
+    UPROPERTY(Transient)
+    float LevelStartedAt{ 0.f };
+
     /**
      * Select a player start location.
      *
@@ -19,7 +27,14 @@ class BLASTER_API ABlasterGameMode final : public AGameMode
      */
     AActor* SelectPlayerStart() const;
 
+protected:
+    virtual void BeginPlay() override;
+
 public:
+    ABlasterGameMode();
+
+    virtual void Tick(float DeltaTime) override;
+
     /**
      * Invoked when a player is Eliminated/killed.
      *
@@ -28,8 +43,8 @@ public:
      * @param Attacker The PlayerController that eliminated/killed the Player.
      */
     void PlayerEliminated(ABlasterCharacter* Character,
-                          ABlasterPlayerController* Controller,
-                          ABlasterPlayerController* Attacker);
+                          const ABlasterPlayerController* Controller,
+                          const ABlasterPlayerController* Attacker);
 
     /**
      * Request that the player be respawned.

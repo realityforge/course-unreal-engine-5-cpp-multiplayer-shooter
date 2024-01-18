@@ -234,17 +234,26 @@ void ABlasterCharacter::Destroyed()
     }
 }
 
+void ABlasterCharacter::RegisterPlayerInputMapping(const APlayerController* const PlayerController)
+{
+    if (!bInputMappingRegistered)
+    {
+        if (const auto Subsystem =
+                ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+        {
+            // TODO: move the registration of contexts to controller ... binding of actions to methods can stay here
+            Subsystem->AddMappingContext(InputMapping.LoadSynchronous(), 0);
+            bInputMappingRegistered = true;
+        }
+    }
+}
+
 void ABlasterCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    if (const auto PlayerController = Cast<APlayerController>(Controller); IsValid(PlayerController))
+    if (const auto PlayerController = Cast<APlayerController>(Controller))
     {
-        if (const auto Subsystem =
-                ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-            IsValid(Subsystem))
-        {
-            Subsystem->AddMappingContext(InputMapping.LoadSynchronous(), 0);
-        }
+        // RegisterPlayerInputMapping(PlayerController);
     }
 
     if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))

@@ -5,9 +5,38 @@
 #include "PlayerController/BlasterPlayerController.h"
 #include "PlayerState/BlasterPlayerState.h"
 
+ABlasterGameMode::ABlasterGameMode()
+{
+    // The GameMode will not automatically transition from WaitingToStart to InProgress
+    // when we set bDelayedStart to true so we have to manually call StartMatch
+    bDelayedStart = true;
+}
+
+void ABlasterGameMode::BeginPlay()
+{
+    Super::BeginPlay();
+
+    LevelStartedAt = GetWorld()->GetTimeSeconds();
+}
+
+void ABlasterGameMode::Tick(const float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    if (MatchState::WaitingToStart == MatchState)
+    {
+        // Start the match after we have spent WarmupDuration waiting
+        if (WarmupDuration - GetWorld()->GetTimeSeconds() + LevelStartedAt <= 0.f)
+        {
+            StartMatch();
+        }
+    }
+}
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
 void ABlasterGameMode::PlayerEliminated(ABlasterCharacter* Character,
-                                        ABlasterPlayerController* Controller,
-                                        ABlasterPlayerController* Attacker)
+                                        const ABlasterPlayerController* Controller,
+                                        const ABlasterPlayerController* Attacker)
 {
     const auto AttackerState = Attacker ? Cast<ABlasterPlayerState>(Attacker->PlayerState) : nullptr;
     const auto VictimState = Controller ? Cast<ABlasterPlayerState>(Controller->PlayerState) : nullptr;
