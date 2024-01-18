@@ -15,6 +15,8 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
     UPROPERTY(Transient)
     TObjectPtr<ABlasterHUD> BlasterHUD{ nullptr };
 
+    UCharacterOverlay* GetCharacterOverlay();
+
     /** The duration of the match in seconds. */
     UPROPERTY(EditAnywhere)
     int32 MatchDuration{ 120 };
@@ -24,7 +26,6 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
 
 protected:
     virtual void BeginPlay() override;
-    UCharacterOverlay* GetCharacterOverlay();
 
 public:
     virtual void Tick(float DeltaSeconds) override;
