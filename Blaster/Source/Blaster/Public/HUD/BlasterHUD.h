@@ -50,13 +50,10 @@ class BLASTER_API ABlasterHUD final : public AHUD
     UPROPERTY(VisibleAnywhere, Transient, Category = "PlayerStats")
     TObjectPtr<UCharacterOverlay> CharacterOverlay{ nullptr };
 
-    void AddCharacterOverlay();
-
-protected:
-    virtual void BeginPlay() override;
-
 public:
     virtual void DrawHUD() override;
+
+    void AddCharacterOverlay();
 
     FORCEINLINE void SetHUDPackage(const FHUDPackage& InHUDPackage) { HUDPackage = InHUDPackage; }
 

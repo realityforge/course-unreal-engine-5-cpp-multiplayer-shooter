@@ -2,10 +2,18 @@
 #include "Character/BlasterCharacter.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
-#include "EnhancedInputSubsystems.h"
+#include "GameFramework/GameMode.h"
 #include "HUD/BlasterHUD.h"
 #include "HUD/CharacterOverlay.h"
+#include "Net/UnrealNetwork.h"
 #include "PlayerState/BlasterPlayerState.h"
+
+void ABlasterPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(ABlasterPlayerController, MatchState);
+}
 
 void ABlasterPlayerController::ServerRequestServerTime_Implementation(const float TimeOfClientRequest)
 {
@@ -43,6 +51,44 @@ void ABlasterPlayerController::CheckTimeSync(const float DeltaTime)
     }
 }
 
+void ABlasterPlayerController::AddCharacterOverlayIfMatchStateInProgress()
+{
+    if (MatchState::InProgress == MatchState)
+    {
+        if (const auto HUD = GetBlasterHUD())
+        {
+            HUD->AddCharacterOverlay();
+        }
+        else
+        {
+            UE_LOG(LogTemp,
+                   Error,
+                   TEXT("Failed to retrieve ABlasterHUD from HUD %s "
+                        "as it is not an instance of ABlasterHUD"),
+                   GetHUD() ? *GetHUD()->GetName() : TEXT("?"));
+        }
+    }
+}
+
+void ABlasterPlayerController::OnRep_MatchState()
+{
+    AddCharacterOverlayIfMatchStateInProgress();
+}
+
+void ABlasterPlayerController::InitHUDIfRequired()
+{
+    if (bInitializeCharacterOverlay && !CharacterOverlay)
+    {
+        if (auto Overlay = GetCharacterOverlay())
+        {
+            CharacterOverlay = Overlay;
+            SetHUDHealth(HUDHealth, HUDMaxHealth);
+            SetHUDScore(HUDScore);
+            SetHUDDefeats(HUDDefeats);
+        }
+    }
+}
+
 void ABlasterPlayerController::BeginPlay()
 {
     Super::BeginPlay();
@@ -50,15 +96,20 @@ void ABlasterPlayerController::BeginPlay()
     BlasterHUD = Cast<ABlasterHUD>(GetHUD());
 }
 
-UCharacterOverlay* ABlasterPlayerController::GetCharacterOverlay()
+ABlasterHUD* ABlasterPlayerController::GetBlasterHUD()
 {
     if (UNLIKELY(!BlasterHUD))
     {
         // What scenario is this actually required?
         BlasterHUD = Cast<ABlasterHUD>(GetHUD());
     }
+    return BlasterHUD;
+}
 
-    return BlasterHUD ? BlasterHUD->GetCharacterOverlay() : nullptr;
+UCharacterOverlay* ABlasterPlayerController::GetCharacterOverlay()
+{
+    const auto HUD = GetBlasterHUD();
+    return HUD ? HUD->GetCharacterOverlay() : nullptr;
 }
 
 void ABlasterPlayerController::Tick(const float DeltaSeconds)
@@ -67,6 +118,7 @@ void ABlasterPlayerController::Tick(const float DeltaSeconds)
 
     UpdateHUDCountDown();
     CheckTimeSync(DeltaSeconds);
+    InitHUDIfRequired();
 }
 
 void ABlasterPlayerController::ReceivedPlayer()
@@ -91,6 +143,12 @@ void ABlasterPlayerController::SetHUDHealth(const float Health, const float MaxH
         const auto& Text = FString::Printf(TEXT("%d/%d"), FMath::CeilToInt(Health), FMath::CeilToInt(MaxHealth));
         Overlay->GetHealthText()->SetText(FText::FromString(Text));
     }
+    else
+    {
+        bInitializeCharacterOverlay = true;
+        HUDHealth = Health;
+        HUDMaxHealth = MaxHealth;
+    }
 }
 
 void ABlasterPlayerController::SetHUDScore(const float Score)
@@ -102,6 +160,11 @@ void ABlasterPlayerController::SetHUDScore(const float Score)
         const auto& Text = FString::Printf(TEXT("%d"), FMath::FloorToInt(Score));
         Overlay->GetScoreAmount()->SetText(FText::FromString(Text));
     }
+    else
+    {
+        bInitializeCharacterOverlay = true;
+        HUDScore = Score;
+    }
 }
 
 void ABlasterPlayerController::SetHUDDefeats(const int32 Defeats)
@@ -112,6 +175,11 @@ void ABlasterPlayerController::SetHUDDefeats(const int32 Defeats)
     {
         const auto& Text = FString::Printf(TEXT("%d"), Defeats);
         Overlay->GetDefeatsAmount()->SetText(FText::FromString(Text));
+    }
+    else
+    {
+        bInitializeCharacterOverlay = true;
+        HUDDefeats = Defeats;
     }
 }
 
@@ -193,4 +261,11 @@ void ABlasterPlayerController::OnPossess(APawn* InPawn)
     {
         BlasterCharacter->RegisterPlayerInputMapping(this);
     }
+}
+
+void ABlasterPlayerController::OnMatchStateSet(const FName& State)
+{
+    MatchState = State;
+
+    AddCharacterOverlayIfMatchStateInProgress();
 }

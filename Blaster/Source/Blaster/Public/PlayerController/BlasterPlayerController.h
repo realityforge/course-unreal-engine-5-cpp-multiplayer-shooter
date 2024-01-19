@@ -16,6 +16,7 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
     TObjectPtr<ABlasterHUD> BlasterHUD{ nullptr };
 
     UCharacterOverlay* GetCharacterOverlay();
+    ABlasterHUD* GetBlasterHUD();
 
     /** The duration of the match in seconds. */
     UPROPERTY(EditAnywhere)
@@ -64,6 +65,38 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
 
     float GetServerTime() const;
     void CheckTimeSync(float DeltaTime);
+    void AddCharacterOverlayIfMatchStateInProgress();
+
+    //---------------------------------------------------------------------------
+    // MatchState (why oh why is this per-PlayerController? Why not replicate it on GameMode?)
+    //---------------------------------------------------------------------------
+
+    UPROPERTY(ReplicatedUsing = OnRep_MatchState)
+    FName MatchState;
+
+    UFUNCTION()
+    void OnRep_MatchState();
+
+    //---------------------------------------------------------------------------
+    // CharacterOverlay
+    //---------------------------------------------------------------------------
+
+    /** A cached copy of CharacterOverlay. */
+    UPROPERTY(Transient)
+    TObjectPtr<UCharacterOverlay> CharacterOverlay{ nullptr };
+
+    /** Set when we have some data to put on the HUD and thus should initialize HUD if not initialized. */
+    bool bInitializeCharacterOverlay{ false };
+
+    // The following are all cached values HUD which we will use when we
+    // initialize the HUD. Thereafter they are not used.
+
+    float HUDHealth{ 0.f };
+    float HUDMaxHealth{ 0.f };
+    float HUDScore{ 0.f };
+    int32 HUDDefeats{ 0 };
+
+    void InitHUDIfRequired();
 
 protected:
     virtual void BeginPlay() override;
@@ -71,6 +104,7 @@ protected:
 public:
     virtual void Tick(float DeltaSeconds) override;
     virtual void ReceivedPlayer() override;
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
     void SetHUDHealth(float Health, float MaxHealth);
     void SetHUDScore(float Score);
@@ -83,4 +117,6 @@ public:
 
     void ResetHUD();
     virtual void OnPossess(APawn* InPawn) override;
+
+    void OnMatchStateSet(const FName& State);
 };

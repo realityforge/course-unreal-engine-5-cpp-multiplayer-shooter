@@ -14,12 +14,6 @@ void ABlasterHUD::AddCharacterOverlay()
     }
 }
 
-void ABlasterHUD::BeginPlay()
-{
-    Super::BeginPlay();
-    AddCharacterOverlay();
-}
-
 void ABlasterHUD::DrawHUD()
 {
     Super::DrawHUD();

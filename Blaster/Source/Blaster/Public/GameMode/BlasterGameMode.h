@@ -29,6 +29,7 @@ class BLASTER_API ABlasterGameMode final : public AGameMode
 
 protected:
     virtual void BeginPlay() override;
+    virtual void OnMatchStateSet() override;
 
 public:
     ABlasterGameMode();

@@ -19,6 +19,28 @@ void ABlasterGameMode::BeginPlay()
     LevelStartedAt = GetWorld()->GetTimeSeconds();
 }
 
+void ABlasterGameMode::OnMatchStateSet()
+{
+    Super::OnMatchStateSet();
+
+    for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+    {
+        const TWeakObjectPtr<APlayerController> PlayerController = *It;
+        if (auto BlasterPlayer = Cast<ABlasterPlayerController>(PlayerController))
+        {
+            BlasterPlayer->OnMatchStateSet(MatchState);
+        }
+        else
+        {
+            UE_LOG(LogTemp,
+                   Error,
+                   TEXT("Failed to call OnMatchStateSet on controller %s "
+                        "as it is not an instance of ABlasterPlayerController"),
+                   *PlayerController.Get()->GetName());
+        }
+    }
+}
+
 void ABlasterGameMode::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
