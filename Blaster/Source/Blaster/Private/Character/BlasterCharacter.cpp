@@ -251,11 +251,6 @@ void ABlasterCharacter::RegisterPlayerInputMapping(const APlayerController* cons
 void ABlasterCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    if (const auto PlayerController = Cast<APlayerController>(Controller))
-    {
-        // RegisterPlayerInputMapping(PlayerController);
-    }
-
     if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
     {
         PlayerController->ResetHUD();
