@@ -27,6 +27,8 @@ Shorthand notes of where to go next with this experiment:
     * Add RuleRanger validation to ensure license is set
 * Name checks:
   * Add regex per-type for nested names? or global regex for internal names?
+  * Ensure that classes (C++ and Blueprint) have a "basename" that ends with Base rather than starts with Base. i.e. Prefer FooBase over BaseFoo
+  * Ensure some name patterns (i.e. *Base) require (Abstract) UCLASS specifier
 * Material checks:
   * Ensure parameters have group/categories
   * Ensure parameters have descriptions
@@ -51,6 +53,19 @@ Shorthand notes of where to go next with this experiment:
     * Emissive
     * AORMT
     * Other?
+* Animation Sequence:
+  * Ensure animation sequence has a certain FPS
+  * Ensure animation sequence contains curve data for specific curves
+* Skeletal Mesh:
+  * Ensure that a AnimationSlot Group and/or name exists
+  * Ensure that a Curve with name/type exists
+  * Ensure that a Curve is attached/not attached to particular bones
+  * Ensure naming conventions for AnimationSlot Group/Name
+* Skeleton:
+  * Ensure that a AnimationSlot Group and/or name exists
+  * Ensure that a Curve with name/type exists
+  * Ensure that a Curve is attached/not attached to particular bones
+  * Ensure naming conventions for AnimationSlot Group/Name
 * Niagara checks:
   * Ensure every Niagara system has an "Effect Type" associated with it.
 * Sound checks:
