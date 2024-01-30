@@ -3,6 +3,7 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/GameMode.h"
+#include "HUD/Announcement.h"
 #include "HUD/BlasterHUD.h"
 #include "HUD/CharacterOverlay.h"
 #include "Net/UnrealNetwork.h"
@@ -58,6 +59,12 @@ void ABlasterPlayerController::AddCharacterOverlayIfMatchStateInProgress()
         if (const auto HUD = GetBlasterHUD())
         {
             HUD->AddCharacterOverlay();
+            if (const auto& Announcement = HUD->GetAnnouncement())
+            {
+                // Once we actually start the match then hide the announcement HUD
+                // We don't destroy it as we will use it at the end of a match as well
+                Announcement->SetVisibility(ESlateVisibility::Hidden);
+            }
         }
         else
         {
@@ -94,6 +101,10 @@ void ABlasterPlayerController::BeginPlay()
     Super::BeginPlay();
 
     BlasterHUD = Cast<ABlasterHUD>(GetHUD());
+    if (BlasterHUD)
+    {
+        BlasterHUD->AddAnnouncement();
+    }
 }
 
 ABlasterHUD* ABlasterPlayerController::GetBlasterHUD()
