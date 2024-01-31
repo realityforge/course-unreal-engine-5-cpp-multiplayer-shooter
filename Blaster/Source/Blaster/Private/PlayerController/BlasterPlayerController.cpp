@@ -364,13 +364,14 @@ void ABlasterPlayerController::ClientJoinMidGame_Implementation(const FName& InM
 
 void ABlasterPlayerController::ServerCheckMatchState_Implementation()
 {
-    if (const auto GameMode = Cast<ABlasterGameMode>(UGameplayStatics::GetGameMode(this)))
+    const auto GameMode = UGameplayStatics::GetGameMode(this);
+    if (const auto BlasterGameMode = Cast<ABlasterGameMode>(GameMode))
     {
         // TODO: Unclear why we cache these here on the server?
-        WarmupDuration = GameMode->GetWarmupDuration();
-        MatchDuration = GameMode->GetMatchDuration();
-        LevelStartedAt = GameMode->GetLevelStartedAt();
-        MatchState = GameMode->GetMatchState();
+        WarmupDuration = BlasterGameMode->GetWarmupDuration();
+        MatchDuration = BlasterGameMode->GetMatchDuration();
+        LevelStartedAt = BlasterGameMode->GetLevelStartedAt();
+        MatchState = BlasterGameMode->GetMatchState();
         ClientJoinMidGame(MatchState, WarmupDuration, MatchDuration, LevelStartedAt);
     }
 }
