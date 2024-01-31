@@ -13,7 +13,11 @@ FString BlasterGetClientServerContextString(const UObject* Object)
     {
         FString Context{ TEXT("") };
         const auto World = Object->GetWorld();
-        if (EWorldType::Game == World->WorldType)
+        if (!World)
+        {
+            Context.Append("NoWorld");
+        }
+        else if (EWorldType::Game == World->WorldType)
         {
             Context.Append("Game");
         }
@@ -42,7 +46,7 @@ FString BlasterGetClientServerContextString(const UObject* Object)
             Context.Append("Preview");
         }
         // ReSharper disable once CppTooWideScopeInitStatement
-        const ENetMode NetMode = World->GetNetMode();
+        const ENetMode NetMode = World ? World->GetNetMode() : NM_Standalone;
         if (NM_Client == NetMode)
         {
             Context.Append(":Client");
