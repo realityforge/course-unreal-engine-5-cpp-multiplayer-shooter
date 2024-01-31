@@ -263,9 +263,12 @@ void ABlasterCharacter::RegisterPlayerInputMapping(const APlayerController* cons
 void ABlasterCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+    if (IsLocallyControlled())
     {
-        PlayerController->ResetHUD();
+        if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+        {
+            PlayerController->ResetHUDIfLocalController();
+        }
     }
     if (HasAuthority())
     {
