@@ -18,12 +18,20 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
     UCharacterOverlay* GetCharacterOverlay();
     ABlasterHUD* GetBlasterHUD();
 
-    /** The duration of the match in seconds. */
-    UPROPERTY(EditAnywhere)
-    int32 MatchDuration{ 120 };
+    /** The duration (in seconds) that the match will stay in the Warmup phase. */
+    UPROPERTY(Transient, VisibleInstanceOnly)
+    float WarmupDuration{ 0.f };
 
-    /** The MatchTimeRemaining when the HUD was last updated */
-    int32 LastMatchTimeRemaining{ 0 };
+    /** The duration (in seconds) of the match. */
+    UPROPERTY(Transient, VisibleInstanceOnly)
+    float MatchDuration{ 0.f };
+
+    /** The time at which the level started. */
+    UPROPERTY(Transient, VisibleInstanceOnly)
+    float LevelStartedAt{ 0.f };
+
+    /** The TimeRemaining when the HUD was last updated */
+    int32 LastTimeRemaining{ 0 };
 
     //---------------------------------------------------------------------------
     // Deriving Match Time From Server
@@ -111,7 +119,8 @@ public:
     void SetHUDDefeats(int32 Defeats);
     void SetHUDWeaponAmmo(int32 Ammo);
     void SetHUDCarriedAmmo(int32 CarriedAmmo);
-    void SetHUDCountDown(int32 MatchTimeRemaining);
+    void SetHUDMatchCountDown(int32 MatchTimeRemaining);
+    void SetHUDAnnouncementCountdown(float PreMatchTimeRemaining);
 
     void UpdateHUDCountDown();
 
@@ -119,4 +128,13 @@ public:
     virtual void OnPossess(APawn* InPawn) override;
 
     void OnMatchStateSet(const FName& State);
+
+    /** Called by client to update the local match state. */
+    UFUNCTION(Server, Reliable)
+    void ServerCheckMatchState();
+
+    /** Callback that is called from ServerCheckMatchState to update client with match details. */
+    UFUNCTION(Client, Reliable)
+    void
+    ClientJoinMidGame(const FName& InMatchState, float InWarmupDuration, float InMatchDuration, float InLevelStartedAt);
 };

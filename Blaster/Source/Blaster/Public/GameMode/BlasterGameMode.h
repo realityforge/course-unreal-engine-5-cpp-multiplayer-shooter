@@ -12,9 +12,13 @@ class BLASTER_API ABlasterGameMode final : public AGameMode
 {
     GENERATED_BODY()
 
-    /** The duration that the match will stay in the Warmup phase. */
+    /** The duration (in seconds) that the match will stay in the Warmup phase. */
     UPROPERTY(EditDefaultsOnly)
     float WarmupDuration{ 10.f };
+
+    /** The duration (in seconds) of the match. */
+    UPROPERTY(EditDefaultsOnly)
+    float MatchDuration{ 120.f };
 
     /** The time at which the level started. */
     UPROPERTY(Transient)
@@ -54,4 +58,8 @@ public:
      * @param Controller The Player Controller.
      */
     void RequestRespawn(ACharacter* Character, AController* Controller);
+
+    FORCEINLINE float GetWarmupDuration() const { return WarmupDuration; }
+    FORCEINLINE float GetMatchDuration() const { return MatchDuration; }
+    FORCEINLINE float GetLevelStartedAt() const { return LevelStartedAt; }
 };

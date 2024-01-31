@@ -3,9 +3,11 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "GameFramework/GameMode.h"
+#include "GameMode/BlasterGameMode.h"
 #include "HUD/Announcement.h"
 #include "HUD/BlasterHUD.h"
 #include "HUD/CharacterOverlay.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "PlayerState/BlasterPlayerState.h"
 
@@ -80,6 +82,7 @@ void ABlasterPlayerController::AddCharacterOverlayIfMatchStateInProgress()
 void ABlasterPlayerController::OnRep_MatchState()
 {
     AddCharacterOverlayIfMatchStateInProgress();
+    LastTimeRemaining = 0.f;
 }
 
 void ABlasterPlayerController::InitHUDIfRequired()
@@ -101,10 +104,9 @@ void ABlasterPlayerController::BeginPlay()
     Super::BeginPlay();
 
     BlasterHUD = Cast<ABlasterHUD>(GetHUD());
-    if (BlasterHUD)
-    {
-        BlasterHUD->AddAnnouncement();
-    }
+
+    // Retrieve match state from the server
+    ServerCheckMatchState();
 }
 
 ABlasterHUD* ABlasterPlayerController::GetBlasterHUD()
@@ -216,7 +218,7 @@ void ABlasterPlayerController::SetHUDCarriedAmmo(const int32 CarriedAmmo)
     }
 }
 
-void ABlasterPlayerController::SetHUDCountDown(const int32 MatchTimeRemaining)
+void ABlasterPlayerController::SetHUDMatchCountDown(const int32 MatchTimeRemaining)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto& Overlay = GetCharacterOverlay();
@@ -229,16 +231,43 @@ void ABlasterPlayerController::SetHUDCountDown(const int32 MatchTimeRemaining)
     }
 }
 
+void ABlasterPlayerController::SetHUDAnnouncementCountdown(const float PreMatchTimeRemaining)
+{
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const auto HUD = GetBlasterHUD();
+    if (HUD && HUD->GetAnnouncement())
+    {
+        const int32 Minutes = PreMatchTimeRemaining / 60;
+        const int32 Seconds = static_cast<int32>(PreMatchTimeRemaining) % 60;
+        const auto& Text = FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
+        HUD->GetAnnouncement()->GetWarmupTime()->SetText(FText::FromString(Text));
+    }
+}
+
 void ABlasterPlayerController::UpdateHUDCountDown()
 {
     const double MatchStartTime = GetWorld()->GetTimeSeconds();
-    // ReSharper disable once CppTooWideScopeInitStatement
-    const int32 MatchTimeRemaining = FMath::FloorToInt32(MatchDuration - MatchStartTime);
-    if (LastMatchTimeRemaining != MatchTimeRemaining)
+    if (MatchState::WaitingToStart == MatchState)
     {
-        // Only update the UI when the text will change
-        SetHUDCountDown(MatchTimeRemaining);
-        LastMatchTimeRemaining = MatchTimeRemaining;
+        // ReSharper disable once CppTooWideScopeInitStatement
+        const int32 TimeRemaining = FMath::FloorToInt32(MatchDuration - MatchStartTime);
+        if (LastTimeRemaining != TimeRemaining)
+        {
+            // Only update the UI when the text will change
+            SetHUDMatchCountDown(TimeRemaining);
+            LastTimeRemaining = TimeRemaining;
+        }
+    }
+    else if (MatchState::InProgress == MatchState)
+    {
+        // ReSharper disable once CppTooWideScopeInitStatement
+        const int32 MatchTimeRemaining = FMath::FloorToInt32(WarmupDuration - MatchStartTime);
+        if (LastTimeRemaining != MatchTimeRemaining)
+        {
+            // Only update the UI when the text will change
+            SetHUDAnnouncementCountdown(MatchTimeRemaining);
+            LastTimeRemaining = MatchTimeRemaining;
+        }
     }
 }
 
@@ -279,4 +308,33 @@ void ABlasterPlayerController::OnMatchStateSet(const FName& State)
     MatchState = State;
 
     AddCharacterOverlayIfMatchStateInProgress();
+}
+
+void ABlasterPlayerController::ClientJoinMidGame_Implementation(const FName& InMatchState,
+                                                                const float InWarmupDuration,
+                                                                const float InMatchDuration,
+                                                                const float InLevelStartedAt)
+{
+    WarmupDuration = InWarmupDuration;
+    MatchDuration = InMatchDuration;
+    LevelStartedAt = InLevelStartedAt;
+    MatchState = InMatchState;
+    OnMatchStateSet(MatchState);
+    if (BlasterHUD && MatchState::WaitingToStart == MatchState)
+    {
+        BlasterHUD->AddAnnouncement();
+    }
+}
+
+void ABlasterPlayerController::ServerCheckMatchState_Implementation()
+{
+    if (const auto GameMode = Cast<ABlasterGameMode>(UGameplayStatics::GetGameMode(this)))
+    {
+        // TODO: Unclear why we cache these here on the server?
+        WarmupDuration = GameMode->GetWarmupDuration();
+        MatchDuration = GameMode->GetMatchDuration();
+        LevelStartedAt = GameMode->GetLevelStartedAt();
+        MatchState = GameMode->GetMatchState();
+        ClientJoinMidGame(MatchState, WarmupDuration, MatchDuration, LevelStartedAt);
+    }
 }
