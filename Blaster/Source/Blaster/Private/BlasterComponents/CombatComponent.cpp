@@ -383,7 +383,10 @@ void UCombatComponent::UpdateHUDCarriedAmmo()
     }
     if (LIKELY(Controller))
     {
-        Controller->SetHUDCarriedAmmo(CarriedAmmo);
+        if (Controller->IsLocalController())
+        {
+            Controller->SetHUDCarriedAmmo(CarriedAmmo);
+        }
     }
 }
 

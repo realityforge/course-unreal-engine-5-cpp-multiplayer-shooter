@@ -26,9 +26,9 @@ void ABlasterGameMode::OnMatchStateSet()
     for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
     {
         const TWeakObjectPtr<APlayerController> PlayerController = *It;
-        if (auto BlasterPlayer = Cast<ABlasterPlayerController>(PlayerController))
+        if (const auto BlasterPlayerController = Cast<ABlasterPlayerController>(PlayerController))
         {
-            BlasterPlayer->OnMatchStateSet(MatchState);
+            BlasterPlayerController->OnMatchStateSet(MatchState);
         }
         else
         {

@@ -169,7 +169,10 @@ void AWeapon::UpdateHUDAmmo()
     if (const auto PlayerController = GetOwnerController())
     {
         // Initialize Health on HUD
-        PlayerController->SetHUDWeaponAmmo(Ammo);
+        if (PlayerController->IsLocalController())
+        {
+            PlayerController->SetHUDWeaponAmmo(Ammo);
+        }
     }
 }
 

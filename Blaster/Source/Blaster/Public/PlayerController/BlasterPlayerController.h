@@ -12,12 +12,6 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
 {
     GENERATED_BODY()
 
-    UPROPERTY(Transient)
-    TObjectPtr<ABlasterHUD> BlasterHUD{ nullptr };
-
-    UCharacterOverlay* GetCharacterOverlay();
-    ABlasterHUD* GetBlasterHUD();
-
     /** The duration (in seconds) that the match will stay in the Warmup phase. */
     UPROPERTY(Transient, VisibleInstanceOnly)
     float WarmupDuration{ 0.f };
@@ -86,8 +80,14 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
     void OnRep_MatchState();
 
     //---------------------------------------------------------------------------
-    // CharacterOverlay
+    // HUD and CharacterOverlay
     //---------------------------------------------------------------------------
+
+    UPROPERTY(Transient)
+    TObjectPtr<ABlasterHUD> BlasterHUD{ nullptr };
+
+    UCharacterOverlay* GetCharacterOverlay();
+    ABlasterHUD* GetBlasterHUD();
 
     /** A cached copy of CharacterOverlay. */
     UPROPERTY(Transient)
@@ -105,6 +105,9 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
     int32 HUDDefeats{ 0 };
 
     void InitHUDIfRequired();
+
+    /** Used to cache the BlasterHUD reference. */
+    void CacheBlasterHUD();
 
 protected:
     virtual void BeginPlay() override;
@@ -124,7 +127,7 @@ public:
 
     void UpdateHUDCountDown();
 
-    void ResetHUD();
+    void ResetHUDIfLocalController();
     virtual void OnPossess(APawn* InPawn) override;
 
     void OnMatchStateSet(const FName& State);

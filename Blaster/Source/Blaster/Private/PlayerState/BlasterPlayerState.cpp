@@ -19,7 +19,10 @@ void ABlasterPlayerState::UpdateScoreOnHUD()
 {
     if (const auto& PlayerController = GetController())
     {
-        PlayerController->SetHUDScore(GetScore());
+        if (PlayerController->IsLocalController())
+        {
+            PlayerController->SetHUDScore(GetScore());
+        }
     }
 }
 
@@ -33,7 +36,10 @@ void ABlasterPlayerState::UpdateDefeatsOnHUD()
 {
     if (const auto& PlayerController = GetController())
     {
-        PlayerController->SetHUDDefeats(Defeats);
+        if (PlayerController->IsLocalController())
+        {
+            PlayerController->SetHUDDefeats(Defeats);
+        }
     }
 }
 
@@ -42,6 +48,7 @@ void ABlasterPlayerState::AddToDefeats(const int32 DefeatsAmount)
     Defeats += DefeatsAmount;
     UpdateDefeatsOnHUD();
 }
+
 void ABlasterPlayerState::OnRep_Defeats()
 {
     UpdateDefeatsOnHUD();

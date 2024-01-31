@@ -56,6 +56,7 @@ void ABlasterPlayerController::CheckTimeSync(const float DeltaTime)
 
 void ABlasterPlayerController::AddCharacterOverlayIfMatchStateInProgress()
 {
+    check(IsLocalController());
     if (MatchState::InProgress == MatchState)
     {
         if (const auto HUD = GetBlasterHUD())
@@ -87,7 +88,7 @@ void ABlasterPlayerController::OnRep_MatchState()
 
 void ABlasterPlayerController::InitHUDIfRequired()
 {
-    if (bInitializeCharacterOverlay && !CharacterOverlay)
+    if (bInitializeCharacterOverlay && !CharacterOverlay && IsLocalController())
     {
         if (auto Overlay = GetCharacterOverlay())
         {
@@ -99,11 +100,22 @@ void ABlasterPlayerController::InitHUDIfRequired()
     }
 }
 
+void ABlasterPlayerController::CacheBlasterHUD()
+{
+    check(IsLocalController());
+    if (const auto HUD = GetHUD())
+    {
+        BlasterHUD = Cast<ABlasterHUD>(HUD);
+    }
+}
+
 void ABlasterPlayerController::BeginPlay()
 {
     Super::BeginPlay();
-
-    BlasterHUD = Cast<ABlasterHUD>(GetHUD());
+    if (IsLocalController())
+    {
+        CacheBlasterHUD();
+    }
 
     // Retrieve match state from the server
     ServerCheckMatchState();
@@ -111,16 +123,20 @@ void ABlasterPlayerController::BeginPlay()
 
 ABlasterHUD* ABlasterPlayerController::GetBlasterHUD()
 {
+    // This method should NOT be invoked unless the controller is local
+    check(IsLocalController());
+
     if (UNLIKELY(!BlasterHUD))
     {
         // What scenario is this actually required?
-        BlasterHUD = Cast<ABlasterHUD>(GetHUD());
+        CacheBlasterHUD();
     }
     return BlasterHUD;
 }
 
 UCharacterOverlay* ABlasterPlayerController::GetCharacterOverlay()
 {
+    check(IsLocalController());
     const auto HUD = GetBlasterHUD();
     return HUD ? HUD->GetCharacterOverlay() : nullptr;
 }
@@ -129,7 +145,10 @@ void ABlasterPlayerController::Tick(const float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    UpdateHUDCountDown();
+    if (IsLocalController())
+    {
+        UpdateHUDCountDown();
+    }
     CheckTimeSync(DeltaSeconds);
     InitHUDIfRequired();
 }
@@ -146,6 +165,7 @@ void ABlasterPlayerController::ReceivedPlayer()
 
 void ABlasterPlayerController::SetHUDHealth(const float Health, const float MaxHealth)
 {
+    check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto& Overlay = GetCharacterOverlay();
 
@@ -166,6 +186,7 @@ void ABlasterPlayerController::SetHUDHealth(const float Health, const float MaxH
 
 void ABlasterPlayerController::SetHUDScore(const float Score)
 {
+    check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto& Overlay = GetCharacterOverlay();
     if (Overlay && Overlay->GetScoreAmount())
@@ -182,6 +203,7 @@ void ABlasterPlayerController::SetHUDScore(const float Score)
 
 void ABlasterPlayerController::SetHUDDefeats(const int32 Defeats)
 {
+    check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto& Overlay = GetCharacterOverlay();
     if (Overlay && Overlay->GetDefeatsAmount())
@@ -198,6 +220,7 @@ void ABlasterPlayerController::SetHUDDefeats(const int32 Defeats)
 
 void ABlasterPlayerController::SetHUDWeaponAmmo(const int32 Ammo)
 {
+    check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto& Overlay = GetCharacterOverlay();
     if (Overlay && Overlay->GetAmmoAmount())
@@ -209,6 +232,7 @@ void ABlasterPlayerController::SetHUDWeaponAmmo(const int32 Ammo)
 
 void ABlasterPlayerController::SetHUDCarriedAmmo(const int32 CarriedAmmo)
 {
+    check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto& Overlay = GetCharacterOverlay();
     if (Overlay && Overlay->GetCarriedAmmoAmount())
@@ -220,6 +244,7 @@ void ABlasterPlayerController::SetHUDCarriedAmmo(const int32 CarriedAmmo)
 
 void ABlasterPlayerController::SetHUDMatchCountDown(const int32 MatchTimeRemaining)
 {
+    check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto& Overlay = GetCharacterOverlay();
     if (Overlay && Overlay->GetCountDown())
@@ -233,6 +258,7 @@ void ABlasterPlayerController::SetHUDMatchCountDown(const int32 MatchTimeRemaini
 
 void ABlasterPlayerController::SetHUDAnnouncementCountdown(const float PreMatchTimeRemaining)
 {
+    check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto HUD = GetBlasterHUD();
     if (HUD && HUD->GetAnnouncement())
@@ -271,8 +297,9 @@ void ABlasterPlayerController::UpdateHUDCountDown()
     }
 }
 
-void ABlasterPlayerController::ResetHUD()
+void ABlasterPlayerController::ResetHUDIfLocalController()
 {
+    check(IsLocalController());
     if (const auto BlasterCharacter = Cast<ABlasterCharacter>(GetPawn()))
     {
         SetHUDHealth(BlasterCharacter->GetHealth(), BlasterCharacter->GetMaxHealth());
@@ -292,8 +319,11 @@ void ABlasterPlayerController::ResetHUD()
 void ABlasterPlayerController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
-    // This makes sure we reset the hud on Respawn
-    ResetHUD();
+    if (IsLocalController())
+    {
+        // This makes sure we reset the hud on Respawn
+        ResetHUDIfLocalController();
+    }
 
     // Bit of an ugly hack because we delay match start which means
     // that we do not have controller when character BeginPlay is called
@@ -307,7 +337,10 @@ void ABlasterPlayerController::OnMatchStateSet(const FName& State)
 {
     MatchState = State;
 
-    AddCharacterOverlayIfMatchStateInProgress();
+    if (IsLocalController())
+    {
+        AddCharacterOverlayIfMatchStateInProgress();
+    }
 }
 
 void ABlasterPlayerController::ClientJoinMidGame_Implementation(const FName& InMatchState,
@@ -319,10 +352,13 @@ void ABlasterPlayerController::ClientJoinMidGame_Implementation(const FName& InM
     MatchDuration = InMatchDuration;
     LevelStartedAt = InLevelStartedAt;
     MatchState = InMatchState;
-    OnMatchStateSet(MatchState);
-    if (BlasterHUD && MatchState::WaitingToStart == MatchState)
+    if (IsLocalController())
     {
-        BlasterHUD->AddAnnouncement();
+        AddCharacterOverlayIfMatchStateInProgress();
+        if (BlasterHUD && MatchState::WaitingToStart == MatchState)
+        {
+            BlasterHUD->AddAnnouncement();
+        }
     }
 }
 

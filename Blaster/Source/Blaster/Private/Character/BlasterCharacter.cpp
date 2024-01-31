@@ -194,6 +194,7 @@ void ABlasterCharacter::SpawnEliminationEffect()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::ZeroHUDAmmo()
 {
+    check(IsLocallyControlled());
     if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
     {
         // Zero the Ammo on HUD
@@ -209,15 +210,21 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
     DisableCharacterMovement();
     DisableCollision();
     SpawnEliminationEffect();
-    ZeroHUDAmmo();
+    if (IsLocallyControlled())
+    {
+        ZeroHUDAmmo();
+    }
 }
 
 void ABlasterCharacter::UpdateHUDHealth() const
 {
-    if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+    if (IsLocallyControlled() && Controller)
     {
-        // Initialize Health on HUD
-        PlayerController->SetHUDHealth(Health, MaxHealth);
+        if (const auto PlayerController = Cast<ABlasterPlayerController>(Controller))
+        {
+            // Initialize Health on HUD
+            PlayerController->SetHUDHealth(Health, MaxHealth);
+        }
     }
 }
 
