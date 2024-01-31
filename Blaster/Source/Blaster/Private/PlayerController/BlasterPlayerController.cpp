@@ -133,7 +133,7 @@ ABlasterHUD* ABlasterPlayerController::GetBlasterHUD()
 
     if (UNLIKELY(!BlasterHUD))
     {
-        // What scenario is this actually required?
+        // This happens when the actor ticks before BeginPlay which seems to happen on clients?
         CacheBlasterHUD();
     }
     return BlasterHUD;
