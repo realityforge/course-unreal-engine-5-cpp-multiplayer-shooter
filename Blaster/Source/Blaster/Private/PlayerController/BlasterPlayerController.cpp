@@ -277,27 +277,27 @@ void ABlasterPlayerController::SetHUDAnnouncementCountdown(const int32 PreMatchT
 
 void ABlasterPlayerController::UpdateHUDCountDown()
 {
-    const double MatchStartTime = GetWorld()->GetTimeSeconds();
+    const double LevelTime = GetWorld()->GetTimeSeconds() - LevelStartedAt;
     if (MatchState::WaitingToStart == MatchState)
     {
         // ReSharper disable once CppTooWideScopeInitStatement
-        const int32 TimeRemaining = FMath::FloorToInt32(MatchDuration - MatchStartTime);
+        const int32 TimeRemaining = FMath::FloorToInt32(WarmupDuration - LevelTime);
         if (LastTimeRemaining != TimeRemaining)
         {
             // Only update the UI when the text will change
-            SetHUDMatchCountDown(TimeRemaining);
+            SetHUDAnnouncementCountdown(TimeRemaining);
             LastTimeRemaining = TimeRemaining;
         }
     }
     else if (MatchState::InProgress == MatchState)
     {
         // ReSharper disable once CppTooWideScopeInitStatement
-        const int32 MatchTimeRemaining = FMath::FloorToInt32(WarmupDuration - MatchStartTime);
-        if (LastTimeRemaining != MatchTimeRemaining)
+        const int32 TimeRemaining = FMath::FloorToInt32(WarmupDuration + MatchDuration - LevelTime);
+        if (LastTimeRemaining != TimeRemaining)
         {
             // Only update the UI when the text will change
-            SetHUDAnnouncementCountdown(MatchTimeRemaining);
-            LastTimeRemaining = MatchTimeRemaining;
+            SetHUDMatchCountDown(TimeRemaining);
+            LastTimeRemaining = TimeRemaining;
         }
     }
 }
