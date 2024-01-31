@@ -1,4 +1,5 @@
 #include "PlayerController/BlasterPlayerController.h"
+#include "BlasterLogging.h"
 #include "Character/BlasterCharacter.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
@@ -106,6 +107,10 @@ void ABlasterPlayerController::CacheBlasterHUD()
     if (const auto HUD = GetHUD())
     {
         BlasterHUD = Cast<ABlasterHUD>(HUD);
+        if (!BlasterHUD)
+        {
+            BL_ULOG_ERROR("HUD set to object named %s that can not be cast to ABlasterHUD", *HUD->GetName());
+        }
     }
 }
 
@@ -373,5 +378,9 @@ void ABlasterPlayerController::ServerCheckMatchState_Implementation()
         LevelStartedAt = BlasterGameMode->GetLevelStartedAt();
         MatchState = BlasterGameMode->GetMatchState();
         ClientJoinMidGame(MatchState, WarmupDuration, MatchDuration, LevelStartedAt);
+    }
+    else
+    {
+        BL_ULOG_ERROR("GameMode %s is not compatible with ABlasterGameMode", *GameMode->GetName());
     }
 }

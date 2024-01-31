@@ -1,4 +1,5 @@
 #include "GameMode/BlasterGameMode.h"
+#include "BlasterLogging.h"
 #include "Character/BlasterCharacter.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -32,11 +33,9 @@ void ABlasterGameMode::OnMatchStateSet()
         }
         else
         {
-            UE_LOG(LogTemp,
-                   Error,
-                   TEXT("Failed to call OnMatchStateSet on controller %s "
-                        "as it is not an instance of ABlasterPlayerController"),
-                   *PlayerController.Get()->GetName());
+            BL_ULOG_ERROR("Failed to call OnMatchStateSet on controller %s "
+                          "as it is not an instance of ABlasterPlayerController",
+                          *PlayerController.Get()->GetName());
         }
     }
 }

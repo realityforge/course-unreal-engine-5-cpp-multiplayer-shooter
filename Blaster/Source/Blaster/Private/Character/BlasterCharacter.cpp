@@ -1,6 +1,7 @@
 #include "Character/BlasterCharacter.h"
 #include "Blaster/Blaster.h"
 #include "BlasterComponents/CombatComponent.h"
+#include "BlasterLogging.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
@@ -224,6 +225,10 @@ void ABlasterCharacter::UpdateHUDHealth() const
         {
             // Initialize Health on HUD
             PlayerController->SetHUDHealth(Health, MaxHealth);
+        }
+        else
+        {
+            BL_ULOG_ERROR("Controller %s is not of expected type ABlasterPlayerController", *Controller->GetName());
         }
     }
 }
