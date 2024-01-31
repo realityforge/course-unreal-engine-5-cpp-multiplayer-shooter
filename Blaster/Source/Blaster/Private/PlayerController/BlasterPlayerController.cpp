@@ -112,6 +112,10 @@ void ABlasterPlayerController::CacheBlasterHUD()
             BL_ULOG_ERROR("HUD set to object named %s that can not be cast to ABlasterHUD", *HUD->GetName());
         }
     }
+    else
+    {
+        BL_ULOG_ERROR("HUD not yet created, can not cache BlasterHUD");
+    }
 }
 
 void ABlasterPlayerController::BeginPlay()
