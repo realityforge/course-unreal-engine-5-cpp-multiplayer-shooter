@@ -261,7 +261,7 @@ void ABlasterPlayerController::SetHUDMatchCountDown(const int32 MatchTimeRemaini
     }
 }
 
-void ABlasterPlayerController::SetHUDAnnouncementCountdown(const float PreMatchTimeRemaining)
+void ABlasterPlayerController::SetHUDAnnouncementCountdown(const int32 PreMatchTimeRemaining)
 {
     check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
@@ -269,7 +269,7 @@ void ABlasterPlayerController::SetHUDAnnouncementCountdown(const float PreMatchT
     if (HUD && HUD->GetAnnouncement())
     {
         const int32 Minutes = PreMatchTimeRemaining / 60;
-        const int32 Seconds = static_cast<int32>(PreMatchTimeRemaining) % 60;
+        const int32 Seconds = PreMatchTimeRemaining % 60;
         const auto& Text = FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
         HUD->GetAnnouncement()->GetWarmupTime()->SetText(FText::FromString(Text));
     }
