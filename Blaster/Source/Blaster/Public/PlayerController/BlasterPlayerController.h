@@ -75,7 +75,7 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
     void UpdateHUDOnMatchStateChange();
 
     //---------------------------------------------------------------------------
-    // MatchState (why oh why is this per-PlayerController? Why not replicate it on GameMode?)
+    // MatchState (why oh why is this per-PlayerController? Why not replicate it on GameState?)
     //---------------------------------------------------------------------------
 
     UPROPERTY(ReplicatedUsing = OnRep_MatchState)
