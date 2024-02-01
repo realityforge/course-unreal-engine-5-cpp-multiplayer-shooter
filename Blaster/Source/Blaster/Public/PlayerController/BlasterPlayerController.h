@@ -135,7 +135,7 @@ public:
     void ResetHUDIfLocalController();
     virtual void OnPossess(APawn* InPawn) override;
 
-    void OnMatchStateSet(const FName& State);
+    void OnMatchStateSet(const FName& InMatchState);
 
     void HandleMatchInCooldown();
 

@@ -428,13 +428,12 @@ void ABlasterPlayerController::OnPossess(APawn* InPawn)
     }
 }
 
-void ABlasterPlayerController::OnMatchStateSet(const FName& State)
 {
-    MatchState = State;
 
     if (IsLocalController())
     {
         UpdateHUDOnMatchStateChange();
+    MatchState = InMatchState;
     }
 }
 
