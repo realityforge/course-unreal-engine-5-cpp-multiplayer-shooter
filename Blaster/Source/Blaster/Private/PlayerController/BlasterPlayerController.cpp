@@ -316,8 +316,22 @@ void ABlasterPlayerController::UpdateHUDCountDown()
     const double LevelTime = GetWorld()->GetTimeSeconds() - LevelStartedAt;
     if (MatchState::WaitingToStart == MatchState)
     {
+        int32 ExpectedDuration{ -1 };
+        if (HasAuthority())
+        {
+            const auto GameModeBase = UGameplayStatics::GetGameMode(this);
+            if (const auto GameMode = Cast<ABlasterGameMode>(GameModeBase))
+            {
+                // Use more accurate time if we are on the server, in case of drift
+                ExpectedDuration = GameMode->GetWarmupDuration();
+            }
+        }
+        if (-1 == ExpectedDuration)
+        {
+            ExpectedDuration = WarmupDuration;
+        }
         // ReSharper disable once CppTooWideScopeInitStatement
-        const int32 TimeRemaining = FMath::FloorToInt32(WarmupDuration - LevelTime);
+        const int32 TimeRemaining = FMath::FloorToInt32(ExpectedDuration - LevelTime);
         if (LastTimeRemaining != TimeRemaining)
         {
             // Only update the UI when the text will change
@@ -327,8 +341,22 @@ void ABlasterPlayerController::UpdateHUDCountDown()
     }
     else if (MatchState::InProgress == MatchState)
     {
+        int32 ExpectedDuration{ -1 };
+        if (HasAuthority())
+        {
+            const auto GameModeBase = UGameplayStatics::GetGameMode(this);
+            if (const auto GameMode = Cast<ABlasterGameMode>(GameModeBase))
+            {
+                // Use more accurate time if we are on the server, in case of drift
+                ExpectedDuration = GameMode->GetWarmupDuration() + GameMode->GetMatchDuration();
+            }
+        }
+        if (-1 == ExpectedDuration)
+        {
+            ExpectedDuration = WarmupDuration + MatchDuration;
+        }
         // ReSharper disable once CppTooWideScopeInitStatement
-        const int32 TimeRemaining = FMath::FloorToInt32(WarmupDuration + MatchDuration - LevelTime);
+        const int32 TimeRemaining = FMath::FloorToInt32(ExpectedDuration - LevelTime);
         if (LastTimeRemaining != TimeRemaining)
         {
             // Only update the UI when the text will change
@@ -338,8 +366,23 @@ void ABlasterPlayerController::UpdateHUDCountDown()
     }
     else if (MatchState::Cooldown == MatchState)
     {
+        int32 ExpectedDuration{ -1 };
+        if (HasAuthority())
+        {
+            const auto GameModeBase = UGameplayStatics::GetGameMode(this);
+            if (const auto GameMode = Cast<ABlasterGameMode>(GameModeBase))
+            {
+                // Use more accurate time if we are on the server, in case of drift
+                ExpectedDuration =
+                    GameMode->GetWarmupDuration() + GameMode->GetMatchDuration() + GameMode->GetCooldownDuration();
+            }
+        }
+        if (-1 == ExpectedDuration)
+        {
+            ExpectedDuration = WarmupDuration + MatchDuration + CooldownDuration;
+        }
         // ReSharper disable once CppTooWideScopeInitStatement
-        const int32 TimeRemaining = FMath::FloorToInt32(WarmupDuration + MatchDuration + CooldownDuration - LevelTime);
+        const int32 TimeRemaining = FMath::FloorToInt32(ExpectedDuration - LevelTime);
         if (LastTimeRemaining != TimeRemaining)
         {
             // Only update the UI when the text will change
