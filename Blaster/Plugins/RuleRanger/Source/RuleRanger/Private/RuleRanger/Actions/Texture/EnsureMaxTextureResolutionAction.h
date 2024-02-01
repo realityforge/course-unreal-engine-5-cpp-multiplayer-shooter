@@ -15,7 +15,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
 #include "EnsureMaxTextureResolutionAction.generated.h"
 
