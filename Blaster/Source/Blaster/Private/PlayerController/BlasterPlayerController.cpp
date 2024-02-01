@@ -77,6 +77,8 @@ void ABlasterPlayerController::HandleMatchInCooldown()
         HUD->GetCharacterOverlay()->RemoveFromParent();
         if (const auto& Announcement = HUD->GetAnnouncement())
         {
+            Announcement->GetAnnouncementText()->SetText(FText::FromString(TEXT("New Match Starts In:")));
+            Announcement->GetInfoText()->SetText(FText());
             Announcement->SetVisibility(ESlateVisibility::Visible);
         }
     }
@@ -334,6 +336,17 @@ void ABlasterPlayerController::UpdateHUDCountDown()
             LastTimeRemaining = TimeRemaining;
         }
     }
+    else if (MatchState::Cooldown == MatchState)
+    {
+        // ReSharper disable once CppTooWideScopeInitStatement
+        const int32 TimeRemaining = FMath::FloorToInt32(WarmupDuration + MatchDuration + CooldownDuration - LevelTime);
+        if (LastTimeRemaining != TimeRemaining)
+        {
+            // Only update the UI when the text will change
+            SetHUDAnnouncementCountDown(TimeRemaining);
+            LastTimeRemaining = TimeRemaining;
+        }
+    }
 }
 
 void ABlasterPlayerController::ResetHUDIfLocalController()
@@ -385,10 +398,12 @@ void ABlasterPlayerController::OnMatchStateSet(const FName& State)
 void ABlasterPlayerController::ClientJoinMidGame_Implementation(const FName& InMatchState,
                                                                 const float InWarmupDuration,
                                                                 const float InMatchDuration,
+                                                                const float InCooldownDuration,
                                                                 const float InLevelStartedAt)
 {
     WarmupDuration = InWarmupDuration;
     MatchDuration = InMatchDuration;
+    CooldownDuration = InCooldownDuration;
     LevelStartedAt = InLevelStartedAt;
     MatchState = InMatchState;
     if (IsLocalController())
@@ -409,9 +424,10 @@ void ABlasterPlayerController::ServerCheckMatchState_Implementation()
         // TODO: Unclear why we cache these here on the server?
         WarmupDuration = BlasterGameMode->GetWarmupDuration();
         MatchDuration = BlasterGameMode->GetMatchDuration();
+        CooldownDuration = BlasterGameMode->GetCooldownDuration();
         LevelStartedAt = BlasterGameMode->GetLevelStartedAt();
         MatchState = BlasterGameMode->GetMatchState();
-        ClientJoinMidGame(MatchState, WarmupDuration, MatchDuration, LevelStartedAt);
+        ClientJoinMidGame(MatchState, WarmupDuration, MatchDuration, CooldownDuration, LevelStartedAt);
     }
     else
     {

@@ -20,6 +20,10 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
     UPROPERTY(Transient, VisibleInstanceOnly)
     float MatchDuration{ 0.f };
 
+    /** The duration (in seconds) that the match will stay in the Cooldown phase. */
+    UPROPERTY(EditDefaultsOnly)
+    float CooldownDuration{ 0.f };
+
     /** The time at which the level started. */
     UPROPERTY(Transient, VisibleInstanceOnly)
     float LevelStartedAt{ 0.f };
@@ -141,6 +145,9 @@ public:
 
     /** Callback that is called from ServerCheckMatchState to update client with match details. */
     UFUNCTION(Client, Reliable)
-    void
-    ClientJoinMidGame(const FName& InMatchState, float InWarmupDuration, float InMatchDuration, float InLevelStartedAt);
+    void ClientJoinMidGame(const FName& InMatchState,
+                           float InWarmupDuration,
+                           float InMatchDuration,
+                           float InCooldownDuration,
+                           float InLevelStartedAt);
 };

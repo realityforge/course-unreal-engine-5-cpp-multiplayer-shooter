@@ -72,5 +72,6 @@ public:
 
     FORCEINLINE float GetWarmupDuration() const { return WarmupDuration; }
     FORCEINLINE float GetMatchDuration() const { return MatchDuration; }
+    FORCEINLINE float GetCooldownDuration() const { return CooldownDuration; }
     FORCEINLINE float GetLevelStartedAt() const { return LevelStartedAt; }
 };
