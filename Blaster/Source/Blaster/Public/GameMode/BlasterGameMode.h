@@ -27,6 +27,10 @@ class BLASTER_API ABlasterGameMode final : public AGameMode
     UPROPERTY(EditDefaultsOnly)
     float MatchDuration{ 120.f };
 
+    /** The duration (in seconds) that the match will stay in the Cooldown phase. */
+    UPROPERTY(EditDefaultsOnly)
+    float CooldownDuration{ 10.f };
+
     /** The time at which the level started. */
     UPROPERTY(Transient)
     float LevelStartedAt{ 0.f };

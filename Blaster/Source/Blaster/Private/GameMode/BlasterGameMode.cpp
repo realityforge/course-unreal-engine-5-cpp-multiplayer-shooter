@@ -57,6 +57,13 @@ void ABlasterGameMode::Tick(const float DeltaTime)
             StartMatch();
         }
     }
+    else if (MatchState::InProgress == MatchState)
+    {
+        if (WarmupDuration + MatchDuration - GetWorld()->GetTimeSeconds() + LevelStartedAt <= 0.f)
+        {
+            SetMatchState(MatchState::Cooldown);
+        }
+    }
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic

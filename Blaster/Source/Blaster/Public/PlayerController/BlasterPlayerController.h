@@ -133,6 +133,8 @@ public:
 
     void OnMatchStateSet(const FName& State);
 
+    void HandleMatchInCooldown();
+
     /** Called by client to update the local match state. */
     UFUNCTION(Server, Reliable)
     void ServerCheckMatchState();

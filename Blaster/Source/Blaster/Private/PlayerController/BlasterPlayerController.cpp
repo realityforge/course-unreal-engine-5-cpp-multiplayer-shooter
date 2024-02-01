@@ -69,12 +69,29 @@ void ABlasterPlayerController::HandleMatchHasStarted()
     }
 }
 
+void ABlasterPlayerController::HandleMatchInCooldown()
+{
+    check(IsLocalController());
+    if (const auto& BlasterHUD = GetBlasterHUD())
+    {
+        BlasterHUD->GetCharacterOverlay()->RemoveFromParent();
+        if (const auto& Announcement = BlasterHUD->GetAnnouncement())
+        {
+            Announcement->SetVisibility(ESlateVisibility::Visible);
+        }
+    }
+}
+
 void ABlasterPlayerController::UpdateHUDOnMatchStateChange()
 {
     check(IsLocalController());
     if (MatchState::InProgress == MatchState)
     {
         HandleMatchHasStarted();
+    }
+    else if (MatchState::Cooldown == MatchState)
+    {
+        HandleMatchInCooldown();
     }
 }
 
