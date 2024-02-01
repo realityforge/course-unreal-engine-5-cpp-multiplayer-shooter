@@ -57,49 +57,45 @@ void ABlasterPlayerController::CheckTimeSync(const float DeltaTime)
 
 void ABlasterPlayerController::HandleMatchHasStarted()
 {
-    if (const auto HUD = GetBlasterHUD())
+    if (IsLocalController())
     {
-        HUD->AddCharacterOverlay();
-        if (const auto& Announcement = HUD->GetAnnouncement())
+        if (const auto HUD = GetBlasterHUD())
         {
-            // Once we actually start the match then hide the announcement HUD
-            // We don't destroy it as we will use it at the end of a match as well
-            Announcement->SetVisibility(ESlateVisibility::Hidden);
+            HUD->AddCharacterOverlay();
+            if (const auto& Announcement = HUD->GetAnnouncement())
+            {
+                // Once we actually start the match then hide the announcement HUD
+                // We don't destroy it as we will use it at the end of a match as well
+                Announcement->SetVisibility(ESlateVisibility::Hidden);
+            }
         }
     }
 }
 
 void ABlasterPlayerController::HandleMatchInCooldown()
 {
-    check(IsLocalController());
-    if (const auto& HUD = GetBlasterHUD())
+    if (IsLocalController())
     {
-        HUD->GetCharacterOverlay()->RemoveFromParent();
-        if (const auto& Announcement = HUD->GetAnnouncement())
+        if (const auto& HUD = GetBlasterHUD())
         {
-            Announcement->GetAnnouncementText()->SetText(FText::FromString(TEXT("New Match Starts In:")));
-            Announcement->GetInfoText()->SetText(FText());
-            Announcement->SetVisibility(ESlateVisibility::Visible);
+            HUD->GetCharacterOverlay()->RemoveFromParent();
+            if (const auto& Announcement = HUD->GetAnnouncement())
+            {
+                Announcement->GetAnnouncementText()->SetText(FText::FromString(TEXT("New Match Starts In:")));
+                Announcement->GetInfoText()->SetText(FText());
+                Announcement->SetVisibility(ESlateVisibility::Visible);
+            }
         }
     }
-}
-
-void ABlasterPlayerController::UpdateHUDOnMatchStateChange()
-{
-    check(IsLocalController());
-    if (MatchState::InProgress == MatchState)
+    if (const auto BlasterCharacter = Cast<ABlasterCharacter>(GetPawn()))
     {
-        HandleMatchHasStarted();
-    }
-    else if (MatchState::Cooldown == MatchState)
-    {
-        HandleMatchInCooldown();
+        BlasterCharacter->DisableGameplay();
     }
 }
 
 void ABlasterPlayerController::OnRep_MatchState()
 {
-    UpdateHUDOnMatchStateChange();
+    OnMatchStateSet(MatchState);
     LastTimeRemaining = 0.f;
 }
 
@@ -428,12 +424,32 @@ void ABlasterPlayerController::OnPossess(APawn* InPawn)
     }
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ABlasterPlayerController::HandleMatchIsWaitingToStart()
 {
-
     if (IsLocalController())
     {
-        UpdateHUDOnMatchStateChange();
+        if (BlasterHUD && MatchState::WaitingToStart == MatchState && !BlasterHUD->GetAnnouncement())
+        {
+            BlasterHUD->AddAnnouncement();
+        }
+    }
+}
+
+void ABlasterPlayerController::OnMatchStateSet(const FName& InMatchState)
+{
     MatchState = InMatchState;
+    if (MatchState::WaitingToStart == MatchState)
+    {
+        HandleMatchIsWaitingToStart();
+    }
+    else if (MatchState::InProgress == MatchState)
+    {
+        HandleMatchHasStarted();
+    }
+    else if (MatchState::Cooldown == MatchState)
+    {
+        HandleMatchInCooldown();
     }
 }
 
@@ -448,14 +464,7 @@ void ABlasterPlayerController::ClientJoinMidGame_Implementation(const FName& InM
     CooldownDuration = InCooldownDuration;
     LevelStartedAt = InLevelStartedAt;
     MatchState = InMatchState;
-    if (IsLocalController())
-    {
-        UpdateHUDOnMatchStateChange();
-        if (BlasterHUD && MatchState::WaitingToStart == MatchState)
-        {
-            BlasterHUD->AddAnnouncement();
-        }
-    }
+    OnMatchStateSet(MatchState);
 }
 
 void ABlasterPlayerController::ServerCheckMatchState_Implementation()

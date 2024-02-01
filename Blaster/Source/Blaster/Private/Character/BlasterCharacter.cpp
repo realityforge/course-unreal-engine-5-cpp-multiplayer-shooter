@@ -92,6 +92,7 @@ void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
     DOREPLIFETIME_CONDITION(ABlasterCharacter, OverlappingWeapon, COND_OwnerOnly);
     DOREPLIFETIME(ABlasterCharacter, Health);
+    DOREPLIFETIME(ABlasterCharacter, bDisableGameplay);
 }
 
 void ABlasterCharacter::PostInitializeComponents()
@@ -157,16 +158,13 @@ void ABlasterCharacter::Eliminate()
     GetWorld()->GetTimerManager().SetTimer(RespawnTimer, this, &ABlasterCharacter::RespawnTimerFinished, RespawnDelay);
 }
 
-void ABlasterCharacter::DisableCharacterMovement()
+void ABlasterCharacter::DisableGameplay()
 {
-    // Disables movement of the character
-    GetCharacterMovement()->DisableMovement();
-    // Disables rotation of character
-    GetCharacterMovement()->StopMovementImmediately();
-    // Disables input (so can not keep firing
-    if (const auto PlayerController = Cast<APlayerController>(Controller))
+    if (Combat)
     {
-        DisableInput(PlayerController);
+        bDisableGameplay = true;
+        // Mark fire button as no longer pressed so we don't try to keep firing
+        Combat->SetFireButtonPressed(false);
     }
 }
 
@@ -208,7 +206,7 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
     bEliminated = true;
     PlayEliminationMontage();
     StartDissolve();
-    DisableCharacterMovement();
+    bDisableGameplay = true;
     DisableCollision();
     SpawnEliminationEffect();
     if (IsLocallyControlled())
@@ -243,6 +241,10 @@ void ABlasterCharacter::Destroyed()
     if (EliminationBotComponent)
     {
         EliminationBotComponent->DestroyComponent();
+    }
+    if (Combat && Combat->EquippedWeapon)
+    {
+        Combat->EquippedWeapon->Destroy();
     }
 }
 
@@ -300,7 +302,7 @@ void ABlasterCharacter::OnTakeDamage([[maybe_unused]] AActor* DamagedActor,
 
 void ABlasterCharacter::MoveInputActionTriggered(const FInputActionValue& Value)
 {
-    if (IsValid(Controller))
+    if (!bDisableGameplay && IsValid(Controller))
     {
         // find out which way is forward
         const FRotator Rotation = Controller->GetControlRotation();
@@ -333,24 +335,27 @@ void ABlasterCharacter::LookInputActionTriggered(const FInputActionValue& Value)
 
 void ABlasterCharacter::EquipInputActionTriggered()
 {
-    if (HasAuthority())
+    if (!bDisableGameplay)
     {
-        if (IsValid(Combat))
+        if (HasAuthority())
         {
-            Combat->EquipWeapon(OverlappingWeapon);
+            if (IsValid(Combat))
+            {
+                Combat->EquipWeapon(OverlappingWeapon);
+            }
         }
-    }
-    else
-    {
-        // We are on the client so call the server
-        ServerEquip();
+        else
+        {
+            // We are on the client so call the server
+            ServerEquip();
+        }
     }
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::ReloadInputActionTriggered()
 {
-    if (IsValid(Combat))
+    if (!bDisableGameplay && IsValid(Combat))
     {
         Combat->Reload();
     }
@@ -358,18 +363,24 @@ void ABlasterCharacter::ReloadInputActionTriggered()
 
 void ABlasterCharacter::OnCrouchInputActionStarted()
 {
-    Crouch();
+    if (!bDisableGameplay)
+    {
+        Crouch();
+    }
 }
 
 void ABlasterCharacter::OnCrouchInputActionCompleted()
 {
-    UnCrouch();
+    if (!bDisableGameplay)
+    {
+        UnCrouch();
+    }
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::OnAimInputActionStarted()
 {
-    if (IsValid(Combat))
+    if (!bDisableGameplay && IsValid(Combat))
     {
         Combat->SetAiming(true);
     }
@@ -378,7 +389,7 @@ void ABlasterCharacter::OnAimInputActionStarted()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::OnAimInputActionCompleted()
 {
-    if (IsValid(Combat))
+    if (!bDisableGameplay && IsValid(Combat))
     {
         Combat->SetAiming(false);
     }
@@ -387,7 +398,7 @@ void ABlasterCharacter::OnAimInputActionCompleted()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::OnFireInputActionStarted()
 {
-    if (IsValid(Combat))
+    if (!bDisableGameplay && IsValid(Combat))
     {
         Combat->SetFireButtonPressed(true);
     }
@@ -396,7 +407,7 @@ void ABlasterCharacter::OnFireInputActionStarted()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void ABlasterCharacter::OnFireInputActionCompleted()
 {
-    if (IsValid(Combat))
+    if (!bDisableGameplay && IsValid(Combat))
     {
         Combat->SetFireButtonPressed(false);
     }
@@ -404,15 +415,18 @@ void ABlasterCharacter::OnFireInputActionCompleted()
 
 void ABlasterCharacter::Jump()
 {
-    // Normally if you attempt to jump while crouched it is a no-op but when
-    // we press "Jump" while crouching we will instead stand up.
-    if (bIsCrouched)
+    if (!bDisableGameplay)
     {
-        UnCrouch();
-    }
-    else
-    {
-        Super::Jump();
+        // Normally if you attempt to jump while crouched it is a no-op but when
+        // we press "Jump" while crouching we will instead stand up.
+        if (bIsCrouched)
+        {
+            UnCrouch();
+        }
+        else
+        {
+            Super::Jump();
+        }
     }
 }
 
@@ -700,26 +714,39 @@ bool ABlasterCharacter::IsAiming() const
     return IsValid(Combat) && Combat->bAiming;
 }
 
+void ABlasterCharacter::RotateInPlace(const float DeltaTime)
+{
+    if (bDisableGameplay)
+    {
+        bUseControllerRotationYaw = false;
+        TurningInPlace = ETurningInPlace::TIP_NotTurning;
+    }
+    else
+    {
+        if (GetLocalRole() > ROLE_SimulatedProxy && IsLocallyControlled())
+        {
+            // We get here if we are locally controlled and on the server node or locally controlled and on the client
+            // Not sure why this is not equivalent to just IsLocallyControlled() ...
+            CalculateAimOffset(DeltaTime);
+        }
+        else
+        {
+            TimeSinceLastMovementReplication += DeltaTime;
+            if (TimeSinceLastMovementReplication > 0.25f)
+            {
+                // If it has been "long" enough since the last network tick hen fake it to try and avoid jitter
+                OnRep_ReplicatedMovement();
+            }
+            CalculateAimOffsetPitch();
+        }
+    }
+}
+
 void ABlasterCharacter::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if (GetLocalRole() > ROLE_SimulatedProxy && IsLocallyControlled())
-    {
-        // We get here if we are locally controlled and on the server node or locally controlled and on the client
-        // Not sure why this is not equivalent to just IsLocallyControlled() ...
-        CalculateAimOffset(DeltaTime);
-    }
-    else
-    {
-        TimeSinceLastMovementReplication += DeltaTime;
-        if (TimeSinceLastMovementReplication > 0.25f)
-        {
-            // If it has been "long" enough since the last network tick hen fake it to try and avoid jitter
-            OnRep_ReplicatedMovement();
-        }
-        CalculateAimOffsetPitch();
-    }
+    RotateInPlace(DeltaTime);
     HideCharacterIfCameraClose();
 }
 

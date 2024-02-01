@@ -43,6 +43,8 @@ public:
 
     void Eliminate();
 
+    void DisableGameplay();
+
     UFUNCTION(NetMulticast, Reliable)
     void MulticastEliminate();
 
@@ -112,6 +114,10 @@ private:
     //---------------------------------------------------------------------------
     // User Inputs Section
     //---------------------------------------------------------------------------
+
+    /** Flag indicating whether we should disable inputs or not. */
+    UPROPERTY(Transient, Replicated)
+    bool bDisableGameplay{ false };
 
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TSoftObjectPtr<UInputMappingContext> InputMapping{ nullptr };
@@ -221,7 +227,6 @@ private:
 
     float TimeSinceLastMovementReplication{ 0.f };
 
-    void DisableCharacterMovement();
     void DisableCollision() const;
     void SpawnEliminationEffect();
     void ZeroHUDAmmo();
@@ -363,6 +368,8 @@ public:
     FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
     FORCEINLINE ECombatState GetCombatState() const { return Combat ? Combat->CombatState : ECombatState::Unoccupied; };
 
+    FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
+
     void SetOverlappingWeapon(AWeapon* Weapon);
 
     /** Return the EquippedWeapon if any. **/
@@ -370,6 +377,7 @@ public:
 
     bool IsWeaponEquipped() const;
     bool IsAiming() const;
+    void RotateInPlace(float DeltaTime);
 
     FVector GetHitTarget() const;
 };
