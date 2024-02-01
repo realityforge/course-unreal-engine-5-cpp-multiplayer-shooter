@@ -72,10 +72,10 @@ void ABlasterPlayerController::HandleMatchHasStarted()
 void ABlasterPlayerController::HandleMatchInCooldown()
 {
     check(IsLocalController());
-    if (const auto& BlasterHUD = GetBlasterHUD())
+    if (const auto& HUD = GetBlasterHUD())
     {
-        BlasterHUD->GetCharacterOverlay()->RemoveFromParent();
-        if (const auto& Announcement = BlasterHUD->GetAnnouncement())
+        HUD->GetCharacterOverlay()->RemoveFromParent();
+        if (const auto& Announcement = HUD->GetAnnouncement())
         {
             Announcement->SetVisibility(ESlateVisibility::Visible);
         }
