@@ -55,35 +55,32 @@ void ABlasterPlayerController::CheckTimeSync(const float DeltaTime)
     }
 }
 
-void ABlasterPlayerController::AddCharacterOverlayIfMatchStateInProgress()
+void ABlasterPlayerController::HandleMatchHasStarted()
+{
+    if (const auto HUD = GetBlasterHUD())
+    {
+        HUD->AddCharacterOverlay();
+        if (const auto& Announcement = HUD->GetAnnouncement())
+        {
+            // Once we actually start the match then hide the announcement HUD
+            // We don't destroy it as we will use it at the end of a match as well
+            Announcement->SetVisibility(ESlateVisibility::Hidden);
+        }
+    }
+}
+
+void ABlasterPlayerController::UpdateHUDOnMatchStateChange()
 {
     check(IsLocalController());
     if (MatchState::InProgress == MatchState)
     {
-        if (const auto HUD = GetBlasterHUD())
-        {
-            HUD->AddCharacterOverlay();
-            if (const auto& Announcement = HUD->GetAnnouncement())
-            {
-                // Once we actually start the match then hide the announcement HUD
-                // We don't destroy it as we will use it at the end of a match as well
-                Announcement->SetVisibility(ESlateVisibility::Hidden);
-            }
-        }
-        else
-        {
-            UE_LOG(LogTemp,
-                   Error,
-                   TEXT("Failed to retrieve ABlasterHUD from HUD %s "
-                        "as it is not an instance of ABlasterHUD"),
-                   GetHUD() ? *GetHUD()->GetName() : TEXT("?"));
-        }
+        HandleMatchHasStarted();
     }
 }
 
 void ABlasterPlayerController::OnRep_MatchState()
 {
-    AddCharacterOverlayIfMatchStateInProgress();
+    UpdateHUDOnMatchStateChange();
     LastTimeRemaining = 0.f;
 }
 
@@ -348,7 +345,7 @@ void ABlasterPlayerController::OnMatchStateSet(const FName& State)
 
     if (IsLocalController())
     {
-        AddCharacterOverlayIfMatchStateInProgress();
+        UpdateHUDOnMatchStateChange();
     }
 }
 
@@ -363,7 +360,7 @@ void ABlasterPlayerController::ClientJoinMidGame_Implementation(const FName& InM
     MatchState = InMatchState;
     if (IsLocalController())
     {
-        AddCharacterOverlayIfMatchStateInProgress();
+        UpdateHUDOnMatchStateChange();
         if (BlasterHUD && MatchState::WaitingToStart == MatchState)
         {
             BlasterHUD->AddAnnouncement();

@@ -67,7 +67,8 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
 
     float GetServerTime() const;
     void CheckTimeSync(float DeltaTime);
-    void AddCharacterOverlayIfMatchStateInProgress();
+    void HandleMatchHasStarted();
+    void UpdateHUDOnMatchStateChange();
 
     //---------------------------------------------------------------------------
     // MatchState (why oh why is this per-PlayerController? Why not replicate it on GameMode?)
