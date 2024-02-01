@@ -265,31 +265,47 @@ void ABlasterPlayerController::SetHUDCarriedAmmo(const int32 CarriedAmmo)
     }
 }
 
-void ABlasterPlayerController::SetHUDMatchCountDown(const int32 MatchTimeRemaining)
+void ABlasterPlayerController::SetHUDMatchCountDown(const int32 TimeRemaining)
 {
     check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto& Overlay = GetCharacterOverlay();
     if (Overlay && Overlay->GetCountDown())
     {
-        const int32 Minutes = MatchTimeRemaining / 60;
-        const int32 Seconds = MatchTimeRemaining % 60;
-        const auto& Text = FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
-        Overlay->GetCountDown()->SetText(FText::FromString(Text));
+        const auto CountDown = Overlay->GetCountDown();
+        if (TimeRemaining < 0.f)
+        {
+            CountDown->SetText(FText());
+        }
+        else
+        {
+            const int32 Minutes = TimeRemaining / 60;
+            const int32 Seconds = TimeRemaining % 60;
+            const auto& Text = FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
+            CountDown->SetText(FText::FromString(Text));
+        }
     }
 }
 
-void ABlasterPlayerController::SetHUDAnnouncementCountdown(const int32 PreMatchTimeRemaining)
+void ABlasterPlayerController::SetHUDAnnouncementCountDown(const int32 TimeRemaining)
 {
     check(IsLocalController());
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto HUD = GetBlasterHUD();
     if (HUD && HUD->GetAnnouncement())
     {
-        const int32 Minutes = PreMatchTimeRemaining / 60;
-        const int32 Seconds = PreMatchTimeRemaining % 60;
-        const auto& Text = FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
-        HUD->GetAnnouncement()->GetWarmupTime()->SetText(FText::FromString(Text));
+        const auto WarmupTime = HUD->GetAnnouncement()->GetWarmupTime();
+        if (TimeRemaining < 0.f)
+        {
+            WarmupTime->SetText(FText());
+        }
+        else
+        {
+            const int32 Minutes = TimeRemaining / 60;
+            const int32 Seconds = TimeRemaining % 60;
+            const auto& Text = FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
+            WarmupTime->SetText(FText::FromString(Text));
+        }
     }
 }
 
@@ -303,7 +319,7 @@ void ABlasterPlayerController::UpdateHUDCountDown()
         if (LastTimeRemaining != TimeRemaining)
         {
             // Only update the UI when the text will change
-            SetHUDAnnouncementCountdown(TimeRemaining);
+            SetHUDAnnouncementCountDown(TimeRemaining);
             LastTimeRemaining = TimeRemaining;
         }
     }

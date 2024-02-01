@@ -123,8 +123,8 @@ public:
     void SetHUDDefeats(int32 Defeats);
     void SetHUDWeaponAmmo(int32 Ammo);
     void SetHUDCarriedAmmo(int32 CarriedAmmo);
-    void SetHUDMatchCountDown(int32 MatchTimeRemaining);
-    void SetHUDAnnouncementCountdown(int32 PreMatchTimeRemaining);
+    void SetHUDMatchCountDown(int32 TimeRemaining);
+    void SetHUDAnnouncementCountDown(int32 TimeRemaining);
 
     void UpdateHUDCountDown();
 
