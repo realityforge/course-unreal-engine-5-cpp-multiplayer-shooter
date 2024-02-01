@@ -6,6 +6,11 @@
 #include "PlayerController/BlasterPlayerController.h"
 #include "PlayerState/BlasterPlayerState.h"
 
+namespace MatchState
+{
+    const FName Cooldown = FName("Cooldown");
+}
+
 ABlasterGameMode::ABlasterGameMode()
 {
     // The GameMode will not automatically transition from WaitingToStart to InProgress

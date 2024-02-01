@@ -7,6 +7,13 @@
 class ABlasterPlayerController;
 class ABlasterCharacter;
 
+// Reopen MatchState namespace to add our custom MatchState
+namespace MatchState
+{
+    /** Match duration has been reached. Display winner and begin cooldown timer. */
+    extern BLASTER_API const FName Cooldown;
+} // namespace MatchState
+
 UCLASS()
 class BLASTER_API ABlasterGameMode final : public AGameMode
 {
