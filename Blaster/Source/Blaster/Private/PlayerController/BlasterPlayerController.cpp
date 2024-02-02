@@ -5,6 +5,7 @@
 #include "Components/TextBlock.h"
 #include "GameFramework/GameMode.h"
 #include "GameMode/BlasterGameMode.h"
+#include "GameState/BlasterGameState.h"
 #include "HUD/Announcement.h"
 #include "HUD/BlasterHUD.h"
 #include "HUD/CharacterOverlay.h"
@@ -82,8 +83,40 @@ void ABlasterPlayerController::HandleMatchInCooldown()
             if (const auto& Announcement = HUD->GetAnnouncement())
             {
                 Announcement->GetAnnouncementText()->SetText(FText::FromString(TEXT("New Match Starts In:")));
-                Announcement->GetInfoText()->SetText(FText());
                 Announcement->SetVisibility(ESlateVisibility::Visible);
+
+                const auto BlasterGameState = Cast<ABlasterGameState>(UGameplayStatics::GetGameState(this));
+                // ReSharper disable once CppTooWideScopeInitStatement
+                const auto BlasterPlayerState = GetPlayerState<ABlasterPlayerState>();
+                if (BlasterGameState && BlasterPlayerState)
+                {
+                    auto TopPlayers = BlasterGameState->GetTopScoringPlayers();
+                    FString InfoTextString;
+                    if (0 == TopPlayers.Num())
+                    {
+                        InfoTextString = FString("There is no winner.");
+                    }
+                    else if (1 == TopPlayers.Num())
+                    {
+                        if (TopPlayers[0] == BlasterPlayerState)
+                        {
+                            InfoTextString = FString("You are the winner!");
+                        }
+                        else
+                        {
+                            InfoTextString = FString::Printf(TEXT("Winner: \n%s"), *TopPlayers[0]->GetPlayerName());
+                        }
+                    }
+                    else if (TopPlayers.Num() > 1)
+                    {
+                        InfoTextString = FString("Players tied for the win:\n");
+                        for (const auto TopPlayer : TopPlayers)
+                        {
+                            InfoTextString.Append(FString::Printf(TEXT("%s\n"), *TopPlayer->GetPlayerName()));
+                        }
+                    }
+                    Announcement->GetInfoText()->SetText(FText::FromString(InfoTextString));
+                }
             }
         }
     }

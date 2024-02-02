@@ -2,6 +2,7 @@
 #include "BlasterLogging.h"
 #include "Character/BlasterCharacter.h"
 #include "GameFramework/PlayerStart.h"
+#include "GameState/BlasterGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerController/BlasterPlayerController.h"
 #include "PlayerState/BlasterPlayerState.h"
@@ -84,6 +85,14 @@ void ABlasterGameMode::PlayerEliminated(ABlasterCharacter* Character,
     if (AttackerState && AttackerState != VictimState)
     {
         AttackerState->AddToScore(1.f);
+        if (const auto BlasterGameState = GetGameState<ABlasterGameState>())
+        {
+            BlasterGameState->UpdateTopScore(AttackerState);
+        }
+        else
+        {
+            BL_ULOG_ERROR("GameState is not of the expected type ABlasterGameState");
+        }
     }
     if (VictimState)
     {

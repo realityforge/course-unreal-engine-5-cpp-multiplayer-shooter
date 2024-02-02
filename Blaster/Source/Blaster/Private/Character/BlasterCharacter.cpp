@@ -206,7 +206,7 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
     bEliminated = true;
     PlayEliminationMontage();
     StartDissolve();
-    bDisableGameplay = true;
+    DisableGameplay();
     DisableCollision();
     SpawnEliminationEffect();
     if (IsLocallyControlled())
@@ -244,7 +244,17 @@ void ABlasterCharacter::Destroyed()
     }
     if (Combat && Combat->EquippedWeapon)
     {
-        Combat->EquippedWeapon->Destroy();
+        // If we are eliminated then we should not destroy the weapon but should instead
+        // leave it to be dropped on the ground. If we are destroyed for another reason
+        // (i.e. Cooldown or maybe even leaving the game) then the weapon is destroyed ...
+        // I don't understand why....)
+
+        // ReSharper disable once CppTooWideScopeInitStatement
+        const auto GameMode = Cast<ABlasterGameMode>(UGameplayStatics::GetGameMode(this));
+        if (GameMode && MatchState::InProgress != GameMode->GetMatchState())
+        {
+            Combat->EquippedWeapon->Destroy();
+        }
     }
 }
 
