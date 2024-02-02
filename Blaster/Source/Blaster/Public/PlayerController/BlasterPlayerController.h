@@ -12,6 +12,10 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
 {
     GENERATED_BODY()
 
+    // TODO: The following variables are replicated via RPC ... it is a little unclear
+    // TODO: why we don't replicated it via GameState (which already replicates MatchState)
+    // TODO: or at least do the rpc dance over there ...
+
     /** The duration (in seconds) that the match will stay in the Warmup phase. */
     UPROPERTY(Transient, VisibleInstanceOnly)
     float WarmupDuration{ 0.f };
