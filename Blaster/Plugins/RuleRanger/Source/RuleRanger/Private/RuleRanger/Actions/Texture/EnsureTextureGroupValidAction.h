@@ -29,7 +29,14 @@ class RULERANGER_API UEnsureTextureGroupValidAction final : public URuleRangerAc
 
     /** The valid TextureGroups. */
     UPROPERTY(EditAnywhere)
-    TSet<TEnumAsByte<TextureGroup>> TextureGroups;
+    TArray<TEnumAsByte<TextureGroup>> TextureGroups;
+
+    /**
+     * Flag to indicate that the first group should be used when fixing the asset.
+     * If not set (or not groups specified) then no fix will be applied.
+     */
+    UPROPERTY(EditAnywhere)
+    bool bApplyFix;
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
