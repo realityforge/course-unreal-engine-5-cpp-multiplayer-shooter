@@ -40,7 +40,7 @@ void UEnsureRequiredPropertiesPresent::Apply_Implementation(URuleRangerActionCon
             {
                 if (1 == ObjectProperty->ArrayDim)
                 {
-                    if (!ObjectProperty->GetObjectPropertyValue_InContainer(DefaultObject))
+                    if (!ObjectProperty->LoadObjectPropertyValue_InContainer(DefaultObject))
                     {
                         const auto& ErrorMessage = FString::Printf(
                             TEXT("Object contains property named '%s' that is not set but the property is "
@@ -54,7 +54,7 @@ void UEnsureRequiredPropertiesPresent::Apply_Implementation(URuleRangerActionCon
                 {
                     for (int32 i = 0; i < ObjectProperty->ArrayDim; i++)
                     {
-                        if (!ObjectProperty->GetObjectPropertyValue_InContainer(DefaultObject, i))
+                        if (!ObjectProperty->LoadObjectPropertyValue_InContainer(DefaultObject, i))
                         {
                             const auto& ErrorMessage = FString::Printf(
                                 TEXT("Object contains property named '%s' that has index %d that is not set "
