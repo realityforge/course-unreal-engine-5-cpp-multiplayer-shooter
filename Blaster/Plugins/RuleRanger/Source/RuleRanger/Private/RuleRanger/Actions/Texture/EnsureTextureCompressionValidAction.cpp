@@ -24,11 +24,11 @@ void UEnsureTextureCompressionValidAction::Apply_Implementation(URuleRangerActio
         const UEnum* Enum = StaticEnum<TextureCompressionSettings>();
         if (bApplyFix && Settings.Num() > 0)
         {
+            FFormatNamedArguments Arguments;
+            Arguments.Add(TEXT("OriginalSetting"), Enum->GetDisplayNameTextByValue(Texture->CompressionSettings));
+            Arguments.Add(TEXT("NewSetting"), Enum->GetDisplayNameTextByValue(Settings[0]));
             if (ActionContext->IsDryRun())
             {
-                FFormatNamedArguments Arguments;
-                Arguments.Add(TEXT("OriginalSetting"), Enum->GetDisplayNameTextByValue(Texture->CompressionSettings));
-                Arguments.Add(TEXT("NewSetting"), Enum->GetDisplayNameTextByValue(Settings[0]));
                 const FText Message =
                     FText::Format(NSLOCTEXT("RuleRanger",
                                             "TextureCompressionChangeOmitted",
@@ -40,9 +40,6 @@ void UEnsureTextureCompressionValidAction::Apply_Implementation(URuleRangerActio
             }
             else
             {
-                FFormatNamedArguments Arguments;
-                Arguments.Add(TEXT("OriginalSetting"), Enum->GetDisplayNameTextByValue(Texture->CompressionSettings));
-                Arguments.Add(TEXT("NewSetting"), Enum->GetDisplayNameTextByValue(Settings[0]));
                 const FText Message = FText::Format(NSLOCTEXT("RuleRanger",
                                                               "TextureCompressionChanged",
                                                               "Texture changed the compression setting from "
