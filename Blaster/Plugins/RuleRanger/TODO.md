@@ -50,7 +50,15 @@ Shorthand notes of where to go next with this experiment:
     * Base Color
     * Emissive
     * AORMT
-    * Other?
+    * "UI"  (folder grouping?) group=TextureGroup::TEXTUREGROUP_UI, Compression = TextureCompressionSettings::TC_EditorIcon, sRGB=true, NeverStream=true, mipGen=TextureMipGenSettings::TMGS_NoMipmaps
+    * "_DM": sRGB=false, Compression = TextureCompressionSettings::TC_Displacementmap
+    * "_VDM": sRGB=false, Compression = TextureCompressionSettings::TC_VectorDisplacementmap
+    * "_HDR": Compression = TextureCompressionSettings::TC_HDR
+    * "_AM" = sRGB=false, Compression = TextureCompressionSettings::TC_Alpha // AlphaMask
+    * "_DFF": Compression = TextureCompressionSettings::TC_DistanceFieldFont
+  * Other rules:
+    * If TextureCompressionSettings::TC_Masks then sRGB = false
+    * * If TextureCompressionSettings::TC_Grayscale then sRGB = true (huh?)
 * Animation Sequence:
   * Ensure animation sequence has a certain FPS
   * Ensure animation sequence contains curve data for specific curves
