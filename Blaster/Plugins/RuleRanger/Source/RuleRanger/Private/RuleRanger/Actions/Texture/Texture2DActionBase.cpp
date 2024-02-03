@@ -12,26 +12,9 @@
  * limitations under the License.
  */
 
-#pragma once
-
-#include "CoreMinimal.h"
-#include "Engine/DataTable.h"
-#include "RuleRangerAction.h"
 #include "Texture2DActionBase.h"
-#include "EnsureSRGBValidAction.generated.h"
 
-/**
- * Action to check that a Texture has a valid sRGB value.
- */
-UCLASS(DisplayName = "Ensure sRGB Valid")
-class RULERANGER_API UEnsureSRGBValidAction final : public UTexture2DActionBase
+UClass* UTexture2DActionBase::GetExpectedType()
 {
-    GENERATED_BODY()
-
-    /** The valid sRGB settings. */
-    UPROPERTY(EditAnywhere)
-    bool bSRGB;
-
-public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-};
+    return UTexture2D::StaticClass();
+}

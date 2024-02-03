@@ -16,13 +16,14 @@
 
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
+#include "Texture2DActionBase.h"
 #include "EnsureMaxTextureResolutionAction.generated.h"
 
 /**
  * Action to check that a Texture dimensions comply with the specified constraint.
  */
 UCLASS()
-class RULERANGER_API UEnsureMaxTextureResolutionAction final : public URuleRangerAction
+class RULERANGER_API UEnsureMaxTextureResolutionAction final : public UTexture2DActionBase
 {
     GENERATED_BODY()
 
@@ -42,6 +43,4 @@ class RULERANGER_API UEnsureMaxTextureResolutionAction final : public URuleRange
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-    virtual UClass* GetExpectedType() override;
 };

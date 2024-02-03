@@ -78,8 +78,3 @@ void UEnsureTextureGroupValidAction::Apply_Implementation(URuleRangerActionConte
         LogInfo(Texture, TEXT("Texture has a valid TextureGroup. No Aciton required."));
     }
 }
-
-UClass* UEnsureTextureGroupValidAction::GetExpectedType()
-{
-    return UTexture2D::StaticClass();
-}

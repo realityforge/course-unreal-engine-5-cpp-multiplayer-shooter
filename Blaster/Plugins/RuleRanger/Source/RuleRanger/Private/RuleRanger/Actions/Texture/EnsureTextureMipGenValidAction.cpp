@@ -80,8 +80,3 @@ void UEnsureTextureMipGenValidAction::Apply_Implementation(URuleRangerActionCont
         LogInfo(Texture, TEXT("Texture has a valid MipGen Setting. No Aciton required."));
     }
 }
-
-UClass* UEnsureTextureMipGenValidAction::GetExpectedType()
-{
-    return UTexture2D::StaticClass();
-}

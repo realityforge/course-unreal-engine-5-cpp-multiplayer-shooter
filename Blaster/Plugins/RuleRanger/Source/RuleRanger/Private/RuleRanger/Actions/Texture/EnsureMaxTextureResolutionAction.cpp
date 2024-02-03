@@ -35,8 +35,3 @@ void UEnsureMaxTextureResolutionAction::Apply_Implementation(URuleRangerActionCo
             Arguments));
     }
 }
-
-UClass* UEnsureMaxTextureResolutionAction::GetExpectedType()
-{
-    return UTexture2D::StaticClass();
-}

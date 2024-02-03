@@ -17,28 +17,16 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
-#include "Texture2DActionBase.h"
-#include "EnsureTextureGroupValidAction.generated.h"
+#include "Texture2DActionBase.generated.h"
 
 /**
- * Action to check that a Texture has a valid TextureGroup.
+ * Base class for actions that check Texture2D assets.
  */
-UCLASS()
-class RULERANGER_API UEnsureTextureGroupValidAction final : public UTexture2DActionBase
+UCLASS(Abstract)
+class RULERANGER_API UTexture2DActionBase : public URuleRangerAction
 {
     GENERATED_BODY()
 
-    /** The valid TextureGroups. */
-    UPROPERTY(EditAnywhere)
-    TArray<TEnumAsByte<TextureGroup>> TextureGroups;
-
-    /**
-     * Flag to indicate that the first group should be used when fixing the asset.
-     * If not set (or not groups specified) then no fix will be applied.
-     */
-    UPROPERTY(EditAnywhere)
-    bool bApplyFix;
-
 public:
-    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+    virtual UClass* GetExpectedType() override;
 };

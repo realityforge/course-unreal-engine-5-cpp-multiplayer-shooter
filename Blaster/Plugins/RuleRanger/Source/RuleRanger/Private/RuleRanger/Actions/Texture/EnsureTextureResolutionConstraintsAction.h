@@ -17,6 +17,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
+#include "Texture2DActionBase.h"
 #include "EnsureTextureResolutionConstraintsAction.generated.h"
 
 /**
@@ -54,7 +55,7 @@ enum class ETextureResolutionConstraint : uint8
  * Action to check that a Texture dimensions comply with the specified constraint.
  */
 UCLASS()
-class RULERANGER_API UEnsureTextureResolutionConstraintsAction final : public URuleRangerAction
+class RULERANGER_API UEnsureTextureResolutionConstraintsAction final : public UTexture2DActionBase
 {
     GENERATED_BODY()
 
@@ -67,6 +68,4 @@ class RULERANGER_API UEnsureTextureResolutionConstraintsAction final : public UR
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-    virtual UClass* GetExpectedType() override;
 };

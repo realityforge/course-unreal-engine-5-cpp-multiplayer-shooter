@@ -130,8 +130,3 @@ void UEnsureTextureResolutionConstraintsAction::Apply_Implementation(URuleRanger
         CheckDivisibleConstraint(ActionContext, Texture);
     }
 }
-
-UClass* UEnsureTextureResolutionConstraintsAction::GetExpectedType()
-{
-    return UTexture2D::StaticClass();
-}

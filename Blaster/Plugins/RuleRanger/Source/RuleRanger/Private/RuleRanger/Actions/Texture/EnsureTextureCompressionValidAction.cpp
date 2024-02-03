@@ -81,8 +81,3 @@ void UEnsureTextureCompressionValidAction::Apply_Implementation(URuleRangerActio
         LogInfo(Texture, TEXT("Texture has a valid Texture Compression Setting. No Aciton required."));
     }
 }
-
-UClass* UEnsureTextureCompressionValidAction::GetExpectedType()
-{
-    return UTexture2D::StaticClass();
-}

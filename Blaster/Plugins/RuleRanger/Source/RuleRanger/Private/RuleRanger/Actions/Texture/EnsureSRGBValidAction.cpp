@@ -51,8 +51,3 @@ void UEnsureSRGBValidAction::Apply_Implementation(URuleRangerActionContext* Acti
         LogInfo(Texture, TEXT("Texture has a valid sRGB. No Aciton required."));
     }
 }
-
-UClass* UEnsureSRGBValidAction::GetExpectedType()
-{
-    return UTexture2D::StaticClass();
-}

@@ -17,13 +17,14 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
+#include "Texture2DActionBase.h"
 #include "EnsureTextureMipGenValidAction.generated.h"
 
 /**
  * Action to check that a Texture has a valid MipGen setting.
  */
 UCLASS()
-class RULERANGER_API UEnsureTextureMipGenValidAction final : public URuleRangerAction
+class RULERANGER_API UEnsureTextureMipGenValidAction final : public UTexture2DActionBase
 {
     GENERATED_BODY()
 
@@ -40,6 +41,4 @@ class RULERANGER_API UEnsureTextureMipGenValidAction final : public URuleRangerA
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-    virtual UClass* GetExpectedType() override;
 };
