@@ -22,7 +22,7 @@
 /**
  * Action to ensure that a function has a maximum number of "non-trivial" nodes.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"))
+UCLASS()
 class RULERANGER_API UEnsureFunctionsMaxNodeCountAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()

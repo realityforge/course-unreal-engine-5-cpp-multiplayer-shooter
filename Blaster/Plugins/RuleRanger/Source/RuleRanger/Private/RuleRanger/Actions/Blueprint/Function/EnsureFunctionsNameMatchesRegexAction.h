@@ -22,7 +22,7 @@
 /**
  * Action to ensure that the names of functions match specified regex.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"))
+UCLASS()
 class RULERANGER_API UEnsureFunctionsNameMatchesRegexAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()

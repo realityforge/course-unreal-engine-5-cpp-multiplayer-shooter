@@ -22,7 +22,7 @@
 /**
  * Base class for analyzing the functions in a Blueprint Graph.
  */
-UCLASS(Abstract, AutoExpandCategories = ("Rule Ranger"))
+UCLASS(Abstract)
 class RULERANGER_API UBlueprintFunctionActionBase : public URuleRangerAction
 {
     GENERATED_BODY()

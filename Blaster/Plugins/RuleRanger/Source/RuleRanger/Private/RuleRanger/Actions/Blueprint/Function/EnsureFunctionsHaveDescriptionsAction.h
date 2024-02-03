@@ -23,7 +23,7 @@
 /**
  * Action to check that the functions defined in the Blueprint have descriptions.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"))
+UCLASS()
 class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()

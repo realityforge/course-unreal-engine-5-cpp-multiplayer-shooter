@@ -23,7 +23,7 @@
  * Action to check that the functions have a return node.
  * (We let the EnsureNoUnlinkedNodesAction verify that the result node is connected).
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"))
+UCLASS()
 class RULERANGER_API UEnsureFunctionsHaveReturnAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()

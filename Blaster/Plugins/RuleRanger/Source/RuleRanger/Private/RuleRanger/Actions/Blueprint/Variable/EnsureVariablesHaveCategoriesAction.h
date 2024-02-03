@@ -23,7 +23,7 @@
  * Action to check that the variables defined in the Blueprint have a category if the Blueprint crosses a threshold
  * number of variables.
  */
-UCLASS(AutoExpandCategories = ("Rule Ranger"))
+UCLASS()
 class RULERANGER_API UEnsureVariablesHaveCategoriesAction final : public UBlueprintVariableActionBase
 {
     GENERATED_BODY()
