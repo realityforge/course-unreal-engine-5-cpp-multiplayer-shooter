@@ -44,7 +44,7 @@ enum class ETextureResolutionConstraint : uint8
     DivisibleByEight UMETA(DisplayString = "Divisible by 8"),
     /**
      * Both texture dimensions must be divisible by 12.
-     * Some texture compression formats require that the texture be divisible by 8 to use the texture compression
+     * Some texture compression formats require that the texture be divisible by 12 to use the texture compression
      * format.
      */
     DivisibleByTwelve UMETA(DisplayString = "Divisible by 12")
