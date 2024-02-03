@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BaseAnalyzeVariableAction.h"
+#include "BlueprintVariableActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
 #include "EnsureVariablesHaveCategoriesAction.generated.h"
@@ -24,7 +24,7 @@
  * number of variables.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UEnsureVariablesHaveCategoriesAction final : public UBaseAnalyzeVariableAction
+class RULERANGER_API UEnsureVariablesHaveCategoriesAction final : public UBlueprintVariableActionBase
 {
     GENERATED_BODY()
 

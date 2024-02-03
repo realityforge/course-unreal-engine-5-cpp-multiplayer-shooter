@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BaseAnalyzeFunctionAction.h"
+#include "BlueprintFunctionActionBase.h"
 #include "CoreMinimal.h"
 #include "K2Node_FunctionEntry.h"
 #include "RuleRangerAction.h"
@@ -25,7 +25,7 @@
  * number of functions.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UEnsureFunctionsHaveCategoriesAction final : public UBaseAnalyzeFunctionAction
+class RULERANGER_API UEnsureFunctionsHaveCategoriesAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()
 

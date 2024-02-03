@@ -12,34 +12,34 @@
  * limitations under the License.
  */
 
-#include "BaseAnalyzeVariableAction.h"
+#include "BlueprintVariableActionBase.h"
 #include "K2Node_FunctionEntry.h"
 
-bool UBaseAnalyzeVariableAction::ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const
+bool UBlueprintVariableActionBase::ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const
 {
     return true;
 }
 
-bool UBaseAnalyzeVariableAction::ShouldAnalyzeBlueprintVariables(UBlueprint* Blueprint) const
+bool UBlueprintVariableActionBase::ShouldAnalyzeBlueprintVariables(UBlueprint* Blueprint) const
 {
     return true;
 }
 
-bool UBaseAnalyzeVariableAction::ShouldAnalyzeFunction(UEdGraph* Graph, UK2Node_FunctionEntry* FunctionEntry) const
+bool UBlueprintVariableActionBase::ShouldAnalyzeFunction(UEdGraph* Graph, UK2Node_FunctionEntry* FunctionEntry) const
 {
     return UEdGraphSchema_K2::FN_UserConstructionScript != Graph->GetFName();
 }
 
-void UBaseAnalyzeVariableAction::AnalyzeVariable(URuleRangerActionContext* ActionContext,
-                                                 UBlueprint* Blueprint,
-                                                 const FBPVariableDescription& Variable,
-                                                 UK2Node_FunctionEntry* FunctionEntry,
-                                                 UEdGraph* Graph)
+void UBlueprintVariableActionBase::AnalyzeVariable(URuleRangerActionContext* ActionContext,
+                                                   UBlueprint* Blueprint,
+                                                   const FBPVariableDescription& Variable,
+                                                   UK2Node_FunctionEntry* FunctionEntry,
+                                                   UEdGraph* Graph)
 {
     LogError(Blueprint, TEXT("Action failed to override AnalyzeVariable."));
 }
 
-void UBaseAnalyzeVariableAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UBlueprintVariableActionBase::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto Blueprint = CastChecked<UBlueprint>(Object);
@@ -79,7 +79,7 @@ void UBaseAnalyzeVariableAction::Apply_Implementation(URuleRangerActionContext* 
     }
 }
 
-UClass* UBaseAnalyzeVariableAction::GetExpectedType()
+UClass* UBlueprintVariableActionBase::GetExpectedType()
 {
     return UBlueprint::StaticClass();
 }

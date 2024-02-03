@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BaseAnalyzeVariableAction.h"
+#include "BlueprintVariableActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
 #include "EnsureVariablesNameMatchesRegexAction.generated.h"
@@ -23,7 +23,7 @@
  * Action to check that the variable defined in the Blueprint match a pattern.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UEnsureVariablesNameMatchesRegexAction final : public UBaseAnalyzeVariableAction
+class RULERANGER_API UEnsureVariablesNameMatchesRegexAction final : public UBlueprintVariableActionBase
 {
     GENERATED_BODY()
 

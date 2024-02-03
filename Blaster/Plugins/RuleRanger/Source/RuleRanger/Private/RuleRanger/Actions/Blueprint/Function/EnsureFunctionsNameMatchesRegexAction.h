@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BaseAnalyzeFunctionAction.h"
+#include "BlueprintFunctionActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
 #include "EnsureFunctionsNameMatchesRegexAction.generated.h"
@@ -23,7 +23,7 @@
  * Action to ensure that the names of functions match specified regex.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UEnsureFunctionsNameMatchesRegexAction final : public UBaseAnalyzeFunctionAction
+class RULERANGER_API UEnsureFunctionsNameMatchesRegexAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()
 

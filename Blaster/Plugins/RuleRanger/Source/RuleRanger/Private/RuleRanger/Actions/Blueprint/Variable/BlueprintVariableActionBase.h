@@ -16,14 +16,14 @@
 
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
-#include "BaseAnalyzeVariableAction.generated.h"
+#include "BlueprintVariableActionBase.generated.h"
 
 class UK2Node_FunctionEntry;
 /**
  * Base class for analyzing the variables in a Blueprint.
  */
 UCLASS(Abstract, AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UBaseAnalyzeVariableAction : public URuleRangerAction
+class RULERANGER_API UBlueprintVariableActionBase : public URuleRangerAction
 {
     GENERATED_BODY()
 

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BaseAnalyzeFunctionAction.h"
+#include "BlueprintFunctionActionBase.h"
 #include "CoreMinimal.h"
 #include "K2Node_FunctionEntry.h"
 #include "RuleRangerAction.h"
@@ -24,7 +24,7 @@
  * Action to check that the functions defined in the Blueprint have descriptions.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public UBaseAnalyzeFunctionAction
+class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()
 

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BaseAnalyzeFunctionAction.h"
+#include "BlueprintFunctionActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
 #include "EnsureFunctionsMaxNodeCountAction.generated.h"
@@ -23,7 +23,7 @@
  * Action to ensure that a function has a maximum number of "non-trivial" nodes.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UEnsureFunctionsMaxNodeCountAction final : public UBaseAnalyzeFunctionAction
+class RULERANGER_API UEnsureFunctionsMaxNodeCountAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()
 

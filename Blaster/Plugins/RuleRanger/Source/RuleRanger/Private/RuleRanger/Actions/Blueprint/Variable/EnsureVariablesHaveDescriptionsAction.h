@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BaseAnalyzeVariableAction.h"
+#include "BlueprintVariableActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
 #include "EnsureVariablesHaveDescriptionsAction.generated.h"
@@ -23,7 +23,7 @@
  * Action to check that the variable defined in the Blueprint have descriptions.
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UEnsureVariablesHaveDescriptionsAction final : public UBaseAnalyzeVariableAction
+class RULERANGER_API UEnsureVariablesHaveDescriptionsAction final : public UBlueprintVariableActionBase
 {
     GENERATED_BODY()
 

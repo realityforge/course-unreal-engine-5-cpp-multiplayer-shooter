@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BaseAnalyzeFunctionAction.h"
+#include "BlueprintFunctionActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
 #include "EnsureFunctionsHaveReturnAction.generated.h"
@@ -24,7 +24,7 @@
  * (We let the EnsureNoUnlinkedNodesAction verify that the result node is connected).
  */
 UCLASS(AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UEnsureFunctionsHaveReturnAction final : public UBaseAnalyzeFunctionAction
+class RULERANGER_API UEnsureFunctionsHaveReturnAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()
 

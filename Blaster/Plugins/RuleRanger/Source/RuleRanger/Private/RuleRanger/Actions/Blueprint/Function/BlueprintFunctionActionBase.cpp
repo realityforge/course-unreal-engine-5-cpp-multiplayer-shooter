@@ -12,19 +12,19 @@
  * limitations under the License.
  */
 
-#include "BaseAnalyzeFunctionAction.h"
+#include "BlueprintFunctionActionBase.h"
 
-bool UBaseAnalyzeFunctionAction::ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const
+bool UBlueprintFunctionActionBase::ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const
 {
     return true;
 }
 
-bool UBaseAnalyzeFunctionAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
+bool UBlueprintFunctionActionBase::ShouldAnalyzeGraph(UEdGraph* Graph) const
 {
     return UEdGraphSchema_K2::FN_UserConstructionScript != Graph->GetFName();
 }
 
-void UBaseAnalyzeFunctionAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
+void UBlueprintFunctionActionBase::AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                                  UBlueprint* Blueprint,
                                                  UK2Node_FunctionEntry* FunctionEntry,
                                                  UEdGraph* Graph)
@@ -32,7 +32,7 @@ void UBaseAnalyzeFunctionAction::AnalyzeFunction(URuleRangerActionContext* Actio
     LogError(Blueprint, TEXT("Action failed to override AnalyzeFunction."));
 }
 
-void UBaseAnalyzeFunctionAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UBlueprintFunctionActionBase::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto Blueprint = CastChecked<UBlueprint>(Object);
@@ -66,7 +66,7 @@ void UBaseAnalyzeFunctionAction::Apply_Implementation(URuleRangerActionContext* 
     }
 }
 
-UClass* UBaseAnalyzeFunctionAction::GetExpectedType()
+UClass* UBlueprintFunctionActionBase::GetExpectedType()
 {
     return UBlueprint::StaticClass();
 }

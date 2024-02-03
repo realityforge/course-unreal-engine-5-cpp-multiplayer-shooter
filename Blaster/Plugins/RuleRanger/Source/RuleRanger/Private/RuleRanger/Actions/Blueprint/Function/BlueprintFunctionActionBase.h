@@ -17,13 +17,13 @@
 #include "CoreMinimal.h"
 #include "K2Node_FunctionEntry.h"
 #include "RuleRangerAction.h"
-#include "BaseAnalyzeFunctionAction.generated.h"
+#include "BlueprintFunctionActionBase.generated.h"
 
 /**
  * Base class for analyzing the functions in a Blueprint Graph.
  */
 UCLASS(Abstract, AutoExpandCategories = ("Rule Ranger"))
-class RULERANGER_API UBaseAnalyzeFunctionAction : public URuleRangerAction
+class RULERANGER_API UBlueprintFunctionActionBase : public URuleRangerAction
 {
     GENERATED_BODY()
 
