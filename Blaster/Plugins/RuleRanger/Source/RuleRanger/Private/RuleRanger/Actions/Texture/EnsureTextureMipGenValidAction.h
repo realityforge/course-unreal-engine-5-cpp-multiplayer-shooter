@@ -31,7 +31,10 @@ class RULERANGER_API UEnsureTextureMipGenValidAction final : public URuleRangerA
     UPROPERTY(EditAnywhere)
     TArray<TEnumAsByte<TextureMipGenSettings>> Settings;
 
-    /** Flag to indicate that the first setting should be used when fixing the asset. */
+    /**
+     * Flag to indicate that the first setting should be used when fixing the asset.
+     * If not set (or not setting specified) then no fix will be applied.
+     */
     UPROPERTY(EditAnywhere)
     bool bApplyFix;
 
