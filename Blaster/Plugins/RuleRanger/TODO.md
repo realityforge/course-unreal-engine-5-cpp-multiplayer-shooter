@@ -40,7 +40,6 @@ Shorthand notes of where to go next with this experiment:
   * Add check that protected Blueprint functions are in non-final blueprint classes?
 * Texture checks:
   * Add default/allowed modes (Color, Linear Color, Alpha etc)
-  * Add default/allowed compressions
   * SRGB required/allowed/disallowed
   * Streaming allowed?
   * Mip generation settings?
