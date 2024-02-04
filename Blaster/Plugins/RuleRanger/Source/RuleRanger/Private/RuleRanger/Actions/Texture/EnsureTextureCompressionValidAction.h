@@ -37,7 +37,7 @@ class RULERANGER_API UEnsureTextureCompressionValidAction final : public UTextur
      * If not set (or not setting specified) then no fix will be applied.
      */
     UPROPERTY(EditAnywhere)
-    bool bApplyFix;
+    bool bApplyFix{ false };
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;

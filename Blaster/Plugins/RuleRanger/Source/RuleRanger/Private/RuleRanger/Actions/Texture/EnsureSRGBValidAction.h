@@ -30,7 +30,7 @@ class RULERANGER_API UEnsureSRGBValidAction final : public UTexture2DActionBase
 
     /** The valid sRGB settings. */
     UPROPERTY(EditAnywhere)
-    bool bSRGB;
+    bool bSRGB{ false };
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
