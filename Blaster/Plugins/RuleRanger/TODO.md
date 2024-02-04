@@ -16,8 +16,6 @@ Shorthand notes of where to go next with this experiment:
 * Add a mechanism for adding an exclude `DataTable` that will will list assets that will ignore specific rules or all rules for specific assets or all assets or all assets that matchers match?
 * Material functions that are Material Layers are prefixed with ML not MF!
 * Retargeters should be named as RTG_\[Source\]_To_\[Target\]
-* Add validation of AnimationMontage to ensure it has specific sections:
-  * https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEAnimMontageValidationHelpers.cpp
 * Add ability to add other validators that are invoked on Scan (i.e. no directories without assets)
 * Add tool to record licenses for assets in MetaData
     * A DataTable that indicates the source (Marketplace project name? Some other project tag), description and license
@@ -53,6 +51,8 @@ Shorthand notes of where to go next with this experiment:
   * Other rules:
     * If TextureCompressionSettings::TC_Masks then sRGB = false
     * * If TextureCompressionSettings::TC_Grayscale then sRGB = true (huh?)
+* AnimationMontage:
+  * Section names/orders: https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEAnimMontageValidationHelpers.cpp
 * Animation Sequence:
   * Ensure animation sequence has a certain FPS
   * Ensure animation sequence contains curve data for specific curves
