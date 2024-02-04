@@ -53,18 +53,23 @@ void UEnsureAssetImportedFromDataSourceFolderAction::ValidateAssetImportData(
             const FString RelativePath = FPaths::GetPath(RelativeFilename);
 
             // Base name of file ala "T_Crypto_N"
-            const FString BaseName = FPaths::SetExtension(FPaths::GetPathLeaf(RelativeFilename), TEXT(""));
+            const FString BaseName = FPaths::GetBaseFilename(RelativeFilename);
 
-            LogInfo(Object,
-                    FString::Printf(TEXT("Object imported from '%s', (relative path = '%s' base name = '%s')"),
-                                    *ImportFilename,
-                                    *RelativePath,
-                                    *BaseName));
+            LogError(Object,
+                     FString::Printf(TEXT("Object imported from '%s', (relative path = '%s' base name = '%s')"),
+                                     *ImportFilename,
+                                     *RelativePath,
+                                     *BaseName));
 
-            const FString ObjectPathName{ Object->GetOutermost()->GetPathName().RightChop(6 /* size of '/Game/' */) };
+            const FString ObjectPathName{ FPaths::GetPath(
+                Object->GetOutermost()->GetPathName().RightChop(6 /* size of '/Game/' */)) };
             const FString ObjectName{ Object->GetName() };
 
-            LogInfo(Object, FString::Printf(TEXT("Object path '%s' name '%s'"), *ObjectPathName, *ObjectName));
+            LogInfo(Object,
+                    FString::Printf(TEXT("Evaluating object with "
+                                         "path '%s' and name '%s'"),
+                                    *ObjectPathName,
+                                    *ObjectName));
 
             if (bRequireMatchingName)
             {
