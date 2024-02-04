@@ -17,24 +17,20 @@
 #include "BlueprintFunctionActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
-#include "EnsureFunctionsNameMatchesRegexAction.generated.h"
+#include "EnsureFunctionsReturnAction.generated.h"
 
 /**
- * Action to ensure that the names of functions match specified regex.
+ * Action to check that the functions have a return node.
+ * (We let the EnsureNoUnlinkedNodesAction verify that the result node is connected).
  */
-UCLASS()
-class RULERANGER_API UEnsureFunctionsNameMatchesRegexAction final : public UBlueprintFunctionActionBase
+UCLASS(DisplayName = "Ensure Blueprint Functions Return")
+class RULERANGER_API UEnsureFunctionsReturnAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()
 
-    /** The regex pattern that the function name is expected to match. */
-    UPROPERTY(EditAnywhere)
-    FString Pattern{ TEXT("^[A-Z][a-z0-9A-Z_]*$") };
-    /** A flag controlling whether matching is Case Sensitive or not. */
-    UPROPERTY(EditAnywhere)
-    bool bCaseSensitive{ true };
-
 protected:
+    virtual bool ShouldAnalyzeGraph(UEdGraph* Graph) const override;
+
     virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                  UBlueprint* Blueprint,
                                  UK2Node_FunctionEntry* FunctionEntry,

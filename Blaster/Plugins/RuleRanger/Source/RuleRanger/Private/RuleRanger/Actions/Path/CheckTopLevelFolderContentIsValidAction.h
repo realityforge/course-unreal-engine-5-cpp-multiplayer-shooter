@@ -22,7 +22,7 @@
 /**
  * Action to check that content in the top level directory matches the configured rules.
  */
-UCLASS()
+UCLASS(DisplayName = "Check Top Level Folder Content Is Valid")
 class RULERANGER_API UCheckTopLevelFolderContentIsValidAction final : public URuleRangerAction
 {
     GENERATED_BODY()

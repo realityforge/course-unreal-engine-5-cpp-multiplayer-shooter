@@ -23,7 +23,7 @@
 /**
  * Action to check that a Texture has a valid TextureGroup.
  */
-UCLASS()
+UCLASS(DisplayName = "Ensure Texture Group Setting Is Valid")
 class RULERANGER_API UEnsureTextureGroupValidAction final : public UTexture2DActionBase
 {
     GENERATED_BODY()

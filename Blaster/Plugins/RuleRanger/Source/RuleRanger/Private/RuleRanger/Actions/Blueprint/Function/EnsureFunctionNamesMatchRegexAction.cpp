@@ -12,12 +12,12 @@
  * limitations under the License.
  */
 
-#include "EnsureFunctionsNameMatchesRegexAction.h"
+#include "EnsureFunctionNamesMatchRegexAction.h"
 
-void UEnsureFunctionsNameMatchesRegexAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                                             UBlueprint* Blueprint,
-                                                             UK2Node_FunctionEntry* FunctionEntry,
-                                                             UEdGraph* Graph)
+void UEnsureFunctionNamesMatchRegexAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
+                                                           UBlueprint* Blueprint,
+                                                           UK2Node_FunctionEntry* FunctionEntry,
+                                                           UEdGraph* Graph)
 {
     const FString& FunctionName = Graph->GetName();
     const FRegexPattern RegexPattern(Pattern,

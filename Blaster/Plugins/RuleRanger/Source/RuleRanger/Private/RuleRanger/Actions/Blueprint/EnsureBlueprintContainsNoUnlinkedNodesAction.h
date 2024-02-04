@@ -16,15 +16,15 @@
 
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
-#include "EnsureNoUnlinkedNodesAction.generated.h"
+#include "EnsureBlueprintContainsNoUnlinkedNodesAction.generated.h"
 
 /**
  * Action to check that no Blueprint graphs have unlinked nodes.
  * If the node has exec pins then they MUST have input pins filled. If the node has no exec pins then they MUST
  * have output data pins used.
  */
-UCLASS()
-class RULERANGER_API UEnsureNoUnlinkedNodesAction final : public URuleRangerAction
+UCLASS(DisplayName = "Ensure Blueprint Contains No Unlinked Nodes")
+class RULERANGER_API UEnsureBlueprintContainsNoUnlinkedNodesAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 

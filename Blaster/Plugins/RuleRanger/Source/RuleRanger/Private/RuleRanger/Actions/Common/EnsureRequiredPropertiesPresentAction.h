@@ -16,26 +16,16 @@
 
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
-#include "CheckBlueprintStatusAction.generated.h"
+#include "EnsureRequiredPropertiesPresentAction.generated.h"
 
 /**
- * Action to check that the compile status of Blueprints is valid.
+ * Action to check that any property with the (boolean) meta property 'RuleRangerRequired' is present on object.
  */
-UCLASS()
-class RULERANGER_API UCheckBlueprintStatusAction final : public URuleRangerAction
+UCLASS(DisplayName = "Ensure Required Properties Present")
+class RULERANGER_API UEnsureRequiredPropertiesPresentAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 
-    /** Should the action generate an error on "Unknown" Compile Status. */
-    UPROPERTY(EditAnywhere)
-    bool bErrorOnUnknown{ true };
-
-    /** Should the action generate an error on "UpToDateWithWarnings" Compile Status. */
-    UPROPERTY(EditAnywhere)
-    bool bErrorOnUpToDateWithWarnings{ true };
-
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
-
-    virtual UClass* GetExpectedType() override;
 };

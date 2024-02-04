@@ -24,7 +24,7 @@
  * Action to check that the functions defined in the Blueprint have a category if the Blueprint crosses a threshold
  * number of functions.
  */
-UCLASS()
+UCLASS(DisplayName = "Ensure Blueprint Functions Have Categories")
 class RULERANGER_API UEnsureFunctionsHaveCategoriesAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()

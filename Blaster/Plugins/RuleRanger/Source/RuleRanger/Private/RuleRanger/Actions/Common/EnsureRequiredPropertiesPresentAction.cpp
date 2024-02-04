@@ -12,11 +12,11 @@
  * limitations under the License.
  */
 
-#include "EnsureRequiredPropertiesPresent.h"
+#include "EnsureRequiredPropertiesPresentAction.h"
 
 static const FName RequiredPropertyName("RuleRangerRequired");
 
-void UEnsureRequiredPropertiesPresent::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UEnsureRequiredPropertiesPresentAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     const UBlueprint* Blueprint = Cast<UBlueprint>(Object);
     UClass* Class;

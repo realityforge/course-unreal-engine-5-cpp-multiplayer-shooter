@@ -23,7 +23,7 @@
 /**
  * Action to check that a Texture has a valid sRGB value.
  */
-UCLASS(DisplayName = "Ensure sRGB Valid")
+UCLASS(DisplayName = "Ensure Texture sRGB is Valid")
 class RULERANGER_API UEnsureSRGBValidAction final : public UTexture2DActionBase
 {
     GENERATED_BODY()

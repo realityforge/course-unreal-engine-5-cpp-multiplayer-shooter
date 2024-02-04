@@ -17,7 +17,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
-#include "NameConventionRenameAction.generated.h"
+#include "EnsureNameFollowsConventionAction.generated.h"
 
 inline static FString NameConvention_DefaultVariant{ TEXT("") };
 
@@ -61,8 +61,8 @@ struct FNameConvention final : public FTableRowBase
  * Action to rename assets according to naming convention specified in a DataTable.
  * The action may optionally issue warnings if applied to an asset that has no NamingConvention specified.
  */
-UCLASS()
-class RULERANGER_API UNameConventionRenameAction : public URuleRangerAction
+UCLASS(DisplayName = "Ensure Name Follows Convention")
+class RULERANGER_API UEnsureNameFollowsConventionAction : public URuleRangerAction
 {
     GENERATED_BODY()
 

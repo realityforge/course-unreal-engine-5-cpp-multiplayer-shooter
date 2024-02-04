@@ -18,13 +18,13 @@
 #include "Engine/DataTable.h"
 #include "RuleRangerAction.h"
 #include "RuleRangerMatcher.h"
-#include "EnsureMatchersAction.generated.h"
+#include "EnsureMatchersMatchAction.generated.h"
 
 /**
  * Action that the specified actions are true.
  */
-UCLASS()
-class RULERANGER_API UEnsureMatchersAction final : public URuleRangerAction
+UCLASS(DisplayName = "Ensure Matchers Match")
+class RULERANGER_API UEnsureMatchersMatchAction final : public URuleRangerAction
 {
     GENERATED_BODY()
 

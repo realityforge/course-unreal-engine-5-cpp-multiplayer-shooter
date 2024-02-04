@@ -54,7 +54,7 @@ enum class ETextureResolutionConstraint : uint8
 /**
  * Action to check that a Texture dimensions comply with the specified constraint.
  */
-UCLASS()
+UCLASS(DisplayName = "Ensure Texture Resolution conforms with Constraint")
 class RULERANGER_API UEnsureTextureResolutionConstraintsAction final : public UTexture2DActionBase
 {
     GENERATED_BODY()

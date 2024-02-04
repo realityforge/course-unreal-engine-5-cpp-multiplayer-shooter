@@ -21,7 +21,7 @@
 /**
  * Action to check that emitters contained in a Niagara System are named according to a regex.
  */
-UCLASS()
+UCLASS(DisplayName = "Check Nested Emitter Name Matches Pattern")
 class RULERANGER_API UCheckNestedEmitterNameMatchesPatternAction final : public URuleRangerAction
 {
     GENERATED_BODY()

@@ -12,12 +12,12 @@
  * limitations under the License.
  */
 
-#include "NameConventionRenameAction.h"
+#include "EnsureNameFollowsConventionAction.h"
 #include "Editor.h"
 #include "RuleRanger/RuleRangerUtilities.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 
-void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UEnsureNameFollowsConventionAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     if (!NameConventionsTables.IsEmpty())
     {
@@ -140,11 +140,11 @@ void UNameConventionRenameAction::Apply_Implementation(URuleRangerActionContext*
     }
 }
 
-void UNameConventionRenameAction::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+void UEnsureNameFollowsConventionAction::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
     const FName PropertyName = PropertyChangedEvent.Property ? PropertyChangedEvent.Property->GetFName() : NAME_None;
     // ReSharper disable once CppTooWideScopeInitStatement
-    const FName TableName = GET_MEMBER_NAME_CHECKED(UNameConventionRenameAction, NameConventionsTables);
+    const FName TableName = GET_MEMBER_NAME_CHECKED(UEnsureNameFollowsConventionAction, NameConventionsTables);
     if (TableName == PropertyName)
     {
         ResetNameConventionsCache();
@@ -153,7 +153,7 @@ void UNameConventionRenameAction::PostEditChangeProperty(FPropertyChangedEvent& 
 }
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
-void UNameConventionRenameAction::ResetCacheIfTableModified(UObject* Object)
+void UEnsureNameFollowsConventionAction::ResetCacheIfTableModified(UObject* Object)
 {
     // This is called on any object edit in editor so match against conventions tables and bust cache as appropriate;
     if (Object && NameConventionsTables.Contains(Object))
@@ -162,7 +162,7 @@ void UNameConventionRenameAction::ResetCacheIfTableModified(UObject* Object)
     }
 }
 
-void UNameConventionRenameAction::ResetNameConventionsCache()
+void UEnsureNameFollowsConventionAction::ResetNameConventionsCache()
 {
     LogInfo(nullptr, TEXT("Resetting the Name Conventions Cache"));
 
@@ -171,7 +171,7 @@ void UNameConventionRenameAction::ResetNameConventionsCache()
     OnObjectModifiedDelegateHandle.Reset();
 }
 
-void UNameConventionRenameAction::RebuildNameConventionsCacheIfNecessary()
+void UEnsureNameFollowsConventionAction::RebuildNameConventionsCacheIfNecessary()
 {
     check(!NameConventionsTables.IsEmpty());
 
@@ -190,7 +190,7 @@ void UNameConventionRenameAction::RebuildNameConventionsCacheIfNecessary()
         // Add a callback for when ANY object is modified in the editor so that we can bust the cache
         OnObjectModifiedDelegateHandle =
             FCoreUObjectDelegates::OnObjectModified.AddUObject(this,
-                                                               &UNameConventionRenameAction::ResetCacheIfTableModified);
+                                                               &UEnsureNameFollowsConventionAction::ResetCacheIfTableModified);
         for (const auto& NameConventionsTable : NameConventionsTables)
         {
             for (const auto& RowName : NameConventionsTable->GetRowNames())

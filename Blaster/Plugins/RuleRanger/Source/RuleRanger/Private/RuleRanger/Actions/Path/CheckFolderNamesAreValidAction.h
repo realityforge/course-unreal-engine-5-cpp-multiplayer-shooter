@@ -22,7 +22,7 @@
 /**
  * Action to check that folder names are compliant with the specified rules.
  */
-UCLASS()
+UCLASS(DisplayName = "Check Folder Names Are Valid")
 class RULERANGER_API UCheckFolderNamesAreValidAction final : public URuleRangerAction
 {
     GENERATED_BODY()

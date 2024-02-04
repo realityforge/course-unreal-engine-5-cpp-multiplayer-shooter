@@ -28,7 +28,7 @@
  * - Subclasses of ProjectileWeapon have a mesh with a MuzzleExit socket (To emit particles from)
  * - Subclasses of Weapon have a mesh with a LeftHand socket (To attach hands to using IK etc)
  */
-UCLASS()
+UCLASS(DisplayName = "Ensure Actor Has Mesh Component With Named Socket")
 class RULERANGER_API UEnsureActorHasMeshComponentWithNamedSocketAction final : public URuleRangerAction
 {
     GENERATED_BODY()

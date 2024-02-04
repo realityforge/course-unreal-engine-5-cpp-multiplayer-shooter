@@ -23,7 +23,7 @@
 /**
  * Action to check that a Texture has a valid MipGen setting.
  */
-UCLASS()
+UCLASS(DisplayName = "Ensure Texture MipGen Setting Is Valid")
 class RULERANGER_API UEnsureTextureMipGenValidAction final : public UTexture2DActionBase
 {
     GENERATED_BODY()

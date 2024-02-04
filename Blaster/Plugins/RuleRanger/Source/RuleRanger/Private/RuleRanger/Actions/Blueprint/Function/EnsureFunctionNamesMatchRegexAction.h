@@ -14,20 +14,20 @@
 
 #pragma once
 
-#include "BlueprintVariableActionBase.h"
+#include "BlueprintFunctionActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
-#include "EnsureVariablesNameMatchesRegexAction.generated.h"
+#include "EnsureFunctionNamesMatchRegexAction.generated.h"
 
 /**
- * Action to check that the variable defined in the Blueprint match a pattern.
+ * Action to ensure that the names of functions match specified regex.
  */
-UCLASS()
-class RULERANGER_API UEnsureVariablesNameMatchesRegexAction final : public UBlueprintVariableActionBase
+UCLASS(DisplayName = "Ensure Blueprint Function Names Match Regex")
+class RULERANGER_API UEnsureFunctionNamesMatchRegexAction final : public UBlueprintFunctionActionBase
 {
     GENERATED_BODY()
 
-    /** The regex pattern that the variable name is expected to match. */
+    /** The regex pattern that the function name is expected to match. */
     UPROPERTY(EditAnywhere)
     FString Pattern{ TEXT("^[A-Z][a-z0-9A-Z_]*$") };
     /** A flag controlling whether matching is Case Sensitive or not. */
@@ -35,9 +35,8 @@ class RULERANGER_API UEnsureVariablesNameMatchesRegexAction final : public UBlue
     bool bCaseSensitive{ true };
 
 protected:
-    virtual void AnalyzeVariable(URuleRangerActionContext* ActionContext,
+    virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                  UBlueprint* Blueprint,
-                                 const FBPVariableDescription& Variable,
                                  UK2Node_FunctionEntry* FunctionEntry,
                                  UEdGraph* Graph) override;
 };

@@ -12,13 +12,13 @@
  * limitations under the License.
  */
 
-#include "EnsureNoUnlinkedNodesAction.h"
+#include "EnsureBlueprintContainsNoUnlinkedNodesAction.h"
 #include "AnimGraphNode_TransitionResult.h"
 #include "AnimStateNode.h"
 #include "AnimStateTransitionNode.h"
 #include "EdGraphNode_Comment.h"
 
-bool UEnsureNoUnlinkedNodesAction::ShouldHaveLinks(const TObjectPtr<UEdGraphNode> Node) const
+bool UEnsureBlueprintContainsNoUnlinkedNodesAction::ShouldHaveLinks(const TObjectPtr<UEdGraphNode> Node) const
 {
     if (!bErrorOnLooseDefaultEvents && Node->IsAutomaticallyPlacedGhostNode())
     {
@@ -52,7 +52,7 @@ bool UEnsureNoUnlinkedNodesAction::ShouldHaveLinks(const TObjectPtr<UEdGraphNode
     }
 }
 
-void UEnsureNoUnlinkedNodesAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UEnsureBlueprintContainsNoUnlinkedNodesAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     const auto Blueprint = CastChecked<UBlueprint>(Object);
     TArray<UEdGraph*> Graphs;
@@ -146,7 +146,7 @@ void UEnsureNoUnlinkedNodesAction::Apply_Implementation(URuleRangerActionContext
     }
 }
 
-UClass* UEnsureNoUnlinkedNodesAction::GetExpectedType()
+UClass* UEnsureBlueprintContainsNoUnlinkedNodesAction::GetExpectedType()
 {
     return UBlueprint::StaticClass();
 }

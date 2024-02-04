@@ -14,25 +14,30 @@
 
 #pragma once
 
-#include "BlueprintFunctionActionBase.h"
+#include "BlueprintVariableActionBase.h"
 #include "CoreMinimal.h"
 #include "RuleRangerAction.h"
-#include "EnsureFunctionsHaveReturnAction.generated.h"
+#include "EnsureVariableNamesMatchRegexAction.generated.h"
 
 /**
- * Action to check that the functions have a return node.
- * (We let the EnsureNoUnlinkedNodesAction verify that the result node is connected).
+ * Action to check that the variable defined in the Blueprint match a pattern.
  */
-UCLASS()
-class RULERANGER_API UEnsureFunctionsHaveReturnAction final : public UBlueprintFunctionActionBase
+UCLASS(DisplayName = "Ensure Blueprint Variable Names Match Regex")
+class RULERANGER_API UEnsureVariableNamesMatchRegexAction final : public UBlueprintVariableActionBase
 {
     GENERATED_BODY()
 
-protected:
-    virtual bool ShouldAnalyzeGraph(UEdGraph* Graph) const override;
+    /** The regex pattern that the variable name is expected to match. */
+    UPROPERTY(EditAnywhere)
+    FString Pattern{ TEXT("^[A-Z][a-z0-9A-Z_]*$") };
+    /** A flag controlling whether matching is Case Sensitive or not. */
+    UPROPERTY(EditAnywhere)
+    bool bCaseSensitive{ true };
 
-    virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
+protected:
+    virtual void AnalyzeVariable(URuleRangerActionContext* ActionContext,
                                  UBlueprint* Blueprint,
+                                 const FBPVariableDescription& Variable,
                                  UK2Node_FunctionEntry* FunctionEntry,
                                  UEdGraph* Graph) override;
 };

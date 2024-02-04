@@ -12,16 +12,16 @@
  * limitations under the License.
  */
 
-#include "EnsureFunctionsHaveReturnAction.h"
+#include "EnsureFunctionsReturnAction.h"
 #include "K2Node_FunctionEntry.h"
 #include "K2Node_FunctionResult.h"
 
-bool UEnsureFunctionsHaveReturnAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
+bool UEnsureFunctionsReturnAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
 {
     return Super::ShouldAnalyzeGraph(Graph) && UEdGraphSchema_K2::GN_AnimGraph != Graph->GetFName();
 }
 
-void UEnsureFunctionsHaveReturnAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
+void UEnsureFunctionsReturnAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                                        UBlueprint* Blueprint,
                                                        UK2Node_FunctionEntry* FunctionEntry,
                                                        UEdGraph* Graph)

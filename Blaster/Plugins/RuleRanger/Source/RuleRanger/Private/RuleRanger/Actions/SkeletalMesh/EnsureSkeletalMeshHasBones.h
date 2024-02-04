@@ -22,7 +22,7 @@
 /**
  * Action to check that the SkeletalMesh assets contain the specified bones.
  */
-UCLASS()
+UCLASS(DisplayName = "Ensure Skeletal Mesh Has Bones")
 class RULERANGER_API UEnsureSkeletalMeshHasBones final : public URuleRangerAction
 {
     GENERATED_BODY()

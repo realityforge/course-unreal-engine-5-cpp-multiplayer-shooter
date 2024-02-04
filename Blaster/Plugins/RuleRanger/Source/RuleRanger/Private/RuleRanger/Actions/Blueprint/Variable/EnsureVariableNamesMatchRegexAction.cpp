@@ -12,13 +12,13 @@
  * limitations under the License.
  */
 
-#include "EnsureVariablesNameMatchesRegexAction.h"
+#include "EnsureVariableNamesMatchRegexAction.h"
 
-void UEnsureVariablesNameMatchesRegexAction::AnalyzeVariable(URuleRangerActionContext* ActionContext,
-                                                             UBlueprint* Blueprint,
-                                                             const FBPVariableDescription& Variable,
-                                                             UK2Node_FunctionEntry* FunctionEntry,
-                                                             UEdGraph* Graph)
+void UEnsureVariableNamesMatchRegexAction::AnalyzeVariable(URuleRangerActionContext* ActionContext,
+                                                           UBlueprint* Blueprint,
+                                                           const FBPVariableDescription& Variable,
+                                                           UK2Node_FunctionEntry* FunctionEntry,
+                                                           UEdGraph* Graph)
 {
     const FString& Name = Variable.VarName.ToString();
     const FRegexPattern RegexPattern(Pattern,

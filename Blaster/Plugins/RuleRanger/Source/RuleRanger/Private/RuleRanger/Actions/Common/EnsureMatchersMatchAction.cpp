@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-#include "EnsureMatchersAction.h"
+#include "EnsureMatchersMatchAction.h"
 
-void UEnsureMatchersAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UEnsureMatchersMatchAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     int Index = 0;
     for (const auto& Matcher : Matchers)

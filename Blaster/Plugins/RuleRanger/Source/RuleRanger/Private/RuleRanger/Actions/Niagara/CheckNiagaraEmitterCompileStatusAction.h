@@ -21,7 +21,7 @@
 /**
  * Action to check that the compile status of a Niagara Emitter is valid.
  */
-UCLASS()
+UCLASS(DisplayName = "Check Niagara Emitter Compile Status")
 class RULERANGER_API UCheckNiagaraEmitterCompileStatusAction final : public URuleRangerAction
 {
     GENERATED_BODY()

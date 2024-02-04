@@ -22,7 +22,7 @@
 /**
  * Action to check that the sample rate of a SoundWave is valid.
  */
-UCLASS()
+UCLASS(DisplayName = "Ensure Sound Wave Sample Rate Is Valid")
 class RULERANGER_API UEnsureSoundWaveSampleRateValidAction final : public URuleRangerAction
 {
     GENERATED_BODY()

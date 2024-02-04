@@ -12,9 +12,9 @@
  * limitations under the License.
  */
 
-#include "CheckBlueprintStatusAction.h"
+#include "CheckBlueprintCompileStatusAction.h"
 
-void UCheckBlueprintStatusAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UCheckBlueprintCompileStatusAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto Blueprint = CastChecked<UBlueprint>(Object);
@@ -60,7 +60,7 @@ void UCheckBlueprintStatusAction::Apply_Implementation(URuleRangerActionContext*
     }
 }
 
-UClass* UCheckBlueprintStatusAction::GetExpectedType()
+UClass* UCheckBlueprintCompileStatusAction::GetExpectedType()
 {
     return UBlueprint::StaticClass();
 }
