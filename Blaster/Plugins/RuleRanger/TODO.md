@@ -50,6 +50,7 @@ Shorthand notes of where to go next with this experiment:
     * Emissive
     * AORMT
     * "UI"  (folder grouping?) group=TextureGroup::TEXTUREGROUP_UI, Compression = TextureCompressionSettings::TC_EditorIcon, sRGB=true, NeverStream=true, mipGen=TextureMipGenSettings::TMGS_NoMipmaps
+    * "M": Compression = TextureCompressionSettings::TC_Masks or TextureCompressionSettings::TC_Grayscale (Greyscale implies sRGB=true while Masks implies sRGB=false)
     * "_DM": sRGB=false, Compression = TextureCompressionSettings::TC_Displacementmap
     * "_VDM": sRGB=false, Compression = TextureCompressionSettings::TC_VectorDisplacementmap
     * "_HDR": Compression = TextureCompressionSettings::TC_HDR
