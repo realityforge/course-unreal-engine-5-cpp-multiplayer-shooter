@@ -265,7 +265,7 @@ bool URuleRangerEditorSubsystem::ProcessOnAssetPostImportRule(const bool bIsReim
                bIsReimport ? TEXT("reimport") : TEXT("import"));
         const ERuleRangerActionTrigger Trigger =
             bIsReimport ? ERuleRangerActionTrigger::AT_Reimport : ERuleRangerActionTrigger::AT_Import;
-        ActionContext->ResetContext(InObject, Trigger);
+        ActionContext->ResetContext(Rule, InObject, Trigger);
 
         Rule->Apply(ActionContext, InObject);
 
@@ -318,7 +318,7 @@ bool URuleRangerEditorSubsystem::ProcessDemandScan(URuleRangerRule* Rule, UObjec
                TEXT("ProcessDemandScan(%s) applying rule %s."),
                *InObject->GetName(),
                *Rule->GetName());
-        ActionContext->ResetContext(InObject, ERuleRangerActionTrigger::AT_Validate);
+        ActionContext->ResetContext(Rule, InObject, ERuleRangerActionTrigger::AT_Validate);
 
         Rule->Apply(ActionContext, InObject);
 
@@ -370,7 +370,7 @@ bool URuleRangerEditorSubsystem::ProcessDemandScanAndFix(URuleRangerRule* Rule, 
                TEXT("ProcessDemandScanAndFix(%s) applying rule %s."),
                *InObject->GetName(),
                *Rule->GetName());
-        ActionContext->ResetContext(InObject, ERuleRangerActionTrigger::AT_Fix);
+        ActionContext->ResetContext(Rule, InObject, ERuleRangerActionTrigger::AT_Fix);
 
         Rule->Apply(ActionContext, InObject);
 

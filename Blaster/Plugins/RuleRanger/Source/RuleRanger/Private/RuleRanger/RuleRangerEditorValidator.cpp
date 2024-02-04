@@ -109,7 +109,8 @@ bool URuleRangerEditorValidator::ProcessRule(TArray<FText>& ValidationErrors, UR
                *InObject->GetName(),
                *Rule->GetName());
 
-        ActionContext->ResetContext(InObject,
+        ActionContext->ResetContext(Rule,
+                                    InObject,
                                     bIsSave ? ERuleRangerActionTrigger::AT_Save
                                             : ERuleRangerActionTrigger::AT_Validate);
 

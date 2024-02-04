@@ -14,6 +14,7 @@
 #include "RuleRangerActionContext.h"
 #include "Misc/UObjectToken.h"
 #include "RuleRangerMessageLog.h"
+#include "RuleRangerRule.h"
 
 ERuleRangerActionState URuleRangerActionContext::GetState()
 {
@@ -32,9 +33,12 @@ bool URuleRangerActionContext::IsDryRun()
              || ERuleRangerActionTrigger::AT_Fix == ActionTrigger);
 }
 
-void URuleRangerActionContext::ResetContext(UObject* InObject, const ERuleRangerActionTrigger InActionTrigger)
+void URuleRangerActionContext::ResetContext(URuleRangerRule* const InRule,
+                                            UObject* const InObject,
+                                            const ERuleRangerActionTrigger InActionTrigger)
 {
     check(nullptr != InObject);
+    Rule = InRule;
     Object = InObject;
     ActionTrigger = InActionTrigger;
     ActionState = ERuleRangerActionState::AS_Success;
@@ -89,7 +93,9 @@ void URuleRangerActionContext::EmitMessageLogs()
 
 FText URuleRangerActionContext::ToMessage(const FText& InMessage) const
 {
-    return FText::FromString(FString::Printf(TEXT("%s (Emitted from rule %s)"), *InMessage.ToString(), *GetName()));
+    return FText::FromString(FString::Printf(TEXT("%s (Emitted from rule %s)"),
+                                             *InMessage.ToString(),
+                                             Rule ? *Rule->GetOutermost()->GetPathName() : TEXT("?")));
 }
 
 void URuleRangerActionContext::Info(const FText& InMessage)

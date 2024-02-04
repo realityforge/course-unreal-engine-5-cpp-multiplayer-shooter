@@ -17,6 +17,8 @@
 #include "UObject/Interface.h"
 #include "RuleRangerActionContext.generated.h"
 
+class URuleRangerRule;
+
 UENUM(BlueprintType)
 enum class ERuleRangerActionTrigger : uint8
 {
@@ -117,15 +119,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
     virtual void Fatal(const FText& InMessage);
 
-    void ResetContext(UObject* InObject, ERuleRangerActionTrigger InActionTrigger);
+    void ResetContext(URuleRangerRule* InRule, UObject* InObject, ERuleRangerActionTrigger InActionTrigger);
     void ClearContext();
 
     void EmitMessageLogs();
 
 private:
+    /** The rule that contains the associated action that is using the context. */
+    UPROPERTY(Transient)
+    TObjectPtr<URuleRangerRule> Rule;
+
     /** The object that the associated action is acting upon. */
     UPROPERTY(VisibleAnywhere)
-    UObject* Object;
+    TObjectPtr<UObject> Object;
 
     /** The reason that the associated action was triggered. */
     UPROPERTY(VisibleAnywhere)
