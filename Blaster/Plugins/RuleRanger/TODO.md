@@ -39,7 +39,6 @@ Shorthand notes of where to go next with this experiment:
 * Texture checks:
   * Add default/allowed modes (Color, Linear Color, Alpha etc)
   * Add rules for well known texture variants:
-    * Base Color
     * AORMT
     * "M": Compression = TextureCompressionSettings::TC_Masks or TextureCompressionSettings::TC_Grayscale (Greyscale implies sRGB=true while Masks implies sRGB=false)
   * Other rules:
