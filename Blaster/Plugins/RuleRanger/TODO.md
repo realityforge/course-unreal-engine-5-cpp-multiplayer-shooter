@@ -39,10 +39,6 @@ Shorthand notes of where to go next with this experiment:
 * Texture checks:
   * Add default/allowed modes (Color, Linear Color, Alpha etc)
   * Add rules for well known texture variants:
-    * "M": Compression = TextureCompressionSettings::TC_Masks or TextureCompressionSettings::TC_Grayscale (Greyscale implies sRGB=true while Masks implies sRGB=false)
-  * Other rules:
-    * If TextureCompressionSettings::TC_Masks then sRGB = false
-    * * If TextureCompressionSettings::TC_Grayscale then sRGB = true (huh?)
 * AnimationMontage:
   * Section names/orders: https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEAnimMontageValidationHelpers.cpp
 * Animation Sequence:
