@@ -398,6 +398,7 @@ void UCombatComponent::OnRep_CarriedAmmo()
 void UCombatComponent::InitializeCarriedAmmo()
 {
     CarriedAmmoMap.Add(EWeaponType::AssaultRifle, InitialAssaultRifleAmmo);
+    CarriedAmmoMap.Add(EWeaponType::RocketLauncher, InitialRocketAmmo);
 }
 
 int32 UCombatComponent::AmmoSlotsToReload()
