@@ -14,22 +14,29 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EditorPropertyMatcherBase.h"
+#include "RuleRangerMatcher.h"
 #include "UObject/Object.h"
-#include "EditorPropertyMatcher.generated.h"
+#include "EditorPropertyMatcherBase.generated.h"
 
 /**
- * Matcher that returns true if object has and editor property with the specified name and value.
+ * Abstract base class for matchers that inspect editor properties.
  */
-UCLASS()
-class RULERANGER_API UEditorPropertyMatcher final : public UEditorPropertyMatcherBase
+UCLASS(Abstract)
+class RULERANGER_API UEditorPropertyMatcherBase : public URuleRangerMatcher
 {
     GENERATED_BODY()
 
-    /** The value of the editor property to match. */
+    /** The name of the editor property to match. */
     UPROPERTY(EditAnywhere)
-    FString Value{ TEXT("") };
+    FName Name{ TEXT("") };
+
+    /** Flag indicating whether the property matcher should look at parent instances. */
+    UPROPERTY(EditAnywhere)
+    bool bTraverseInstanceHierarchy{ true };
 
 protected:
-    virtual bool TestEditorProperty(UObject* Object, UObject* Instance, FProperty* Property) override;
+    virtual bool TestEditorProperty(UObject* Object, UObject* Instance, FProperty* Property);
+
+public:
+    virtual bool Test_Implementation(UObject* Object) override;
 };
