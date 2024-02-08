@@ -14,20 +14,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RuleRangerObjectBase.h"
 #include "UObject/Object.h"
 #include "RuleRangerMatcher.generated.h"
 
 /**
  * Base class used to match against an object to determine whether a rule should be applied to the object.
  */
-UCLASS(Abstract,
-       AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
-class RULERANGER_API URuleRangerMatcher : public UObject
+UCLASS(Abstract, Blueprintable, BlueprintType, CollapseCategories, DefaultToInstanced, EditInlineNew)
+class RULERANGER_API URuleRangerMatcher : public URuleRangerObjectBase
 {
     GENERATED_BODY()
 

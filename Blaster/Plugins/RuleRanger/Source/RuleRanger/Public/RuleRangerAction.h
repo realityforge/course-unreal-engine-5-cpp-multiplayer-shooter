@@ -15,20 +15,15 @@
 
 #include "CoreMinimal.h"
 #include "RuleRangerActionContext.h"
+#include "RuleRangerObjectBase.h"
 #include "RuleRangerAction.generated.h"
 
 /**
  * Base class used to apply an action to an object.
  * This is typically used in the body of a rule.
  */
-UCLASS(Abstract,
-       AutoExpandCategories = ("Rule Ranger"),
-       Blueprintable,
-       BlueprintType,
-       CollapseCategories,
-       DefaultToInstanced,
-       EditInlineNew)
-class RULERANGER_API URuleRangerAction : public UObject
+UCLASS(Abstract, Blueprintable, BlueprintType, CollapseCategories, DefaultToInstanced, EditInlineNew)
+class RULERANGER_API URuleRangerAction : public URuleRangerObjectBase
 {
     GENERATED_BODY()
 
@@ -52,24 +47,4 @@ public:
      * @return The Class that the Object must be an instance of.
      */
     virtual UClass* GetExpectedType();
-
-protected:
-    /**
-     * Log an informational message for debugging purposes.
-     * (By default this logs to the RuleRanger category using VeryVerbose level.)
-     *
-     * @param Object the Object that was being processed (if any).
-     * @param Message the message.
-     */
-    void LogInfo(const UObject* const Object, const FString& Message) const;
-
-    /**
-     * Log an error message for debugging purposes.
-     * This usually indicates a misconfigured Action object.
-     * (By default this logs to the RuleRanger category using Error level.)
-     *
-     * @param Object the Object that was being processed (if any).
-     * @param Message the message.
-     */
-    void LogError(const UObject* const Object, const FString& Message) const;
 };
