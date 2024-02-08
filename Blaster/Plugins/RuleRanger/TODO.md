@@ -23,6 +23,7 @@ Shorthand notes of where to go next with this experiment:
     * Add report to report on licenses of all assets
     * Add action to apply license to entire folder or individual assets or selected assets/folders
     * Add RuleRanger validation to ensure license is set
+* Re-enable `RRR_Texture_AlertOnMissingVariant` when exclusion rules in places
 * Name checks:
   * Add regex per-type for nested names? or global regex for internal names?
   * Ensure that classes (C++ and Blueprint) have a "basename" that ends with Base rather than starts with Base. i.e. Prefer FooBase over BaseFoo
@@ -36,10 +37,6 @@ Shorthand notes of where to go next with this experiment:
   * Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
   * Add check that all private Blueprint functions are called
   * Add check that protected Blueprint functions are in non-final blueprint classes?
-* Texture checks:
-  * Add rules for well known texture variants:
-    * "_MSK": Compression = TextureCompressionSettings::TC_Masks, sRGB = no
-    * Re-enable `RRR_Texture_AlertOnMissingVariant` when exclusion rules in places
 * AnimationMontage:
   * Section names/orders: https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEAnimMontageValidationHelpers.cpp
 * Animation Sequence:
