@@ -43,10 +43,6 @@ Shorthand notes of where to go next with this experiment:
     * Emissive
     * AORMT
     * "M": Compression = TextureCompressionSettings::TC_Masks or TextureCompressionSettings::TC_Grayscale (Greyscale implies sRGB=true while Masks implies sRGB=false)
-    * "_DM": sRGB=false, Compression = TextureCompressionSettings::TC_Displacementmap
-    * "_VDM": sRGB=false, Compression = TextureCompressionSettings::TC_VectorDisplacementmap
-    * "_HDR": Compression = TextureCompressionSettings::TC_HDR
-    * "_DFF": Compression = TextureCompressionSettings::TC_DistanceFieldFont
   * Other rules:
     * If TextureCompressionSettings::TC_Masks then sRGB = false
     * * If TextureCompressionSettings::TC_Grayscale then sRGB = true (huh?)
