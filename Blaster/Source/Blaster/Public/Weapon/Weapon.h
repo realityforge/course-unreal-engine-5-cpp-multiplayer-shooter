@@ -107,7 +107,7 @@ private:
     UPROPERTY(EditDefaultsOnly,
               BlueprintReadOnly,
               Category = "Weapon Properties",
-              meta = (AllowAbstract = "false", AllowPrivateAccess, RuleRangerRequired))
+              meta = (AllowAbstract = "false", AllowPrivateAccess))
     TSubclassOf<ACasing> CasingClass{ nullptr };
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
