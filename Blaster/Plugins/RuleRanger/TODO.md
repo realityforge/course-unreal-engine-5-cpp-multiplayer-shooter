@@ -38,7 +38,6 @@ Shorthand notes of where to go next with this experiment:
   * Add check that protected Blueprint functions are in non-final blueprint classes?
 * Texture checks:
   * Add rules for well known texture variants:
-    * "_A": Alpha, Compression = TextureCompressionSettings::TC_Masks , sRGB = no
     * "_MSK": Compression = TextureCompressionSettings::TC_Masks, sRGB = no
     * Re-enable `RRR_Texture_AlertOnMissingVariant` when exclusion rules in places
 * AnimationMontage:
