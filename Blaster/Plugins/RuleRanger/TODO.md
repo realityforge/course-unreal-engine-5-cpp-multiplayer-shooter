@@ -37,8 +37,10 @@ Shorthand notes of where to go next with this experiment:
   * Add check that all private Blueprint functions are called
   * Add check that protected Blueprint functions are in non-final blueprint classes?
 * Texture checks:
-  * Add default/allowed modes (Color, Linear Color, Alpha etc)
   * Add rules for well known texture variants:
+    * "_A": Alpha, Compression = TextureCompressionSettings::TC_Masks , sRGB = no
+    * "_MSK": Compression = TextureCompressionSettings::TC_Masks, sRGB = no
+    * Re-enable `RRR_Texture_AlertOnMissingVariant` when exclusion rules in places
 * AnimationMontage:
   * Section names/orders: https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEAnimMontageValidationHelpers.cpp
 * Animation Sequence:
