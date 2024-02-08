@@ -46,7 +46,6 @@ Shorthand notes of where to go next with this experiment:
     * "_DM": sRGB=false, Compression = TextureCompressionSettings::TC_Displacementmap
     * "_VDM": sRGB=false, Compression = TextureCompressionSettings::TC_VectorDisplacementmap
     * "_HDR": Compression = TextureCompressionSettings::TC_HDR
-    * "_AM" = sRGB=false, Compression = TextureCompressionSettings::TC_Alpha // AlphaMask
     * "_DFF": Compression = TextureCompressionSettings::TC_DistanceFieldFont
   * Other rules:
     * If TextureCompressionSettings::TC_Masks then sRGB = false
