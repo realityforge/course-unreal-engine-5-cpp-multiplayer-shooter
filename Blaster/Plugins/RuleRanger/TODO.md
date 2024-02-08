@@ -33,6 +33,7 @@ Shorthand notes of where to go next with this experiment:
   * Ensure parameters have descriptions
   * Ensure parameters follow naming convention
   * Ensure that parameters of specific name/type exist on a material ... or a material property? (Useful when using to create dynamic material instance and use strings to match parameters)
+  * Ensure that materials associated with Skeletons that have Material type animation curves, have materials with parameters that match.
 * Blueprint checks:
   * Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
   * Add check that all private Blueprint functions are called
