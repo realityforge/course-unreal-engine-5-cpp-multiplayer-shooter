@@ -37,7 +37,6 @@ Shorthand notes of where to go next with this experiment:
 * Blueprint checks:
   * Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
   * Add check that all private Blueprint functions are called
-  * Add check that protected Blueprint functions are in non-final blueprint classes?
 * AnimationMontage:
   * Section names/orders: https://github.com/TheEmidee/UEDataValidationExtensions/blob/d64320e698e00d8269053edcc7b9f058061c64aa/Source/DataValidationExtensionsEditor/Private/DVEAnimMontageValidationHelpers.cpp
 * Animation Sequence:
