@@ -54,6 +54,13 @@ Shorthand notes of where to go next with this experiment:
   * Ensure naming conventions for AnimationSlot Group/Name
 * Niagara checks:
   * Ensure every Niagara system has an "Effect Type" associated with it.
+* Texture type checks:
+  * "_R": Roughness
+  * "_AO": AmbientOcclusion
+  * "_H": Height
+  * "_F": FlowMap
+  * "_D": Displacement
+  * "_L": LightMap
 * Static Mesh checks:
   * Ensure StaticMesh has valid/non-overlapping Lightmap UVs
   * Ensure StaticMesh has NO Lightmap UVs (when not using lightmass)
