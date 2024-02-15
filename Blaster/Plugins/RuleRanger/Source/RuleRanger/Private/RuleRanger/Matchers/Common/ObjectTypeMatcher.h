@@ -30,6 +30,10 @@ class RULERANGER_API UObjectTypeMatcher final : public URuleRangerMatcher
     UPROPERTY(EditAnywhere, meta = (AllowAbstract = "true"))
     TSubclassOf<UObject> ObjectType;
 
+    /** The type to match. */
+    UPROPERTY(EditAnywhere, meta = (AllowAbstract = "true"))
+    bool bTraverseAllTypeHierarchies{ true };
+
 public:
     virtual bool Test_Implementation(UObject* Object) override;
 };

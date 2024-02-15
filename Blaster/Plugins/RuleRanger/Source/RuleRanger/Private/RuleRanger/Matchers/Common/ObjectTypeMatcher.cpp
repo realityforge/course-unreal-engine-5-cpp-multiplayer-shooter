@@ -17,5 +17,5 @@
 
 bool UObjectTypeMatcher::Test_Implementation(UObject* Object)
 {
-    return FRuleRangerUtilities::IsA(Object, ObjectType);
+    return bTraverseAllTypeHierarchies ? FRuleRangerUtilities::IsA(Object, ObjectType) : Object->IsA(ObjectType);
 }
