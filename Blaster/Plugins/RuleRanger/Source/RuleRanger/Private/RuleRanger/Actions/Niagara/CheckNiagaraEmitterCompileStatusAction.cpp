@@ -53,9 +53,10 @@ void UCheckNiagaraEmitterCompileStatusAction::Apply_Implementation(URuleRangerAc
                 case ENiagaraScriptCompileStatus::NCS_UpToDate:
                     LogInfo(Object, TEXT("NiagaraEmitter status is UpToDate. Status valid."));
                     break;
+
                 case ENiagaraScriptCompileStatus::NCS_Error:
                     ActionContext->Error(FText::FromString(
-                        "NiagaraEmitter has an Unknown status. Fix error and recompile NiagaraEmitter."));
+                        "NiagaraEmitter has an error status. Fix error and recompile NiagaraEmitter."));
                     return;
 
                 case ENiagaraScriptCompileStatus::NCS_UpToDateWithWarnings:
