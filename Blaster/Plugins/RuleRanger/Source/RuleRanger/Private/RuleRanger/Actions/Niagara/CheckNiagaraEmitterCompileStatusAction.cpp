@@ -23,9 +23,14 @@ void UCheckNiagaraEmitterCompileStatusAction::Apply_Implementation(URuleRangerAc
     TArray<UNiagaraScript*> Scripts;
     if (const auto& EmitterData = Emitter->GetLatestEmitterData())
     {
+        Scripts.Add(EmitterData->EmitterSpawnScriptProps.Script);
+        Scripts.Add(EmitterData->EmitterUpdateScriptProps.Script);
         Scripts.Add(EmitterData->SpawnScriptProps.Script);
         Scripts.Add(EmitterData->UpdateScriptProps.Script);
-        Scripts.Add(EmitterData->GetGPUComputeScript());
+        if (ENiagaraSimTarget::GPUComputeSim == EmitterData->SimTarget)
+        {
+            Scripts.Add(EmitterData->GetGPUComputeScript());
+        }
     }
 
     for (const auto Script : Scripts)
