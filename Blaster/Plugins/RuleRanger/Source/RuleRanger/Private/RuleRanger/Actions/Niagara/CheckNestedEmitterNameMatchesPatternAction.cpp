@@ -14,26 +14,25 @@
 
 #include "CheckNestedEmitterNameMatchesPatternAction.h"
 #include "NiagaraSystem.h"
-#include "Particles/ParticleEmitter.h"
 
 void UCheckNestedEmitterNameMatchesPatternAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
                                                                        UObject* Object)
 {
-    const UParticleSystem* ParticleSystem = CastChecked<UParticleSystem>(Object);
+    const UNiagaraSystem* NiagaraSystem = CastChecked<UNiagaraSystem>(Object);
 
     const FRegexPattern RegexPattern(Pattern,
                                      bCaseSensitive ? ERegexPatternFlags::None : ERegexPatternFlags::CaseInsensitive);
     FRegexMatcher ElementRegexMatcher(RegexPattern, Object->GetName());
 
-    for (const auto& Emitter : ParticleSystem->Emitters)
+    for (const auto& Emitter : NiagaraSystem->GetEmitterHandles())
     {
-        const auto& EmitterName = Emitter->EmitterName.ToString();
+        const auto& EmitterName = Emitter.GetName();
 
         if (!ElementRegexMatcher.FindNext())
         {
             const auto& ErrorMessage =
                 FString::Printf(TEXT("Niagara System contains an emitter named '%s' that does not match the regex %s."),
-                                *EmitterName,
+                                *EmitterName.ToString(),
                                 *Pattern);
             ActionContext->Error(FText::FromString(ErrorMessage));
         }
