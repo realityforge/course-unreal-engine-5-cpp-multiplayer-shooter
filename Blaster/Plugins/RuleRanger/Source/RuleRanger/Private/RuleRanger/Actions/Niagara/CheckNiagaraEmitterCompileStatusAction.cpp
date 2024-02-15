@@ -30,9 +30,6 @@ void UCheckNiagaraEmitterCompileStatusAction::Apply_Implementation(URuleRangerAc
 
     for (const auto Script : Scripts)
     {
-        // CompileStatuses.Add(Script->GetVMExecutableData().LastCompileStatus);
-        // CompileErrors.Add(Script->GetVMExecutableData().ErrorMsg);
-
         if (Script && Script->IsCompilable())
         {
             const auto VMExecutableData = Script->GetVMExecutableData();
