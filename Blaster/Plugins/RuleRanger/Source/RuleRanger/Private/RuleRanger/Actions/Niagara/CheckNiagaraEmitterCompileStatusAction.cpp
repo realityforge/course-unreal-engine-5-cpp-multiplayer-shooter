@@ -90,8 +90,8 @@ void UCheckNiagaraEmitterCompileStatusAction::Apply_Implementation(URuleRangerAc
                 default:
                     if (bErrorOnUnknown)
                     {
-                        ActionContext->Error(
-                            FText::FromString("NiagaraEmitter has an Unknown status. Recompile NiagaraEmitter"));
+                        ActionContext->Error(FText::FromString(
+                            "NiagaraEmitter has an Unknown status. Recompile NiagaraEmitter or set bErrorOnUnknown to true"));
                         return;
                     }
                     else
