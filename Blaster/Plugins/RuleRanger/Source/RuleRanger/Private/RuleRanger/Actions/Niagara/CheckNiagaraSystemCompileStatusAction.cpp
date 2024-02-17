@@ -49,9 +49,14 @@ void UCheckNiagaraSystemCompileStatusAction::Apply_Implementation(URuleRangerAct
 
     for (const auto Script : Scripts)
     {
-        if (Script)
+        if (Script && Script->IsCompilable())
         {
-            switch (Script->GetLastCompileStatus())
+            const auto VMExecutableData = Script->GetVMExecutableData();
+
+            // ReSharper disable once CppTooWideScope
+            const auto CompileStatus =
+                VMExecutableData.IsValid() ? VMExecutableData.LastCompileStatus : Script->GetLastCompileStatus();
+            switch (CompileStatus)
             {
                 case ENiagaraScriptCompileStatus::NCS_BeingCreated:
                     LogInfo(Object, TEXT("NiagaraSystem status is BeingCreated. Status valid."));
