@@ -96,8 +96,8 @@ void UCheckNiagaraSystemCompileStatusAction::Apply_Implementation(URuleRangerAct
                 default:
                     if (bErrorOnUnknown)
                     {
-                        ActionContext->Error(
-                            FText::FromString("NiagaraSystem has an Unknown status. Recompile NiagaraSystem"));
+                        ActionContext->Error(FText::FromString(
+                            "NiagaraSystem has an Unknown status. Recompile NiagaraSystem or set bErrorOnUnknown to true"));
                         return;
                     }
                     else
