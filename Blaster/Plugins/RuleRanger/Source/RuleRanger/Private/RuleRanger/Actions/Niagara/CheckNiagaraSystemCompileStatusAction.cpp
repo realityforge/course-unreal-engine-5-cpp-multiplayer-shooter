@@ -17,94 +17,132 @@
 #include "NiagaraScriptSource.h"
 #include "NiagaraSystem.h"
 
+bool UCheckNiagaraSystemCompileStatusAction::ValidateScript(URuleRangerActionContext* ActionContext,
+                                                            const UObject* Object,
+                                                            const FString& ContainerContext,
+                                                            UNiagaraScript* const Script) const
+{
+    const auto VMExecutableData = Script->GetVMExecutableData();
+    const auto Name = Script->GetName();
+    // ReSharper disable once CppTooWideScope
+    const auto CompileStatus =
+        VMExecutableData.IsValid() ? VMExecutableData.LastCompileStatus : Script->GetLastCompileStatus();
+    switch (CompileStatus)
+    {
+        case ENiagaraScriptCompileStatus::NCS_BeingCreated:
+            LogInfo(Object,
+                    FString::Printf(TEXT("NiagaraSystem status is BeingCreated for "
+                                         "script %s in %s. Status valid."),
+                                    *Name,
+                                    *ContainerContext));
+            break;
+
+        case ENiagaraScriptCompileStatus::NCS_Dirty:
+            ActionContext->Error(FText::FromString(FString::Printf(TEXT("NiagaraSystem status is dirty for "
+                                                                        "script %s in %s and needs to be recompiled"),
+                                                                   *Name,
+                                                                   *ContainerContext)));
+            return false;
+
+        case ENiagaraScriptCompileStatus::NCS_UpToDate:
+            LogInfo(Object,
+                    FString::Printf(TEXT("NiagaraSystem status is UpToDate for "
+                                         "script %s in %s. Status valid."),
+                                    *Name,
+                                    *ContainerContext));
+            break;
+        case ENiagaraScriptCompileStatus::NCS_Error:
+            ActionContext->Error(
+                FText::FromString(FString::Printf(TEXT("NiagaraSystem has an error status for "
+                                                       "script %s in %s. Fix errors and recompile NiagaraSystem."),
+                                                  *Name,
+                                                  *ContainerContext)));
+            return false;
+            ;
+        case ENiagaraScriptCompileStatus::NCS_UpToDateWithWarnings:
+        case ENiagaraScriptCompileStatus::NCS_ComputeUpToDateWithWarnings:
+            if (bErrorOnUpToDateWithWarnings)
+            {
+                ActionContext->Error(
+                    FText::FromString(FString::Printf(TEXT("NiagaraSystem is UpToDate but has "
+                                                           "warnings for script %s in %s. Fix warnings and "
+                                                           "recompile NiagaraSystem or set "
+                                                           "bErrorOnUpToDateWithWarnings=false"),
+                                                      *Name,
+                                                      *ContainerContext)));
+                return false;
+            }
+            else
+            {
+                LogInfo(
+                    Object,
+                    FString::Printf(TEXT("NiagaraSystem status is UpToDate but has warnings "
+                                         "for script %s in %s and bErrorOnUpToDateWithWarnings=false. Status valid."),
+                                    *Name,
+                                    *ContainerContext));
+            }
+
+            break;
+        case ENiagaraScriptCompileStatus::NCS_Unknown:
+        default:
+            if (bErrorOnUnknown)
+            {
+                ActionContext->Error(
+                    FText::FromString(FString::Printf(TEXT("NiagaraSystem has an Unknown status for script %s in %s. "
+                                                           "Recompile NiagaraSystem or set bErrorOnUnknown to true"),
+                                                      *Name,
+                                                      *ContainerContext)));
+                return false;
+            }
+            else
+            {
+                LogInfo(Object,
+                        FString::Printf(TEXT("NiagaraSystem status is Unknown for script "
+                                             "%s in %s and bErrorOnUnknown=false. Status valid."),
+                                        *Name,
+                                        *ContainerContext));
+            }
+    }
+    return true;
+}
+
 void UCheckNiagaraSystemCompileStatusAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
                                                                   UObject* Object)
 {
     const auto System = CastChecked<UNiagaraSystem>(Object);
-    TArray<UNiagaraScript*> Scripts;
-    Scripts.Add(System->GetSystemSpawnScript());
-    Scripts.Add(System->GetSystemUpdateScript());
+
+    if (System->GetSystemSpawnScript()->IsCompilable())
+    {
+        if (!ValidateScript(ActionContext, Object, TEXT("the NiagaraSystem"), System->GetSystemSpawnScript()))
+        {
+            //            return;
+        }
+    }
+    if (System->GetSystemUpdateScript()->IsCompilable())
+    {
+        if (!ValidateScript(ActionContext, Object, TEXT("the NiagaraSystem"), System->GetSystemUpdateScript()))
+        {
+            return;
+        }
+    }
 
     for (const FNiagaraEmitterHandle& Handle : System->GetEmitterHandles())
     {
         if (const auto& EmitterData = Handle.GetEmitterData())
         {
-            Scripts.Add(EmitterData->EmitterSpawnScriptProps.Script);
-            Scripts.Add(EmitterData->EmitterUpdateScriptProps.Script);
-            Scripts.Add(EmitterData->SpawnScriptProps.Script);
-            Scripts.Add(EmitterData->UpdateScriptProps.Script);
-            if (ENiagaraSimTarget::CPUSim == EmitterData->SimTarget)
+            if (Handle.GetIsEnabled())
             {
-                for (const auto& ScriptProp : EmitterData->EventHandlerScriptProps)
+                TArray<UNiagaraScript*> Scripts;
+
+                EmitterData->GetScripts(Scripts, true, true);
+                const auto Context = FString::Printf(TEXT("the Emitter named %s"), *Handle.GetName().ToString());
+                for (const auto Script : Scripts)
                 {
-                    Scripts.Add(ScriptProp.Script);
+                    if (!ValidateScript(ActionContext, Object, Context, Script))
+                    {
+                        return;
+                    }
                 }
-            }
-            if (ENiagaraSimTarget::GPUComputeSim == EmitterData->SimTarget)
-            {
-                Scripts.Add(EmitterData->GetGPUComputeScript());
-            }
-        }
-    }
-
-    for (const auto Script : Scripts)
-    {
-        if (Script && Script->IsCompilable())
-        {
-            const auto VMExecutableData = Script->GetVMExecutableData();
-
-            // ReSharper disable once CppTooWideScope
-            const auto CompileStatus =
-                VMExecutableData.IsValid() ? VMExecutableData.LastCompileStatus : Script->GetLastCompileStatus();
-            switch (CompileStatus)
-            {
-                case ENiagaraScriptCompileStatus::NCS_BeingCreated:
-                    LogInfo(Object, TEXT("NiagaraSystem status is BeingCreated. Status valid."));
-                    break;
-
-                case ENiagaraScriptCompileStatus::NCS_Dirty:
-                    ActionContext->Error(FText::FromString("NiagaraSystem is dirty and needs to be recompiled"));
-                    return;
-
-                case ENiagaraScriptCompileStatus::NCS_UpToDate:
-                    LogInfo(Object, TEXT("NiagaraSystem status is UpToDate. Status valid."));
-                    break;
-                case ENiagaraScriptCompileStatus::NCS_Error:
-                    ActionContext->Error(
-                        FText::FromString("NiagaraSystem has an error status. Fix error and recompile NiagaraSystem."));
-                    return;
-                    ;
-                case ENiagaraScriptCompileStatus::NCS_UpToDateWithWarnings:
-                case ENiagaraScriptCompileStatus::NCS_ComputeUpToDateWithWarnings:
-                    if (bErrorOnUpToDateWithWarnings)
-                    {
-                        ActionContext->Error(
-                            FText::FromString("NiagaraSystem is UpToDate but has warnings. Fix warnings "
-                                              "and recompile or set bErrorOnUpToDateWithWarnings=false"));
-                        return;
-                    }
-                    else
-                    {
-                        LogInfo(
-                            Object,
-                            TEXT(
-                                "NiagaraSystem status is Unknown and bErrorOnUpToDateWithWarnings=false. Status valid."));
-                    }
-
-                    break;
-                case ENiagaraScriptCompileStatus::NCS_Unknown:
-                default:
-                    if (bErrorOnUnknown)
-                    {
-                        ActionContext->Error(FText::FromString(
-                            "NiagaraSystem has an Unknown status. Recompile NiagaraSystem or set bErrorOnUnknown to true"));
-                        return;
-                    }
-                    else
-                    {
-                        LogInfo(Object,
-                                TEXT("NiagaraSystem status is Unknown and bErrorOnUnknown=false. Status valid."));
-                    }
             }
         }
     }

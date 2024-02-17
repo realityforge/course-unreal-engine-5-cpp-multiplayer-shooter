@@ -15,6 +15,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraScript.h"
 #include "RuleRangerAction.h"
 #include "CheckNiagaraSystemCompileStatusAction.generated.h"
 
@@ -33,6 +34,11 @@ class RULERANGER_API UCheckNiagaraSystemCompileStatusAction final : public URule
     /** Should the action generate an error on "UpToDateWithWarnings" Compile Status. */
     UPROPERTY(EditAnywhere)
     bool bErrorOnUpToDateWithWarnings{ true };
+
+    bool ValidateScript(URuleRangerActionContext* ActionContext,
+                        const UObject* Object,
+                        const FString& ContainerContext,
+                        UNiagaraScript* Script) const;
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
