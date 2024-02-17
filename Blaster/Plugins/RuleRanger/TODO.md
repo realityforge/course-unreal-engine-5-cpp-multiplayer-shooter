@@ -24,6 +24,8 @@ Shorthand notes of where to go next with this experiment:
     * Add action to apply license to entire folder or individual assets or selected assets/folders
     * Add RuleRanger validation to ensure license is set
 * Re-enable `RRR_Texture_AlertOnMissingVariant` when exclusion rules in places
+* Common checks:
+  * Support RuleRangerRequiredIf="SomeProperty" to meta which will require that the property is non-null if the referenced property is non-null.
 * Name checks:
   * Add regex per-type for nested names? or global regex for internal names?
   * Ensure that classes (C++ and Blueprint) have a "basename" that ends with Base rather than starts with Base. i.e. Prefer FooBase over BaseFoo
