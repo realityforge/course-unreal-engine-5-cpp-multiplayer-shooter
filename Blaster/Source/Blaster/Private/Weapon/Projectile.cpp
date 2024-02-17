@@ -70,15 +70,13 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent,
     Destroy();
 }
 
-void AProjectile::Tick(float DeltaTime)
+void AProjectile::Tick(const float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
 
-void AProjectile::Destroyed()
+void AProjectile::EmitDestroyCosmetics() const
 {
-    Super::Destroyed();
-
     if (ImpactParticles)
     {
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, GetActorTransform());
@@ -87,4 +85,11 @@ void AProjectile::Destroyed()
     {
         UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
     }
+}
+
+void AProjectile::Destroyed()
+{
+    Super::Destroyed();
+
+    EmitDestroyCosmetics();
 }

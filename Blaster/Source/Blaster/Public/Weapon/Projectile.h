@@ -48,6 +48,8 @@ protected:
     FORCEINLINE UParticleSystem* GetImpactParticles() const { return ImpactParticles; }
     FORCEINLINE USoundCue* GetImpactSound() const { return ImpactSound; }
 
+    void EmitDestroyCosmetics() const;
+
 public:
     AProjectile();
     virtual void Tick(float DeltaTime) override;
