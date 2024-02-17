@@ -35,6 +35,16 @@ class RULERANGER_API UCheckNiagaraSystemCompileStatusAction final : public URule
     UPROPERTY(EditAnywhere)
     bool bErrorOnUpToDateWithWarnings{ true };
 
+    /**
+     * Validate that the script has been correctly compiled.
+     *
+     * @param ActionContext The ActionContext
+     * @param Object The Object being validated
+     * @param ContainerContext The description of the container used in error messages. (Scripts can be in the system or
+     * one of many emitters)
+     * @param Script The Script to validate
+     * @return True if the script is valid, false otherwise
+     */
     bool ValidateScript(URuleRangerActionContext* ActionContext,
                         const UObject* Object,
                         const FString& ContainerContext,
