@@ -22,12 +22,11 @@ void UCheckNestedEmitterNameMatchesPatternAction::Apply_Implementation(URuleRang
 
     const FRegexPattern RegexPattern(Pattern,
                                      bCaseSensitive ? ERegexPatternFlags::None : ERegexPatternFlags::CaseInsensitive);
-    FRegexMatcher ElementRegexMatcher(RegexPattern, Object->GetName());
-
     for (const auto& Emitter : NiagaraSystem->GetEmitterHandles())
     {
         const auto& EmitterName = Emitter.GetName();
 
+        FRegexMatcher ElementRegexMatcher(RegexPattern, EmitterName.ToString());
         if (!ElementRegexMatcher.FindNext())
         {
             const auto& ErrorMessage =
