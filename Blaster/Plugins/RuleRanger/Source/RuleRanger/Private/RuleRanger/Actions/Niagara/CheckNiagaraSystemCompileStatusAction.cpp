@@ -70,8 +70,8 @@ void UCheckNiagaraSystemCompileStatusAction::Apply_Implementation(URuleRangerAct
                     LogInfo(Object, TEXT("NiagaraSystem status is UpToDate. Status valid."));
                     break;
                 case ENiagaraScriptCompileStatus::NCS_Error:
-                    ActionContext->Error(FText::FromString(
-                        "NiagaraSystem has an Unknown status. Fix error and recompile NiagaraSystem."));
+                    ActionContext->Error(
+                        FText::FromString("NiagaraSystem has an error status. Fix error and recompile NiagaraSystem."));
                     return;
                     ;
                 case ENiagaraScriptCompileStatus::NCS_UpToDateWithWarnings:
