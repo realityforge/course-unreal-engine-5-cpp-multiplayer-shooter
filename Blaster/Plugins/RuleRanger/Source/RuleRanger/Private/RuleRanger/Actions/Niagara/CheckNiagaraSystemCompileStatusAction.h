@@ -15,9 +15,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NiagaraScript.h"
 #include "RuleRangerAction.h"
 #include "CheckNiagaraSystemCompileStatusAction.generated.h"
+
+class UNiagaraScript;
 
 /**
  * Action to check that the compile status of a Niagara System is valid.
