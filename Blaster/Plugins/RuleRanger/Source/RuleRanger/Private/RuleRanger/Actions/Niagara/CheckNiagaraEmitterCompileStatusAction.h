@@ -18,6 +18,8 @@
 #include "RuleRangerAction.h"
 #include "CheckNiagaraEmitterCompileStatusAction.generated.h"
 
+class UNiagaraScript;
+
 /**
  * Action to check that the compile status of a Niagara Emitter is valid.
  */
@@ -33,6 +35,16 @@ class RULERANGER_API UCheckNiagaraEmitterCompileStatusAction final : public URul
     /** Should the action generate an error on "UpToDateWithWarnings" Compile Status. */
     UPROPERTY(EditAnywhere)
     bool bErrorOnUpToDateWithWarnings{ true };
+
+    /**
+     * Validate that the script has been correctly compiled.
+     *
+     * @param ActionContext The ActionContext
+     * @param Object The Object being validated
+     * @param Script The Script to validate
+     * @return True if the script is valid, false otherwise
+     */
+    bool ValidateScript(URuleRangerActionContext* ActionContext, const UObject* Object, UNiagaraScript* Script) const;
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
