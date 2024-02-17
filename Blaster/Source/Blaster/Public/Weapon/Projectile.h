@@ -14,22 +14,22 @@ class BLASTER_API AProjectile : public AActor
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere)
-    UBoxComponent* CollisionBox{ nullptr };
+    TObjectPtr<UBoxComponent> CollisionBox{ nullptr };
 
     UPROPERTY(VisibleAnywhere)
-    UProjectileMovementComponent* ProjectileMovementComponent{ nullptr };
+    TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent{ nullptr };
 
     UPROPERTY(EditAnywhere, meta = (RuleRangerRequired))
-    UParticleSystem* Tracer{ nullptr };
+    TObjectPtr<UParticleSystem> Tracer{ nullptr };
 
     UPROPERTY(VisibleAnywhere)
-    UParticleSystemComponent* TracerComponent{ nullptr };
+    TObjectPtr<UParticleSystemComponent> TracerComponent{ nullptr };
 
     UPROPERTY(EditAnywhere, meta = (RuleRangerRequired))
-    UParticleSystem* ImpactParticles{ nullptr };
+    TObjectPtr<UParticleSystem> ImpactParticles{ nullptr };
 
     UPROPERTY(EditAnywhere, meta = (RuleRangerRequired))
-    USoundCue* ImpactSound{ nullptr };
+    TObjectPtr<USoundCue> ImpactSound{ nullptr };
 
     UPROPERTY(EditAnywhere)
     float Damage{ 20.f };
@@ -43,6 +43,10 @@ protected:
                        UPrimitiveComponent* OtherComponent,
                        FVector NormalImpulse,
                        const FHitResult& Hit);
+
+    FORCEINLINE UBoxComponent* GetCollisionBox() const { return CollisionBox; }
+    FORCEINLINE UParticleSystem* GetImpactParticles() const { return ImpactParticles; }
+    FORCEINLINE USoundCue* GetImpactSound() const { return ImpactSound; }
 
 public:
     AProjectile();
