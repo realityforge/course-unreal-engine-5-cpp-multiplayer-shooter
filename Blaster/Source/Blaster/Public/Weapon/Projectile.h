@@ -19,7 +19,7 @@ class BLASTER_API AProjectile : public AActor
     UPROPERTY(VisibleAnywhere)
     TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent{ nullptr };
 
-    UPROPERTY(EditAnywhere, meta = (RuleRangerRequired))
+    UPROPERTY(EditAnywhere)
     TObjectPtr<UParticleSystem> Tracer{ nullptr };
 
     UPROPERTY(VisibleAnywhere)
