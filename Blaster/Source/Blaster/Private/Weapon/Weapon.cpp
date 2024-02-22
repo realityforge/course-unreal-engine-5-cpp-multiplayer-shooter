@@ -14,6 +14,9 @@ AWeapon::AWeapon()
     // Mark the weapon as replicated
     bReplicates = true;
 
+    // ReSharper disable once CppVirtualFunctionCallInsideCtor
+    SetReplicateMovement(true);
+
     WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
     SetRootComponent(WeaponMesh);
 
