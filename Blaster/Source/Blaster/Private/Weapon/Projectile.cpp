@@ -2,7 +2,6 @@
 #include "Blaster/Blaster.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundCue.h"
 
 AProjectile::AProjectile()
