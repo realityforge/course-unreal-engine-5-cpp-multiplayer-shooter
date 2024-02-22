@@ -78,6 +78,15 @@ void ARocketProjectile::OnHit(UPrimitiveComponent* HitComp,
                               FVector NormalImpulse,
                               const FHitResult& Hit)
 {
+    if (GetOwner() == OtherActor)
+    {
+        // Ignore hits on owner.
+        // This is only used to stop the rocket immediately exploding when fired because
+        // the player was moving forward and now intercepts with collision box of the rocket.
+        // This is an ugly hack that should be done via CollisionBox->IgnoreActorWhenMoving(Owner, true)
+        // on Rocket .... or so I would think. Leaving this here as this is the way the tutorial implemented
+        return;
+    }
     if (HasAuthority())
     {
         AController* InstigatorController{ nullptr };
