@@ -9,7 +9,7 @@ class UNiagaraComponent;
 class UNiagaraSystem;
 
 UCLASS(Abstract)
-class BLASTER_API ARocketProjectile : public AProjectile
+class BLASTER_API ARocketProjectile final : public AProjectile
 {
     GENERATED_BODY()
 
