@@ -43,6 +43,12 @@ void AProjectile::BeginPlay()
         // We only run collision on server so only add listener here
         // We also can not be added in the constructor as this sometimes does not work (Due to saving it to CDO?)
         CollisionBox->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+
+        // Ignore the owner so that it does not explode on the owner ...
+        // This kind of assumes you can not move faster than projectile and
+        // get in front of it in any reasonable scenario
+        // TODO: Apparently this is not the way
+        // CollisionBox->IgnoreActorWhenMoving(Owner, true);
     }
 }
 
