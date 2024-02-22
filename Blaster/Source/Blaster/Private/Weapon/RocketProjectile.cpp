@@ -7,14 +7,22 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystemInstanceController.h"
 #include "Sound/SoundCue.h"
+#include "Weapon/RocketMovementComponent.h"
 
 static FName RocketMeshComponentName(TEXT("RocketMesh"));
+static FName RocketMovementComponentName(TEXT("RocketMovementComponent"));
 
 ARocketProjectile::ARocketProjectile()
 {
     RocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(RocketMeshComponentName);
     RocketMesh->SetupAttachment(RootComponent);
     RocketMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    RocketMovementComponent = CreateDefaultSubobject<URocketMovementComponent>(RocketMovementComponentName);
+    RocketMovementComponent->bRotationFollowsVelocity = true;
+    RocketMovementComponent->InitialSpeed = 1500.f;
+    RocketMovementComponent->MaxSpeed = 1500.f;
+    RocketMovementComponent->ProjectileGravityScale = 0.f;
+    RocketMovementComponent->SetIsReplicated(true);
 }
 
 void ARocketProjectile::DestroyTimerFinished()

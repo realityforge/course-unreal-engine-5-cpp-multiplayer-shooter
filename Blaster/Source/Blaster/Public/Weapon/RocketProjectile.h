@@ -4,6 +4,7 @@
 #include "Weapon/Projectile.h"
 #include "RocketProjectile.generated.h"
 
+class URocketMovementComponent;
 class UNiagaraComponent;
 class UNiagaraSystem;
 
@@ -14,6 +15,9 @@ class BLASTER_API ARocketProjectile : public AProjectile
 
     UPROPERTY(VisibleAnywhere)
     TObjectPtr<UStaticMeshComponent> RocketMesh{ nullptr };
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<URocketMovementComponent> RocketMovementComponent{ nullptr };
 
     FTimerHandle DestroyTimerHandle;
 

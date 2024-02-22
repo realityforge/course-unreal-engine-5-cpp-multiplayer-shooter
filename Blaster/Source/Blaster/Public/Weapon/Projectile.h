@@ -16,9 +16,6 @@ class BLASTER_API AProjectile : public AActor
     UPROPERTY(EditAnywhere)
     TObjectPtr<UBoxComponent> CollisionBox{ nullptr };
 
-    UPROPERTY(VisibleAnywhere)
-    TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent{ nullptr };
-
     UPROPERTY(EditAnywhere)
     TObjectPtr<UParticleSystem> Tracer{ nullptr };
 

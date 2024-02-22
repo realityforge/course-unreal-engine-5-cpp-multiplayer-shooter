@@ -1,7 +1,6 @@
 #include "Weapon/Projectile.h"
 #include "Blaster/Blaster.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundCue.h"
@@ -23,15 +22,6 @@ AProjectile::AProjectile()
     // would result in less precise hit detection. This traces against the Physics asset
     // associated with the mesh which is much more precise
     CollisionBox->SetCollisionResponseToChannel(ECC_SkeletalMesh, ECR_Block);
-
-    ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
-    // We don't need a SetupAttachment here
-
-    // this projectile will have its rotation updated each frame to match the direction of its velocity
-    // Thus if we add fall-off due to gravity then the projectile will orient towards the direction of movement
-    ProjectileMovementComponent->bRotationFollowsVelocity = true;
-    ProjectileMovementComponent->InitialSpeed = 15000.f;
-    ProjectileMovementComponent->MaxSpeed = 15000.f;
 }
 
 void AProjectile::BeginPlay()
