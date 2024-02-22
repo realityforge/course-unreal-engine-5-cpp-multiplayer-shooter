@@ -51,7 +51,7 @@ void AProjectile::BeginPlay()
     }
     if (HasAuthority())
     {
-        // We only run collision  on server so only add listener here
+        // We only run collision on server so only add listener here
         // We also can not be added in the constructor as this sometimes does not work (Due to saving it to CDO?)
         CollisionBox->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
     }
