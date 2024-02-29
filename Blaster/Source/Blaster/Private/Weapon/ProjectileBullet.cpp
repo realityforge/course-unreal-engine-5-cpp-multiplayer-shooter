@@ -3,8 +3,6 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-static const FName ProjectileMovementComponentName(TEXT("ProjectileMovementComponent"));
-
 void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent,
                               AActor* OtherActor,
                               UPrimitiveComponent* OtherComponent,
@@ -24,6 +22,8 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComponent,
 
 AProjectileBullet::AProjectileBullet()
 {
+    static const FName ProjectileMovementComponentName(TEXT("ProjectileMovementComponent"));
+
     ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(ProjectileMovementComponentName);
     // We don't need a SetupAttachment here
 
