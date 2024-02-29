@@ -457,6 +457,12 @@ void ABlasterCharacter::PlayReloadMontage() const
             }
             else if (EWeaponType::RocketLauncher == WeaponType)
             {
+                // TODO: Add correct montage!
+                SectionName = FName("Rifle");
+            }
+            else if (EWeaponType::Pistol == WeaponType)
+            {
+                // TODO: Add correct montage!
                 SectionName = FName("Rifle");
             }
             AnimInstance->Montage_JumpToSection(SectionName);
