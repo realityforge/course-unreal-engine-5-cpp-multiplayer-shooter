@@ -27,6 +27,7 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
                     BeamEnd = FireHit.ImpactPoint;
                     if (auto Character = Cast<ABlasterCharacter>(FireHit.GetActor()))
                     {
+                        // ReSharper disable once CppTooWideScopeInitStatement
                         const auto InstigatorController = OwnerPawn->GetController();
                         if (HasAuthority() && InstigatorController)
                         {
