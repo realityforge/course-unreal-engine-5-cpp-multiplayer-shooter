@@ -9,13 +9,9 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 
     if (const auto& OwnerPawn = Cast<APawn>(GetOwner()))
     {
-        const auto InstigatorController = OwnerPawn->GetController();
-
-        // TODO: Extract the name out as NAME_MuzzleFlash = FName("MuzzleFlash") somewhere
-        // ReSharper disable once CppTooWideScopeInitStatement
-        const auto MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName(FName("MuzzleFlash"));
-
-        if (MuzzleFlashSocket && InstigatorController)
+        // ReSharper disable once CppUE4CodingStandardNamingViolationWarning
+        static const FName NAME_MuzzleFlash = FName("MuzzleFlash");
+        if (const auto MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName(NAME_MuzzleFlash))
         {
             FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
             FVector Start = SocketTransform.GetLocation();
@@ -31,7 +27,8 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
                     BeamEnd = FireHit.ImpactPoint;
                     if (auto Character = Cast<ABlasterCharacter>(FireHit.GetActor()))
                     {
-                        if (HasAuthority())
+                        const auto InstigatorController = OwnerPawn->GetController();
+                        if (HasAuthority() && InstigatorController)
                         {
                             UGameplayStatics::ApplyDamage(Character,
                                                           Damage,
