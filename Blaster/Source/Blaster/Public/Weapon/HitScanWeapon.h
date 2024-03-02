@@ -14,7 +14,7 @@ class BLASTER_API AHitScanWeapon final : public AWeapon
     UPROPERTY(EditDefaultsOnly)
     float Damage{ 20.f };
 
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditDefaultsOnly)
     TObjectPtr<UParticleSystem> ImpactParticles;
 
     UPROPERTY(EditDefaultsOnly)
