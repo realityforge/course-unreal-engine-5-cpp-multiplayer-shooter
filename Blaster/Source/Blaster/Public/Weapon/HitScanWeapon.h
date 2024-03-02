@@ -17,6 +17,9 @@ class BLASTER_API AHitScanWeapon final : public AWeapon
     UPROPERTY(EditAnywhere)
     TObjectPtr<UParticleSystem> ImpactParticles;
 
+    UPROPERTY(EditDefaultsOnly)
+    TObjectPtr<UParticleSystem> BeamParticles;
+
 public:
     virtual void Fire(const FVector& HitTarget) override;
 };

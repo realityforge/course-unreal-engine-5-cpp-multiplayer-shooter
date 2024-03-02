@@ -1,6 +1,7 @@
 #include "Weapon/HitScanWeapon.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 
 void AHitScanWeapon::Fire(const FVector& HitTarget)
 {
@@ -23,9 +24,11 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
             if (const auto World = GetWorld())
             {
                 FHitResult FireHit;
+                FVector BeamEnd = End;
                 World->LineTraceSingleByChannel(FireHit, Start, End, ECC_Visibility);
                 if (FireHit.bBlockingHit)
                 {
+                    BeamEnd = FireHit.ImpactPoint;
                     if (auto Character = Cast<ABlasterCharacter>(FireHit.GetActor()))
                     {
                         if (HasAuthority())
@@ -46,6 +49,13 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
                                                                  ImpactParticles,
                                                                  FireHit.ImpactPoint,
                                                                  FireHit.ImpactNormal.Rotation());
+                    }
+                }
+                if (BeamParticles)
+                {
+                    if (auto Beam = UGameplayStatics::SpawnEmitterAtLocation(World, BeamParticles, SocketTransform))
+                    {
+                        Beam->SetVectorParameter(FName("Target"), BeamEnd);
                     }
                 }
             }
