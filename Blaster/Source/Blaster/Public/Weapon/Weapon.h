@@ -98,10 +98,7 @@ private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<UWidgetComponent> PickupWidget{ nullptr };
 
-    UPROPERTY(EditDefaultsOnly,
-              BlueprintReadOnly,
-              Category = "Weapon Properties",
-              meta = (AllowPrivateAccess, RuleRangerRequired))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess))
     TObjectPtr<UAnimationAsset> FireAnimation{ nullptr };
 
     UPROPERTY(EditDefaultsOnly,
