@@ -377,6 +377,7 @@ bool URuleRangerEditorSubsystem::ProcessDemandScanAndFix(URuleRangerRule* Rule, 
         Rule->Apply(ActionContext, InObject);
 
         ActionContext->EmitMessageLogs();
+        // ReSharper disable once CppTooWideScopeInitStatement
         const auto State = ActionContext->GetState();
         if (ERuleRangerActionState::AS_Fatal == State)
         {
