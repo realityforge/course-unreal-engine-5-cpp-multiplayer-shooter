@@ -80,12 +80,26 @@ void AWeapon::OnWeaponStateUpdated() const
         WeaponMesh->SetSimulatePhysics(false);
         WeaponMesh->SetEnableGravity(false);
         WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        if (EWeaponType::SubmachineGun == WeaponType)
+        {
+            WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+            WeaponMesh->SetEnableGravity(true);
+            WeaponMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
+        }
     }
     else if (EWeaponState::EWS_Dropped == WeaponState)
     {
         WeaponMesh->SetSimulatePhysics(true);
         WeaponMesh->SetEnableGravity(true);
         WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+        if (EWeaponType::SubmachineGun == WeaponType)
+        {
+            // Make sure we revert the SMG collision response to defaults
+            WeaponMesh->SetCollisionResponseToAllChannels(ECR_Block);
+            WeaponMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+            WeaponMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+        }
     }
 }
 
