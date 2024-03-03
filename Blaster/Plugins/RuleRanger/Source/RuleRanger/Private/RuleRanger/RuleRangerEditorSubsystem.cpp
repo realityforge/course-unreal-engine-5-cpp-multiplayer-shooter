@@ -89,16 +89,18 @@ void URuleRangerEditorSubsystem::ProcessRule(UObject* Object, const FRuleRangerR
         }
 
         auto Configs = GetCurrentRuleSetConfigs();
+        const auto Path = Object->GetPathName();
         UE_LOG(RuleRanger,
                VeryVerbose,
-               TEXT("ProcessRule: Located %d Rule Set Scope(s) when discovering rules for object %s"),
+               TEXT("ProcessRule: Located %d Rule Set Scope(s) when discovering rules for object %s at %s"),
                Configs.Num(),
-               *Object->GetName());
+               *Object->GetName(),
+               *Path);
         for (auto ConfigIt = Configs.CreateIterator(); ConfigIt; ++ConfigIt)
         {
             if (const auto Config = ConfigIt->LoadSynchronous())
             {
-                if (const auto Path = Object->GetPathName(); Config->ConfigMatches(Path))
+                if (Config->ConfigMatches(Path))
                 {
                     for (auto RuleSetIt = Config->RuleSets.CreateIterator(); RuleSetIt; ++RuleSetIt)
                     {
