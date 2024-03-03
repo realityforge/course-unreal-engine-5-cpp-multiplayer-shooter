@@ -84,20 +84,23 @@ void UEnsureNameFollowsConventionAction::Apply_Implementation(URuleRangerActionC
 
                                     ActionContext->Warning(Message);
                                 }
-                                else
+                                else if (!Object->IsAsset())
                                 {
                                     FFormatNamedArguments Arguments;
                                     Arguments.Add(TEXT("OriginalName"), FText::FromString(OriginalName));
                                     Arguments.Add(TEXT("NewName"), FText::FromString(NewName));
                                     const auto Message =
                                         FText::Format(NSLOCTEXT("RuleRanger",
-                                                                "ObjectRenamed",
-                                                                "Object named {OriginalName} has been renamed "
-                                                                "to {NewName} to match convention."),
+                                                                "ObjectRenameOmittedForNonAsset",
+                                                                "Object needs to be renamed from '{OriginalName}' "
+                                                                "to '{NewName}'. Rename can not be automated "
+                                                                "as object is not an asset"),
                                                       Arguments);
 
-                                    ActionContext->Info(Message);
-
+                                    ActionContext->Error(Message);
+                                }
+                                else
+                                {
                                     if (!FRuleRangerUtilities::RenameAsset(Object, NewName))
                                     {
                                         const auto InMessage =
@@ -107,6 +110,20 @@ void UEnsureNameFollowsConventionAction::Apply_Implementation(URuleRangerActionC
                                                           FText::FromString(OriginalName),
                                                           FText::FromString(NewName));
                                         ActionContext->Error(InMessage);
+                                    }
+                                    else
+                                    {
+                                        FFormatNamedArguments Arguments;
+                                        Arguments.Add(TEXT("OriginalName"), FText::FromString(OriginalName));
+                                        Arguments.Add(TEXT("NewName"), FText::FromString(NewName));
+                                        const auto Message =
+                                            FText::Format(NSLOCTEXT("RuleRanger",
+                                                                    "ObjectRenamed",
+                                                                    "Object named {OriginalName} has been renamed "
+                                                                    "to {NewName} to match convention."),
+                                                          Arguments);
+
+                                        ActionContext->Info(Message);
                                     }
                                 }
                             }
@@ -188,9 +205,9 @@ void UEnsureNameFollowsConventionAction::RebuildNameConventionsCacheIfNecessary(
     {
         ResetNameConventionsCache();
         // Add a callback for when ANY object is modified in the editor so that we can bust the cache
-        OnObjectModifiedDelegateHandle =
-            FCoreUObjectDelegates::OnObjectModified.AddUObject(this,
-                                                               &UEnsureNameFollowsConventionAction::ResetCacheIfTableModified);
+        OnObjectModifiedDelegateHandle = FCoreUObjectDelegates::OnObjectModified.AddUObject(
+            this,
+            &UEnsureNameFollowsConventionAction::ResetCacheIfTableModified);
         for (const auto& NameConventionsTable : NameConventionsTables)
         {
             for (const auto& RowName : NameConventionsTable->GetRowNames())
