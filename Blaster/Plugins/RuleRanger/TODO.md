@@ -36,6 +36,15 @@ Shorthand notes of where to go next with this experiment:
   * Ensure parameters follow naming convention
   * Ensure that parameters of specific name/type exist on a material ... or a material property? (Useful when using to create dynamic material instance and use strings to match parameters)
   * Ensure that materials associated with Skeletons that have Material type animation curves, have materials with parameters that match.
+* Native Class checks:
+  * Add naming convention check for native classes/structs
+  * Add naming convention check for native classes/structs properties and functions
+  * Add check to ensure classes are abstract (So if meta=(IsBlueprintBase) then all concrete ones are all in blueprints?)
+  * Add check to ensure DisplayName set
+  * Add check to ensure Descriptions for types
+  * Add check to ensure properties are either DefaultsOnly etc
+  * Add matcher so can match native classes from specific modules
+  * Add matcher so can match meta=(IsBlueprintBase=true)
 * Blueprint checks:
   * Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
   * Add check that all private Blueprint functions are called
