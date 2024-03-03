@@ -2,6 +2,7 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 
 void AHitScanWeapon::Fire(const FVector& HitTarget)
 {
@@ -39,14 +40,20 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
                         }
                     }
                     // It is unclear why the base class does not have an impact callback that we call
-                    // from this class and ProjectileWeapon. So then the properties and features could align.
-                    // (i.e. Why does this not have a sound?
+                    // from this class and ProjectileWeapon. So then the properties and features could
+                    // align when we have impacts. Now just compy impact and sound events (also this is
+                    // more expensive over rpc as we collapse these messages into destroy rpc event for
+                    // projectiles)
                     if (ImpactParticles)
                     {
                         UGameplayStatics::SpawnEmitterAtLocation(World,
                                                                  ImpactParticles,
                                                                  FireHit.ImpactPoint,
                                                                  FireHit.ImpactNormal.Rotation());
+                    }
+                    if (HitSound)
+                    {
+                        UGameplayStatics::PlaySoundAtLocation(this, HitSound, FireHit.ImpactPoint);
                     }
                 }
                 if (BeamParticles)
@@ -55,6 +62,16 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
                     {
                         Beam->SetVectorParameter(FName("Target"), BeamEnd);
                     }
+                }
+                if (MuzzleFlash)
+                {
+                    // If Muzzle flash not part of firing animation then explicitly spawn emitter
+                    UGameplayStatics::SpawnEmitterAtLocation(World, MuzzleFlash, SocketTransform);
+                }
+                if (FireSound)
+                {
+                    // If firing sound is not part of firing animation then explicitly play sound
+                    UGameplayStatics::PlaySoundAtLocation(this, FireSound, SocketTransform.GetLocation());
                 }
             }
         }
