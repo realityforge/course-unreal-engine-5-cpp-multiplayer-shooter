@@ -22,7 +22,6 @@
 #include "Subsystems/EditorAssetSubsystem.h"
 #include "Subsystems/ImportSubsystem.h"
 
-static FName ImportMarkerKey = FName(TEXT("RuleRanger.ImportProcessed"));
 static FString ImportMarkerValue = FString(TEXT("True"));
 
 void URuleRangerEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -66,9 +65,10 @@ void URuleRangerEditorSubsystem::OnAssetPostImport([[maybe_unused]] UFactory* Fa
 {
     const auto Subsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>();
 
+    const static FName NAME_ImportMarkerKey = FName(TEXT("RuleRanger.ImportProcessed"));
     // Use a metadata tag when we have imported an asset so that when we try to reimport asset we can
     // identify this through the presence of tag.
-    const bool bIsReimport = Subsystem && Subsystem->GetMetadataTag(Object, ImportMarkerKey) == ImportMarkerValue;
+    const bool bIsReimport = Subsystem && Subsystem->GetMetadataTag(Object, NAME_ImportMarkerKey) == ImportMarkerValue;
 
     ProcessRule(Object, [this, bIsReimport](URuleRangerRule* Rule, UObject* InObject) {
         return ProcessOnAssetPostImportRule(bIsReimport, Rule, InObject);
