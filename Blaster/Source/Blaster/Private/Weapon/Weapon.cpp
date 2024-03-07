@@ -30,6 +30,8 @@ AWeapon::AWeapon()
     AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     PickupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickupWidget"));
+    PickupWidget->SetWidgetSpace(EWidgetSpace::Screen);
+    PickupWidget->SetDrawAtDesiredSize(true);
     PickupWidget->SetupAttachment(WeaponMesh);
 }
 
