@@ -8,3 +8,4 @@
 * Add rule to ensure hand_r bone for skeleton associated with BlasterAnimInstance
 * Add rule to ensure hand_r, hand_l, upperarm_l bone for skeleton associated with BlasterAnimInstance (for FABRIK)
 * Add rule to ensure LeftHandSocket bone for skeleton associated with BlasterAnimInstance
+* Add rule to ensure HitScanWeapon.BeamParticles takes a vector parameter named "Target"
