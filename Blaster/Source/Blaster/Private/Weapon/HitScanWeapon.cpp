@@ -10,8 +10,6 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 
     if (const auto& OwnerPawn = Cast<APawn>(GetOwner()))
     {
-        // ReSharper disable once CppUE4CodingStandardNamingViolationWarning
-        static const FName NAME_MuzzleFlash = FName("MuzzleFlash");
         if (const auto MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName(NAME_MuzzleFlash))
         {
             FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());

@@ -42,6 +42,8 @@ public:
     void ClearCachedOwnerProperties();
 
 protected:
+    static const inline FName NAME_MuzzleFlash = FName("MuzzleFlash");
+
     virtual void OnRep_Owner() override;
 
 public:

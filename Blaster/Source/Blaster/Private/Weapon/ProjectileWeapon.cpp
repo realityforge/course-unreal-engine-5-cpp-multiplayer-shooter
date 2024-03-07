@@ -9,7 +9,7 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
     // Only spawn the projectile on the server and then make sure we replicate to client
     if (HasAuthority())
     {
-        if (const auto MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName(FName("MuzzleFlash")))
+        if (const auto MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName(NAME_MuzzleFlash))
         {
             const FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
             // From MuzzleFlash socket to HitTarget
