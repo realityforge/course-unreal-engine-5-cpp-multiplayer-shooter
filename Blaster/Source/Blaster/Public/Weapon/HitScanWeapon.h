@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -15,21 +13,21 @@ class BLASTER_API AHitScanWeapon final : public AWeapon
     float Damage{ 20.f };
 
     UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<UParticleSystem> ImpactParticles;
+    TObjectPtr<UParticleSystem> ImpactParticles{ nullptr };
 
     UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<UParticleSystem> BeamParticles;
+    TObjectPtr<UParticleSystem> BeamParticles{ nullptr };
 
     /** Particle emitted on fire. Prefer Notify in FireAnimation but can use this if no animation available. */
     UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<UParticleSystem> MuzzleFlash;
+    TObjectPtr<UParticleSystem> MuzzleFlash{ nullptr };
 
     /** Sound played on fire. Prefer Notify in FireAnimation but can use this if no animation available. */
     UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<USoundCue> FireSound;
+    TObjectPtr<USoundCue> FireSound{ nullptr };
 
     UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<USoundCue> HitSound;
+    TObjectPtr<USoundCue> HitSound{ nullptr };
 
 public:
     virtual void Fire(const FVector& HitTarget) override;
