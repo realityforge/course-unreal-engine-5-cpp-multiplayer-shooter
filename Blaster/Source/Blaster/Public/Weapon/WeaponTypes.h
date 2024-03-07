@@ -2,6 +2,13 @@
 
 #include "CoreMinimal.h"
 
+/**
+ * The range out to which we can target.
+ *
+ * Used as range when tracing hits.
+ */
+#define TARGETING_RANGE 80000.f
+
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
 {

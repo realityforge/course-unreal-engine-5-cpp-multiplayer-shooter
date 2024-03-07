@@ -11,8 +11,6 @@
 #include "Weapon/Weapon.h"
 #include "Weapon/WeaponTypes.h"
 
-#define TARGETING_RANGE 80000.f
-
 static const FName RightHandSocketName("RightHandSocket");
 
 UCombatComponent::UCombatComponent()
