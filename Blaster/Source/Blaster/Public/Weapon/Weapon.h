@@ -119,15 +119,15 @@ private:
     //---------------------------------------------------------------------------
 
     UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
-    UTexture2D* CrosshairsCenter{ nullptr };
+    TObjectPtr<UTexture2D> CrosshairsCenter{ nullptr };
     UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
-    UTexture2D* CrosshairsLeft{ nullptr };
+    TObjectPtr<UTexture2D> CrosshairsLeft{ nullptr };
     UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
-    UTexture2D* CrosshairsRight{ nullptr };
-    UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
-    UTexture2D* CrosshairsTop{ nullptr };
-    UPROPERTY(EditDefaultsOnly, Category = Crosshairs, meta = (RuleRangerRequired))
-    UTexture2D* CrosshairsBottom{ nullptr };
+    TObjectPtr<UTexture2D> CrosshairsRight{ nullptr };
+    UPROPERTY(EditDefaultsOnly, Category = Crosshairs)
+    TObjectPtr<UTexture2D> CrosshairsTop{ nullptr };
+    UPROPERTY(EditDefaultsOnly, Category = Crosshairs)
+    TObjectPtr<UTexture2D> CrosshairsBottom{ nullptr };
 
     //---------------------------------------------------------------------------
     // Zoomed FOV while aiming
