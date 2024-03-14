@@ -209,8 +209,16 @@ void ABlasterCharacter::MulticastEliminate_Implementation()
     DisableGameplay();
     DisableCollision();
     SpawnEliminationEffect();
+
     if (IsLocallyControlled())
     {
+        if (Combat && Combat->bAiming && Combat->EquippedWeapon
+            && EWeaponType::SniperRifle == Combat->EquippedWeapon->GetWeaponType())
+        {
+            // If we die while aiming with scope then remove
+            // the aiming widget overlay
+            ShowSniperScopeWidget(false);
+        }
         ZeroHUDAmmo();
     }
 }

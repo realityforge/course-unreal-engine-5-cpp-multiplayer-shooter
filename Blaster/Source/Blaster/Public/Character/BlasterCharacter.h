@@ -380,4 +380,7 @@ public:
     void RotateInPlace(float DeltaTime);
 
     FVector GetHitTarget() const;
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void ShowSniperScopeWidget(bool bShowScope);
 };

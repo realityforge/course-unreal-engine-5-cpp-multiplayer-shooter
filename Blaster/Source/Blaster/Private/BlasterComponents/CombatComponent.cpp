@@ -57,12 +57,21 @@ void UCombatComponent::MirrorWalkSpeedBasedOnState() const
 
 void UCombatComponent::SetAiming(bool bInAiming)
 {
-    // bAiming is set here because if this is called on client then we will locally set var before calling server
-    // not needed on server as ServerSetAiming falls directly through to the server implementation
-    bAiming = bInAiming;
-    // Set the Aiming flag on the server
-    ServerSetAiming(bInAiming);
-    MirrorWalkSpeedBasedOnState();
+    if (Character && EquippedWeapon)
+    {
+        // bAiming is set here because if this is called on client then we will locally set var before calling server
+        // not needed on server as ServerSetAiming falls directly through to the server implementation
+        bAiming = bInAiming;
+        // Set the Aiming flag on the server
+        ServerSetAiming(bInAiming);
+        MirrorWalkSpeedBasedOnState();
+
+        // If local client is are aiming with sniper rifle, then make sure we show/hide the scope UI
+        if (Character->IsLocallyControlled() && EWeaponType::SniperRifle == EquippedWeapon->GetWeaponType())
+        {
+            Character->ShowSniperScopeWidget(bAiming);
+        }
+    }
 }
 
 void UCombatComponent::ServerSetAiming_Implementation(bool bInAiming)
