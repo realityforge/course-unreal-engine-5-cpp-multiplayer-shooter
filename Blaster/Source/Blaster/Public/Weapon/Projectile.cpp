@@ -1,5 +1,6 @@
 #include "Weapon/Projectile.h"
 #include "Blaster/Blaster.h"
+#include "BlasterLogging.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraComponent.h"
@@ -104,6 +105,35 @@ void AProjectile::DeactivateTrailSystem() const
     if (TrailSystemComponent && TrailSystemComponent->GetSystemInstanceController())
     {
         TrailSystemComponent->GetSystemInstanceController()->Deactivate();
+    }
+}
+
+void AProjectile::ExplodeDamage()
+{
+    if (HasAuthority())
+    {
+        AController* InstigatorController{ nullptr };
+        if (const auto& DamageInstigator = GetInstigator())
+        {
+            InstigatorController = DamageInstigator->GetController();
+        }
+        if (!InstigatorController)
+        {
+            BL_ULOG_WARNING("Unable to determine InstigatorController from Instigator '%s'",
+                            GetInstigator() ? *GetInstigator()->GetName() : TEXT("?"))
+        }
+        UGameplayStatics::ApplyRadialDamageWithFalloff(this,                       // World context object
+                                                       GetDamage(),                // BaseDamage
+                                                       10.f,                       // MinimumDamage
+                                                       GetActorLocation(),         // Origin
+                                                       DamageInnerRadius,          // DamageInnerRadius
+                                                       DamageOuterRadius,          // DamageOuterRadius
+                                                       1.f,                        // DamageFalloff
+                                                       UDamageType::StaticClass(), // DamageTypeClass
+                                                       TArray<AActor*>(),          // IgnoreActors
+                                                       this,                       // DamageCauser
+                                                       InstigatorController        // InstigatorController
+        );
     }
 }
 

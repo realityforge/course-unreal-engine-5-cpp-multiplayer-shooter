@@ -78,31 +78,7 @@ void ARocketProjectile::OnHit(UPrimitiveComponent* HitComp,
         // on Rocket .... or so I would think. Leaving this here as this is the way the tutorial implemented
         return;
     }
-    if (HasAuthority())
-    {
-        AController* InstigatorController{ nullptr };
-        if (const auto& DamageInstigator = GetInstigator())
-        {
-            InstigatorController = DamageInstigator->GetController();
-        }
-        if (!InstigatorController)
-        {
-            BL_ULOG_WARNING("Unable to determine InstigatorController from Instigator '%s'",
-                            GetInstigator() ? *GetInstigator()->GetName() : TEXT("?"))
-        }
-        UGameplayStatics::ApplyRadialDamageWithFalloff(this,                       // World context object
-                                                       GetDamage(),                // BaseDamage
-                                                       10.f,                       // MinimumDamage
-                                                       GetActorLocation(),         // Origin
-                                                       200.f,                      // DamageInnerRadius
-                                                       500.f,                      // DamageOuterRadius
-                                                       1.f,                        // DamageFalloff
-                                                       UDamageType::StaticClass(), // DamageTypeClass
-                                                       TArray<AActor*>(),          // IgnoreActors
-                                                       this,                       // DamageCauser
-                                                       InstigatorController        // InstigatorController
-        );
-    }
+    ExplodeDamage();
 
     // We do not call destroy here ... because it would instantly destroy all the components which include the
     // trail emitter component and the sound ... so instead we do the following hackery and delay destroy action

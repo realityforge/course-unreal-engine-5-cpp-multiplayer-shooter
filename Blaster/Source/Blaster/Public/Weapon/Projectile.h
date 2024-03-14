@@ -41,6 +41,12 @@ class BLASTER_API AProjectile : public AActor
     UPROPERTY(EditDefaultsOnly)
     TObjectPtr<UNiagaraSystem> TrailSystem{ nullptr };
 
+    UPROPERTY(EditDefaultsOnly)
+    float DamageInnerRadius{ 200.f };
+
+    UPROPERTY(EditDefaultsOnly)
+    float DamageOuterRadius{ 500.f };
+
 protected:
     virtual void BeginPlay() override;
 
@@ -66,6 +72,9 @@ protected:
      *  Deactivate the trail system that was created via SpawnTrailSystem.
      */
     void DeactivateTrailSystem() const;
+
+    /** Apply damage around projectile. */
+    void ExplodeDamage();
 
 public:
     AProjectile();
