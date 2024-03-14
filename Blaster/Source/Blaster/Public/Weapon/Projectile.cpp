@@ -8,6 +8,15 @@
 #include "NiagaraSystemInstanceController.h"
 #include "Sound/SoundCue.h"
 
+static FName ProjectileMeshComponentName(TEXT("ProjectileMesh"));
+
+void AProjectile::CreateProjectileMesh()
+{
+    ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(ProjectileMeshComponentName);
+    ProjectileMesh->SetupAttachment(RootComponent);
+    ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
 AProjectile::AProjectile()
 {
     PrimaryActorTick.bCanEverTick = true;

@@ -1,22 +1,15 @@
 #include "Weapon/RocketProjectile.h"
-#include "BlasterLogging.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "NiagaraComponent.h"
-#include "NiagaraFunctionLibrary.h"
-#include "NiagaraSystemInstanceController.h"
 #include "Sound/SoundCue.h"
 #include "Weapon/RocketMovementComponent.h"
 
-static FName RocketMeshComponentName(TEXT("RocketMesh"));
 static FName RocketMovementComponentName(TEXT("RocketMovementComponent"));
 
 ARocketProjectile::ARocketProjectile()
 {
-    RocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(RocketMeshComponentName);
-    RocketMesh->SetupAttachment(RootComponent);
-    RocketMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    CreateProjectileMesh();
     RocketMovementComponent = CreateDefaultSubobject<URocketMovementComponent>(RocketMovementComponentName);
     RocketMovementComponent->bRotationFollowsVelocity = true;
     RocketMovementComponent->InitialSpeed = 1500.f;
@@ -83,9 +76,9 @@ void ARocketProjectile::OnHit(UPrimitiveComponent* HitComp,
     // occurred on the server
     EmitDestroyCosmetics();
 
-    if (RocketMesh)
+    if (GetProjectileMesh())
     {
-        RocketMesh->SetVisibility(false);
+        GetProjectileMesh()->SetVisibility(false);
     }
     if (GetCollisionBox())
     {

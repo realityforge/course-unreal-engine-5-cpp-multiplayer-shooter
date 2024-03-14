@@ -14,9 +14,6 @@ class BLASTER_API ARocketProjectile final : public AProjectile
     GENERATED_BODY()
 
     UPROPERTY(VisibleAnywhere)
-    TObjectPtr<UStaticMeshComponent> RocketMesh{ nullptr };
-
-    UPROPERTY(VisibleAnywhere)
     TObjectPtr<URocketMovementComponent> RocketMovementComponent{ nullptr };
 
     /** Component created at runtime if ProjectileLoop and LoopingSoundAttenuation are not null. */

@@ -15,6 +15,9 @@ class BLASTER_API AProjectile : public AActor
 {
     GENERATED_BODY()
 
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<UStaticMeshComponent> ProjectileMesh{ nullptr };
+
     UPROPERTY(EditAnywhere)
     TObjectPtr<UBoxComponent> CollisionBox{ nullptr };
 
@@ -66,6 +69,7 @@ protected:
     FORCEINLINE UBoxComponent* GetCollisionBox() const { return CollisionBox; }
     FORCEINLINE UParticleSystem* GetImpactParticles() const { return ImpactParticles; }
     FORCEINLINE USoundCue* GetImpactSound() const { return ImpactSound; }
+    FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
 
     void EmitDestroyCosmetics() const;
 
@@ -86,6 +90,9 @@ protected:
     void ClearDestroyTimer();
 
     void DestroyTimerFinished();
+
+    /** Method to create the Projectile Mesh. Should only be invoked in constructor. */
+    void CreateProjectileMesh();
 
 public:
     AProjectile();
