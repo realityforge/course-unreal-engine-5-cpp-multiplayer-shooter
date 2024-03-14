@@ -45,16 +45,7 @@ void ARocketProjectile::BeginPlay()
         GetCollisionBox()->OnComponentHit.AddDynamic(this, &ARocketProjectile::OnHit);
     }
 
-    if (TrailSystem)
-    {
-        TrailSystemComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(TrailSystem,
-                                                                            GetRootComponent(),
-                                                                            FName(),
-                                                                            GetActorLocation(),
-                                                                            GetActorRotation(),
-                                                                            EAttachLocation::KeepWorldPosition,
-                                                                            false);
-    }
+    SpawnTrailSystem();
     if (ProjectileLoop && LoopingSoundAttenuation)
     {
         ProjectileLoopComponent = UGameplayStatics::SpawnSoundAttached(ProjectileLoop,
@@ -136,10 +127,7 @@ void ARocketProjectile::OnHit(UPrimitiveComponent* HitComp,
     }
     // Stop the niagara system on impact ...
     // (shouldn't we just stop the flame emitter?)
-    if (TrailSystemComponent && TrailSystemComponent->GetSystemInstanceController())
-    {
-        TrailSystemComponent->GetSystemInstanceController()->Deactivate();
-    }
+    DeactivateTrailSystem();
     // Stop making sound on impacts
     if (ProjectileLoopComponent && ProjectileLoopComponent->IsPlaying())
     {

@@ -25,14 +25,6 @@ class BLASTER_API ARocketProjectile final : public AProjectile
     UPROPERTY(EditDefaultsOnly)
     float DestroyAfterDuration{ 3.f };
 
-    /** Component created at runtime if TrailSystem is not null. */
-    UPROPERTY()
-    TObjectPtr<UNiagaraComponent> TrailSystemComponent{ nullptr };
-
-    /** FX representing projectile trail. */
-    UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<UNiagaraSystem> TrailSystem{ nullptr };
-
     /** Component created at runtime if ProjectileLoop and LoopingSoundAttenuation are not null. */
     UPROPERTY()
     TObjectPtr<UAudioComponent> ProjectileLoopComponent{ nullptr };

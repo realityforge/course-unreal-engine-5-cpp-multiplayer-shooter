@@ -2,6 +2,9 @@
 #include "Blaster/Blaster.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystemInstanceController.h"
 #include "Sound/SoundCue.h"
 
 AProjectile::AProjectile()
@@ -79,6 +82,28 @@ void AProjectile::EmitDestroyCosmetics() const
     if (ImpactSound)
     {
         UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
+    }
+}
+
+void AProjectile::SpawnTrailSystem()
+{
+    if (TrailSystem)
+    {
+        TrailSystemComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(TrailSystem,
+                                                                            GetRootComponent(),
+                                                                            FName(),
+                                                                            GetActorLocation(),
+                                                                            GetActorRotation(),
+                                                                            EAttachLocation::KeepWorldPosition,
+                                                                            false);
+    }
+}
+
+void AProjectile::DeactivateTrailSystem() const
+{
+    if (TrailSystemComponent && TrailSystemComponent->GetSystemInstanceController())
+    {
+        TrailSystemComponent->GetSystemInstanceController()->Deactivate();
     }
 }
 

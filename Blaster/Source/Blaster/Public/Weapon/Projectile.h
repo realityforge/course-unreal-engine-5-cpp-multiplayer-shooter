@@ -4,6 +4,8 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class UNiagaraComponent;
+class UNiagaraSystem;
 class USoundCue;
 class UProjectileMovementComponent;
 class UBoxComponent;
@@ -31,6 +33,14 @@ class BLASTER_API AProjectile : public AActor
     UPROPERTY(EditAnywhere)
     float Damage{ 20.f };
 
+    /** Component created at runtime if TrailSystem is not null. */
+    UPROPERTY()
+    TObjectPtr<UNiagaraComponent> TrailSystemComponent{ nullptr };
+
+    /** FX representing projectile trail. */
+    UPROPERTY(EditDefaultsOnly)
+    TObjectPtr<UNiagaraSystem> TrailSystem{ nullptr };
+
 protected:
     virtual void BeginPlay() override;
 
@@ -46,6 +56,16 @@ protected:
     FORCEINLINE USoundCue* GetImpactSound() const { return ImpactSound; }
 
     void EmitDestroyCosmetics() const;
+
+    /**
+     * Spawn the trail system attached to the projectile if a TrailSystem is configured.
+     */
+    void SpawnTrailSystem();
+
+    /**
+     *  Deactivate the trail system that was created via SpawnTrailSystem.
+     */
+    void DeactivateTrailSystem() const;
 
 public:
     AProjectile();
