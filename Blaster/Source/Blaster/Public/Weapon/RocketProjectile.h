@@ -19,12 +19,6 @@ class BLASTER_API ARocketProjectile final : public AProjectile
     UPROPERTY(VisibleAnywhere)
     TObjectPtr<URocketMovementComponent> RocketMovementComponent{ nullptr };
 
-    FTimerHandle DestroyTimerHandle;
-
-    /** Destroy the actor after this duration. */
-    UPROPERTY(EditDefaultsOnly)
-    float DestroyAfterDuration{ 3.f };
-
     /** Component created at runtime if ProjectileLoop and LoopingSoundAttenuation are not null. */
     UPROPERTY()
     TObjectPtr<UAudioComponent> ProjectileLoopComponent{ nullptr };
@@ -36,8 +30,6 @@ class BLASTER_API ARocketProjectile final : public AProjectile
     /** Sound attenuation for looping sound. */
     UPROPERTY(EditDefaultsOnly, meta = (RuleRangerRequiredIf = ProjectileLoop))
     TObjectPtr<USoundAttenuation> LoopingSoundAttenuation{ nullptr };
-
-    void DestroyTimerFinished();
 
 protected:
     virtual void BeginPlay() override;

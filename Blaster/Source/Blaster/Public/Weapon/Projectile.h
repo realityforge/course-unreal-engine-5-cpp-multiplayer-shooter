@@ -47,6 +47,12 @@ class BLASTER_API AProjectile : public AActor
     UPROPERTY(EditDefaultsOnly)
     float DamageOuterRadius{ 500.f };
 
+    FTimerHandle DestroyTimerHandle;
+
+    /** Destroy the actor after this duration. */
+    UPROPERTY(EditDefaultsOnly)
+    float DestroyAfterDuration{ 3.f };
+
 protected:
     virtual void BeginPlay() override;
 
@@ -75,6 +81,11 @@ protected:
 
     /** Apply damage around projectile. */
     void ExplodeDamage();
+
+    void StartDestroyTimer();
+    void ClearDestroyTimer();
+
+    void DestroyTimerFinished();
 
 public:
     AProjectile();

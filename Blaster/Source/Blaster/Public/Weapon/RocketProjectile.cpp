@@ -25,12 +25,6 @@ ARocketProjectile::ARocketProjectile()
     RocketMovementComponent->SetIsReplicated(true);
 }
 
-void ARocketProjectile::DestroyTimerFinished()
-{
-    // Destroy self. Although why don't we just schedule AActor::Destroy in timer?
-    Destroy();
-}
-
 void ARocketProjectile::BeginPlay()
 {
     Super::BeginPlay();
@@ -82,11 +76,7 @@ void ARocketProjectile::OnHit(UPrimitiveComponent* HitComp,
 
     // We do not call destroy here ... because it would instantly destroy all the components which include the
     // trail emitter component and the sound ... so instead we do the following hackery and delay destroy action
-
-    GetWorldTimerManager().SetTimer(DestroyTimerHandle,
-                                    this,
-                                    &ARocketProjectile::DestroyTimerFinished,
-                                    DestroyAfterDuration);
+    StartDestroyTimer();
 
     // Calling this here seems wrong. It should somehow be signalled from the server....
     // Instead we emit here and hide the mesh ... even if the hit would not have
@@ -116,5 +106,5 @@ void ARocketProjectile::Destroyed()
     // Deliberately do not call super method as otherwise that will also play the sound and explosion again
 
     // Clear the timer just in case we were destroyed for another reason
-    GetWorldTimerManager().ClearTimer(DestroyTimerHandle);
+    ClearDestroyTimer();
 }

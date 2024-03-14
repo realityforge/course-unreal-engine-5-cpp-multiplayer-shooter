@@ -137,6 +137,23 @@ void AProjectile::ExplodeDamage()
     }
 }
 
+void AProjectile::StartDestroyTimer()
+{
+    GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &AProjectile::DestroyTimerFinished, DestroyAfterDuration);
+}
+
+void AProjectile::ClearDestroyTimer()
+{
+    // Clear the timer just in case we were destroyed for another reason
+    GetWorldTimerManager().ClearTimer(DestroyTimerHandle);
+}
+
+void AProjectile::DestroyTimerFinished()
+{
+    // Destroy self. Although why don't we just schedule AActor::Destroy in timer?
+    Destroy();
+}
+
 void AProjectile::Destroyed()
 {
     Super::Destroyed();
