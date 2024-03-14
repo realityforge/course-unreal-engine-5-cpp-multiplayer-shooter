@@ -4,6 +4,8 @@
 #include "Weapon/Projectile.h"
 #include "ProjectileBullet.generated.h"
 
+class UProjectileMovementComponent;
+
 UCLASS()
 class BLASTER_API AProjectileBullet final : public AProjectile
 {
