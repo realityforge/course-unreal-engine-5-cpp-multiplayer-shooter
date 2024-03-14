@@ -7,7 +7,6 @@
 class UNiagaraComponent;
 class UNiagaraSystem;
 class USoundCue;
-class UProjectileMovementComponent;
 class UBoxComponent;
 
 UCLASS(Abstract)
