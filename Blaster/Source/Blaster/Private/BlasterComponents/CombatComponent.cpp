@@ -400,6 +400,7 @@ void UCombatComponent::InitializeCarriedAmmo()
     CarriedAmmoMap.Add(EWeaponType::Pistol, InitialPistolAmmo);
     CarriedAmmoMap.Add(EWeaponType::SubmachineGun, InitialSubmachineGunAmmo);
     CarriedAmmoMap.Add(EWeaponType::Shotgun, InitialShotgunGunAmmo);
+    CarriedAmmoMap.Add(EWeaponType::SniperRifle, InitialSniperRifleGunAmmo);
 }
 
 int32 UCombatComponent::AmmoSlotsToReload()

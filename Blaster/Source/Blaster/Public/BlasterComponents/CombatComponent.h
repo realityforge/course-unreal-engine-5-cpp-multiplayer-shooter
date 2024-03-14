@@ -174,6 +174,9 @@ private:
     UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
     int32 InitialShotgunGunAmmo{ 0 };
 
+    UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
+    int32 InitialSniperRifleGunAmmo{ 0 };
+
     void InitializeCarriedAmmo();
 
     UFUNCTION(Server, Reliable)
