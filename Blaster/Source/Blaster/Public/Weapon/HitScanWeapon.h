@@ -39,7 +39,7 @@ class BLASTER_API AHitScanWeapon : public AWeapon
     /// -------------------------------------------------------------- ///
 
     /** Should this weapon use scattering? */
-    UPROPERTY(EditDefaultsOnly, Category = "Weapon ~Scatter")
+    UPROPERTY(EditDefaultsOnly, Category = "Weapon Scatter")
     bool bUseScatter{ false };
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon Scatter")
