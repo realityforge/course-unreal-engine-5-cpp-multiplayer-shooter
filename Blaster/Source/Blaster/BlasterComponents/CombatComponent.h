@@ -163,22 +163,22 @@ private:
     int32 InitialAssaultRifleAmmo{ 30 };
 
     UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
-    int32 InitialRocketAmmo{ 0 };
+    int32 InitialRocketAmmo{ 4 };
 
     UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
-    int32 InitialPistolAmmo{ 0 };
+    int32 InitialPistolAmmo{ 10 };
 
     UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
-    int32 InitialSubmachineGunAmmo{ 0 };
+    int32 InitialSubmachineGunAmmo{ 30 };
 
     UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
-    int32 InitialShotgunGunAmmo{ 0 };
+    int32 InitialShotgunGunAmmo{ 12 };
 
     UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
-    int32 InitialSniperRifleGunAmmo{ 0 };
+    int32 InitialSniperRifleGunAmmo{ 5 };
 
     UPROPERTY(EditAnywhere, Category = "Combat", meta = (AllowPrivateAccess))
-    int32 InitialGrenadeLauncherGunAmmo{ 0 };
+    int32 InitialGrenadeLauncherGunAmmo{ 4 };
 
     void InitializeCarriedAmmo();
 
