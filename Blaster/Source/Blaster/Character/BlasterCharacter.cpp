@@ -465,23 +465,19 @@ void ABlasterCharacter::PlayReloadMontage() const
             }
             else if (EWeaponType::RocketLauncher == WeaponType)
             {
-                // TODO: Add correct montage!
-                SectionName = FName("Rifle");
+                SectionName = FName("RocketLauncher");
             }
             else if (EWeaponType::Pistol == WeaponType)
             {
-                // TODO: Add correct montage!
-                SectionName = FName("Rifle");
+                SectionName = FName("Pistol");
             }
             else if (EWeaponType::SubmachineGun == WeaponType)
             {
-                // TODO: Add correct montage!
-                SectionName = FName("Rifle");
+                SectionName = FName("Pistol");
             }
             else if (EWeaponType::Shotgun == WeaponType)
             {
-                // TODO: Add correct montage!
-                SectionName = FName("Rifle");
+                SectionName = FName("Shotgun");
             }
             else if (EWeaponType::SniperRifle == WeaponType)
             {
