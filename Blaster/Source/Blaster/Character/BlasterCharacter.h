@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/InterfaceWithCrosshair.h"
 #include "TurningInPlace.h"
-#include "interfaces/InterfaceWithCrosshair.h"
 #include "BlasterCharacter.generated.h"
 
 class USoundCue;
