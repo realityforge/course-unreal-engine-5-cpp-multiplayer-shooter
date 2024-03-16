@@ -11,5 +11,8 @@ public class Blaster : ModuleRules
 		// This ensures we can load header files from the same hierarchy.
 		// This just makes it a lot easier when doing development
 		PublicIncludePaths.AddRange( new[] { "Blaster" } );
+
+		// Generate compile errors if using DrawDebug functions in test/shipping builds.
+		PublicDefinitions.Add("SHIPPING_DRAW_DEBUG_ERROR=1");
 	}
 }
