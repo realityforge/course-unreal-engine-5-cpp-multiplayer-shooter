@@ -38,6 +38,11 @@ public:
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+    UFUNCTION(BlueprintCallable)
+    void ShotgunShellReload();
+
+    void JumpToShotgunEnd();
+
 protected:
     void MirrorWalkSpeedBasedOnState() const;
 

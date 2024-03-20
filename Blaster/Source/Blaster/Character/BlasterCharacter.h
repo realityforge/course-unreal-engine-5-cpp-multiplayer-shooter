@@ -359,6 +359,9 @@ public:
     /** Return the FollowCamera SubObject **/
     FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+    FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; }
+    FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
+
     FORCEINLINE float GetAimOffsetYaw() const { return AimOffsetYaw; }
     FORCEINLINE float GetAimOffsetPitch() const { return AimOffsetPitch; }
     FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }

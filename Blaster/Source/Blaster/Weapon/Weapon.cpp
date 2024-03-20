@@ -155,6 +155,13 @@ void AWeapon::Fire(const FVector& HitTarget)
 void AWeapon::OnRep_Ammo()
 {
     UpdateHUDAmmo();
+    if (const auto BlasterOwnerCharacter = GetOwnerCharacter())
+    {
+        if (BlasterOwnerCharacter->GetCombat() && IsAmmoAtCapacity())
+        {
+            BlasterOwnerCharacter->GetCombat()->JumpToShotgunEnd();
+        }
+    }
 }
 
 void AWeapon::UseAmmo()

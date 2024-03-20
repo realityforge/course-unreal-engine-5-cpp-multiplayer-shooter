@@ -284,13 +284,22 @@ void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& Trac
 
 void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
 {
+    const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
     // We can not interrupt a reload animation otherwise we will not get the notify that calls
     // FinishReloading() which will continue firing (and also update state etc). So we will get
-    // permanently locked in reloading state which is bad
-    if (Character && EquippedWeapon && ECombatState::Unoccupied == CombatState)
+    // permanently locked in reloading state which is bad. This rule does not apply to shotguns that are incrementally
+    // loadded
+    if (Character && EquippedWeapon
+        && ((ECombatState::Unoccupied == CombatState)
+            || ECombatState::Reloading == CombatState && EWeaponType::Shotgun == WeaponType))
     {
         Character->PlayFireMontage(bAiming);
         EquippedWeapon->Fire(TraceHitTarget);
+        if (EWeaponType::Shotgun == WeaponType)
+        {
+            // Force the state back to unoccupied when we potentially interrupted a reload of shotgun
+            CombatState = ECombatState::Unoccupied;
+        }
     }
 }
 
@@ -377,9 +386,25 @@ void UCombatComponent::FireTimerFinished()
 bool UCombatComponent::CanFire() const
 {
     // bCanFire is true when automatic delay has been satisfied
-    // Can not fire while reloading
+    // Can not fire while reloading, unless reloading a shotgun and at least one shell is loaded
     // Can not fire if we do not have a weapon with ammo
-    return bCanFire && ECombatState::Unoccupied == CombatState && EquippedWeapon && EquippedWeapon->HasAmmo();
+    if (!bCanFire)
+    {
+        return false;
+    }
+    else if (!EquippedWeapon || !EquippedWeapon->HasAmmo())
+    {
+        return false;
+    }
+    else if (CombatState == ECombatState::Reloading && EquippedWeapon->GetWeaponType() == EWeaponType::Shotgun)
+    {
+        // We are reloading shotgun and at least one round has been reloaded so we can interrupt it
+        return true;
+    }
+    else
+    {
+        return ECombatState::Unoccupied == CombatState;
+    }
 }
 
 void UCombatComponent::UpdateHUDCarriedAmmo()
@@ -400,6 +425,11 @@ void UCombatComponent::UpdateHUDCarriedAmmo()
 void UCombatComponent::OnRep_CarriedAmmo()
 {
     UpdateHUDCarriedAmmo();
+    if (ECombatState::Reloading == CombatState && EquippedWeapon
+        && EWeaponType::Shotgun == EquippedWeapon->GetWeaponType() && 0 == CarriedAmmo)
+    {
+        JumpToShotgunEnd();
+    }
 }
 
 void UCombatComponent::InitializeCarriedAmmo()
@@ -526,9 +556,8 @@ void UCombatComponent::ReloadIfEmpty()
 
 void UCombatComponent::FinishReloading()
 {
-    check(EquippedWeapon);
     // Only change state on the server and wait for it to be replicated to the client
-    if (Character && Character->HasAuthority())
+    if (EquippedWeapon && Character && Character->HasAuthority())
     {
         CombatState = ECombatState::Unoccupied;
         if (const int32 SlotsToReload = AmmoSlotsToReload(); SlotsToReload > 0)
@@ -545,5 +574,38 @@ void UCombatComponent::FinishReloading()
     if (bFireButtonPressed)
     {
         Fire();
+    }
+}
+
+void UCombatComponent::ShotgunShellReload()
+{
+    if (EquippedWeapon && Character && Character->HasAuthority())
+    {
+        const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
+        if (CarriedAmmoMap.Contains(WeaponType))
+        {
+            CarriedAmmoMap[WeaponType] -= 1;
+            CarriedAmmo = CarriedAmmoMap[WeaponType];
+        }
+        UpdateHUDCarriedAmmo();
+        EquippedWeapon->AddAmmo(1);
+        bCanFire = true;
+        // If the shotgun is full then jump to the end of the animation
+        if (EquippedWeapon->IsAmmoAtCapacity() || 0 == CarriedAmmo)
+        {
+            JumpToShotgunEnd();
+        }
+    }
+}
+
+void UCombatComponent::JumpToShotgunEnd()
+{
+    // Jump to ShotgunEnd section
+    if (const auto AnimInstance = Character->GetMesh()->GetAnimInstance())
+    {
+        if (Character->GetCombat())
+        {
+            AnimInstance->Montage_JumpToSection(FName("ShotgunEnd"));
+        }
     }
 }
