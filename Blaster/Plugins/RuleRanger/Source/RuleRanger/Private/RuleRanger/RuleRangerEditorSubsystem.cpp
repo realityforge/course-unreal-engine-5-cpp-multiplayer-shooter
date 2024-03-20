@@ -165,7 +165,14 @@ void URuleRangerEditorSubsystem::ProcessRule(UObject* Object, const FRuleRangerR
             }
         }
     }
-    ActionContext->ClearContext();
+
+    // We need to check the context as there are cases when Object is not valid
+    // on the first call through (i.e. another subsystem has already renamed/modified object) and
+    // thus ActionContext is not yet initialized
+    if (IsValid(ActionContext))
+    {
+        ActionContext->ClearContext();
+    }
 }
 
 bool URuleRangerEditorSubsystem::IsMatchingRulePresent(UObject* InObject, const FRuleRangerRuleFn& ProcessRuleFunction)
