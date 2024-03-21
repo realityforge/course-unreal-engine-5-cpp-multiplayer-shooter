@@ -186,6 +186,9 @@ private:
     /** Cache and retrieve Controller. */
     ABlasterPlayerController* GetOwnerController();
 
+    /** Enable or disable custom depth. */
+    void EnableCustomDepth(bool bEnable) const;
+
 public:
     FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; };
     FORCEINLINE UTexture2D* GetCrosshairsCenter() const { return CrosshairsCenter; };

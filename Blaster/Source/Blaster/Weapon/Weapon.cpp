@@ -1,4 +1,5 @@
 #include "Weapon/Weapon.h"
+#include "BlasterCustomDepthStencilValue.h"
 #include "Character/BlasterCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
@@ -23,6 +24,12 @@ AWeapon::AWeapon()
     WeaponMesh->SetCollisionResponseToAllChannels(ECR_Block);
     WeaponMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
     WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    EnableCustomDepth(true);
+    WeaponMesh->SetCustomDepthStencilValue(EBlasterCustomDepthStencilValue::BlueOutline);
+    // Need to mark the render state as dirty to get the stencil value updated
+    // TODO: Is this really needed in a constructor??? (does constructor not just set up the default instance?)
+    WeaponMesh->MarkRenderStateDirty();
 
     AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
     AreaSphere->SetupAttachment(WeaponMesh);
@@ -88,6 +95,7 @@ void AWeapon::OnWeaponStateUpdated() const
             WeaponMesh->SetEnableGravity(true);
             WeaponMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
         }
+        EnableCustomDepth(false);
     }
     else if (EWeaponState::EWS_Dropped == WeaponState)
     {
@@ -102,6 +110,9 @@ void AWeapon::OnWeaponStateUpdated() const
             WeaponMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
             WeaponMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
         }
+        EnableCustomDepth(true);
+        WeaponMesh->SetCustomDepthStencilValue(EBlasterCustomDepthStencilValue::BlueOutline);
+        WeaponMesh->MarkRenderStateDirty();
     }
 }
 
@@ -188,6 +199,15 @@ ABlasterPlayerController* AWeapon::GetOwnerController()
             OwnerController = Cast<ABlasterPlayerController>(BlasterCharacter->Controller);
         }
         return OwnerController;
+    }
+}
+
+void AWeapon::EnableCustomDepth(const bool bEnable) const
+{
+    if (WeaponMesh)
+    {
+        // Should we be writing custom depth/stencil buffer for special effects?
+        WeaponMesh->SetRenderCustomDepth(bEnable);
     }
 }
 
