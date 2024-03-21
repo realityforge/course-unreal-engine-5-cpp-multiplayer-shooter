@@ -1,4 +1,5 @@
 #include "BlasterComponents/CombatComponent.h"
+#include "BlasterLogging.h"
 #include "Camera/CameraComponent.h"
 #include "Character/BlasterCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
@@ -481,6 +482,15 @@ void UCombatComponent::OnRep_CombatState()
                 Fire();
             }
         }
+        else if (ECombatState::ThrowingGrenade == CombatState)
+        {
+            if (Character && !Character->IsLocallyControlled())
+            {
+                // This will happen only on clients that did not initiate action
+                // as the client that initiated has already played this montage
+                Character->PlayThrowGrenadeMontage();
+            }
+        }
     }
 }
 
@@ -504,7 +514,7 @@ void UCombatComponent::ServerReload_Implementation()
 
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
-    if (IsValid(Character) && IsValid(WeaponToEquip))
+    if (IsValid(Character) && IsValid(WeaponToEquip) && ECombatState::Unoccupied == CombatState)
     {
         if (EquippedWeapon)
         {
@@ -538,7 +548,7 @@ void UCombatComponent::Reload()
 {
     // Check CarriedAmmo so we are not spamming server with RPC when not necessary
     // We also can not reload while reload in progress
-    if (CarriedAmmo > 0 && ECombatState::Reloading != CombatState)
+    if (CarriedAmmo > 0 && ECombatState::Unoccupied == CombatState)
     {
         ServerReload();
     }
@@ -607,5 +617,43 @@ void UCombatComponent::JumpToShotgunEnd()
         {
             AnimInstance->Montage_JumpToSection(FName("ShotgunEnd"));
         }
+    }
+}
+
+void UCombatComponent::ThrowGrenadeFinished()
+{
+    CombatState = ECombatState::Unoccupied;
+}
+
+void UCombatComponent::ThrowGrenade()
+{
+    BL_ULOG_WARNING("UCombatComponent::ThrowGrenade() called");
+    BL_ULOG_WARNING("CombatState=%d", CombatState);
+    if (ECombatState::Unoccupied == CombatState)
+    {
+        BL_ULOG_WARNING("ECombatState::Unoccupied == CombatState");
+        CombatState = ECombatState::ThrowingGrenade;
+        if (Character)
+        {
+            BL_ULOG_WARNING("Character->PlayThrowGrenadeMontage()");
+            // This will happen on the client
+            Character->PlayThrowGrenadeMontage();
+        }
+        // Actually make sure that the server knows that
+        // we are throwing grenade so it can perform logic and replicate to other clients
+        if (Character && !Character->HasAuthority())
+        {
+            ServerThrowGrenade();
+        }
+    }
+}
+
+void UCombatComponent::ServerThrowGrenade_Implementation()
+{
+    CombatState = ECombatState::ThrowingGrenade;
+    if (Character)
+    {
+        // This supports playing on a listen server
+        Character->PlayThrowGrenadeMontage();
     }
 }

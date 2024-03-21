@@ -379,6 +379,14 @@ void ABlasterCharacter::ReloadInputActionTriggered()
     }
 }
 
+void ABlasterCharacter::ThrowGrenadeInputActionTriggered()
+{
+    if (Combat)
+    {
+        Combat->ThrowGrenade();
+    }
+}
+
 void ABlasterCharacter::OnCrouchInputActionStarted()
 {
     if (!bDisableGameplay)
@@ -489,6 +497,29 @@ void ABlasterCharacter::PlayReloadMontage() const
             }
             AnimInstance->Montage_JumpToSection(SectionName);
         }
+    }
+}
+
+void ABlasterCharacter::PlayThrowGrenadeMontage() const
+{
+    BL_ULOG_WARNING("ABlasterCharacter::PlayThrowGrenadeMontage() called");
+    if (IsValid(ThrowGrenadeMontage))
+    {
+        check(GetMesh());
+        if (const auto AnimInstance = GetMesh()->GetAnimInstance(); IsValid(AnimInstance))
+        {
+            AnimInstance->Montage_Play(ThrowGrenadeMontage);
+            // const FName SectionName("Default");
+            // AnimInstance->Montage_JumpToSection(SectionName);
+        }
+        else
+        {
+            BL_ULOG_WARNING("ABlasterCharacter::PlayThrowGrenadeMontage() IsValid(AnimInstance) returned false");
+        }
+    }
+    else
+    {
+        BL_ULOG_WARNING("ABlasterCharacter::PlayThrowGrenadeMontage() IsValid(ThrowGrenadeMontage) returned false");
     }
 }
 
@@ -887,6 +918,12 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
                        ReloadAction,
                        ETriggerEvent::Triggered,
                        &ABlasterCharacter::ReloadInputActionTriggered);
+
+        SafeBindAction(Input,
+                       TEXT("ThrowGrenadeAction"),
+                       ThrowGrenadeAction,
+                       ETriggerEvent::Triggered,
+                       &ABlasterCharacter::ThrowGrenadeInputActionTriggered);
 
         // Bind crouching actions
         SafeBindAction(Input,

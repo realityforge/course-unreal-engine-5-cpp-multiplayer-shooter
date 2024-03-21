@@ -39,6 +39,8 @@ public:
 
     void PlayReloadMontage() const;
 
+    void PlayThrowGrenadeMontage() const;
+
     virtual void OnRep_ReplicatedMovement() override;
 
     void Eliminate();
@@ -71,6 +73,9 @@ protected:
 
     /** Called for attempting to reload the current weapon */
     void ReloadInputActionTriggered();
+
+    /** Called when attempting to throw a grenade */
+    void ThrowGrenadeInputActionTriggered();
 
     /** Called when player start to crouch */
     void OnCrouchInputActionStarted();
@@ -154,6 +159,10 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
     TObjectPtr<UInputAction> FireAction{ nullptr };
 
+    /** Throw Grenade Input Action */
+    UPROPERTY(EditDefaultsOnly, Category = "Character Input", meta = (AllowPrivateAccess = "true", RuleRangerRequired))
+    TObjectPtr<UInputAction> ThrowGrenadeAction{ nullptr };
+
     // Ugly hack to stop multiple registrations
     bool bInputMappingRegistered{ false };
 
@@ -199,6 +208,9 @@ private:
 
     UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
     TObjectPtr<UAnimMontage> ReloadMontage;
+
+    UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
+    TObjectPtr<UAnimMontage> ThrowGrenadeMontage;
 
     UPROPERTY(EditAnywhere, Category = Combat, meta = (RuleRangerRequired))
     TObjectPtr<UAnimMontage> HitReactMontage{ nullptr };

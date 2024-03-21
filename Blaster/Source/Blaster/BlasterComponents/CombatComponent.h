@@ -43,6 +43,9 @@ public:
 
     void JumpToShotgunEnd();
 
+    UFUNCTION(BlueprintCallable)
+    void ThrowGrenadeFinished();
+
 protected:
     void MirrorWalkSpeedBasedOnState() const;
 
@@ -66,6 +69,11 @@ protected:
     void TraceUnderCrossHairs(FHitResult& OutHitResult);
 
     void SetHUDCrosshairs(float DeltaTime);
+
+    void ThrowGrenade();
+
+    UFUNCTION(Server, Reliable)
+    void ServerThrowGrenade();
 
 private:
     UPROPERTY(Transient)
