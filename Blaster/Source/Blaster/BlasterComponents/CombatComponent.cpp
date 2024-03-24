@@ -487,7 +487,7 @@ void UCombatComponent::OnRep_CombatState()
             {
                 // This will happen only on clients that did not initiate action
                 // as the client that initiated has already played this montage
-                Character->PlayThrowGrenadeMontage();
+                PlayThrowGrenadeMontage();
             }
         }
     }
@@ -539,6 +539,21 @@ void UCombatComponent::UpdateCarriedAmmo()
     const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
     CarriedAmmo = CarriedAmmoMap.Contains(WeaponType) ? CarriedAmmoMap[WeaponType] : 0;
     UpdateHUDCarriedAmmo();
+}
+
+void UCombatComponent::AttachEquippedWeaponToLeftHand() const
+{
+    if (EquippedWeapon)
+    {
+        // Realistically we should have a separate attachment point for every weapon but
+        // as this is just a learning project we just have separate  attachment for pistols that look super bad
+        // when using. Maybe in future we could use the socket that exists on weapon and anchor hand to that place
+        // so IK and this manual; futzing line up ... until then lets leave it ugly
+        const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
+        const bool bUsePistolSocket = EWeaponType::Pistol == WeaponType || EWeaponType::SubmachineGun == WeaponType;
+        const FName SocketName = bUsePistolSocket ? PistolHandSocketName : LeftHandSocketName;
+        AttachActorToSocket(EquippedWeapon, SocketName);
+    }
 }
 
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
@@ -638,21 +653,30 @@ void UCombatComponent::JumpToShotgunEnd()
 void UCombatComponent::ThrowGrenadeFinished()
 {
     CombatState = ECombatState::Unoccupied;
+    if (EquippedWeapon)
+    {
+        AttachActorToSocket(EquippedWeapon, RightHandSocketName);
+    }
+}
+
+void UCombatComponent::PlayThrowGrenadeMontage() const
+{
+    Character->PlayThrowGrenadeMontage();
+    if (EquippedWeapon)
+    {
+        AttachEquippedWeaponToLeftHand();
+    }
 }
 
 void UCombatComponent::ThrowGrenade()
 {
-    BL_ULOG_WARNING("UCombatComponent::ThrowGrenade() called");
-    BL_ULOG_WARNING("CombatState=%d", CombatState);
     if (ECombatState::Unoccupied == CombatState)
     {
-        BL_ULOG_WARNING("ECombatState::Unoccupied == CombatState");
         CombatState = ECombatState::ThrowingGrenade;
         if (Character)
         {
-            BL_ULOG_WARNING("Character->PlayThrowGrenadeMontage()");
             // This will happen on the client
-            Character->PlayThrowGrenadeMontage();
+            PlayThrowGrenadeMontage();
         }
         // Actually make sure that the server knows that
         // we are throwing grenade so it can perform logic and replicate to other clients
@@ -669,6 +693,6 @@ void UCombatComponent::ServerThrowGrenade_Implementation()
     if (Character)
     {
         // This supports playing on a listen server
-        Character->PlayThrowGrenadeMontage();
+        PlayThrowGrenadeMontage();
     }
 }

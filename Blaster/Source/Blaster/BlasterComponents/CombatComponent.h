@@ -221,4 +221,7 @@ private:
     void DropEquippedWeapon();
     void AttachActorToSocket(AWeapon* InActor, const FName& InSocketName) const;
     void UpdateCarriedAmmo();
+    void AttachEquippedWeaponToLeftHand() const;
+
+    void PlayThrowGrenadeMontage() const;
 };
