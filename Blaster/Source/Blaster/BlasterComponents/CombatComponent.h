@@ -217,4 +217,8 @@ private:
 
     /** Function called on both the client and server to do reload. */
     void HandleReload() const;
+
+    void DropEquippedWeapon();
+    void AttachActorToSocket(AWeapon* InActor, const FName& InSocketName) const;
+    void UpdateCarriedAmmo();
 };

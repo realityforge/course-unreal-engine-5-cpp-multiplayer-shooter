@@ -12,6 +12,8 @@
 #include "Weapon/Weapon.h"
 #include "Weapon/WeaponTypes.h"
 
+static const FName PistolHandSocketName("PistolSocket");
+static const FName LeftHandSocketName("LeftHandSocket");
 static const FName RightHandSocketName("RightHandSocket");
 
 UCombatComponent::UCombatComponent()
@@ -100,10 +102,7 @@ void UCombatComponent::OnRep_EquippedWeapon()
         // has been applied. This would result in attachment failing as state needs to be set in
         // EquippedWeapon->WeaponState before attachment can succeed. So we fake it and also apply it on clientside
         EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
-        if (const auto HandSocket = Character->GetMesh()->GetSocketByName(RightHandSocketName))
-        {
-            HandSocket->AttachActor(EquippedWeapon, Character->GetMesh());
-        }
+        AttachActorToSocket(EquippedWeapon, RightHandSocketName);
         StopOrientingRotationToMovement();
 
         PlayEquipSound();
@@ -512,31 +511,50 @@ void UCombatComponent::ServerReload_Implementation()
     }
 }
 
+void UCombatComponent::DropEquippedWeapon()
+{
+    if (EquippedWeapon)
+    {
+        // If we are holding a weapon and try to pick up another then drop
+        // current weapon and store the current Ammo in map
+        CarriedAmmoMap[EquippedWeapon->GetWeaponType()] = CarriedAmmo;
+        EquippedWeapon->Dropped();
+    }
+}
+
+void UCombatComponent::AttachActorToSocket(AWeapon* InActor, const FName& InSocketName) const
+{
+    check(InActor);
+    if (const auto Mesh = Character ? Character->GetMesh() : nullptr)
+    {
+        if (const auto Socket = Mesh->GetSocketByName(InSocketName))
+        {
+            Socket->AttachActor(InActor, Mesh);
+        }
+    }
+}
+
+void UCombatComponent::UpdateCarriedAmmo()
+{
+    const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
+    CarriedAmmo = CarriedAmmoMap.Contains(WeaponType) ? CarriedAmmoMap[WeaponType] : 0;
+    UpdateHUDCarriedAmmo();
+}
+
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 {
     if (IsValid(Character) && IsValid(WeaponToEquip) && ECombatState::Unoccupied == CombatState)
     {
-        if (EquippedWeapon)
-        {
-            // If we are holding a weapon and try to pick up another then drop
-            // current weapon and store the current Ammo in map
-            CarriedAmmoMap[EquippedWeapon->GetWeaponType()] = CarriedAmmo;
-            EquippedWeapon->Dropped();
-        }
+        DropEquippedWeapon();
         EquippedWeapon = WeaponToEquip;
         EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
-        if (const auto HandSocket = Character->GetMesh()->GetSocketByName(RightHandSocketName))
-        {
-            HandSocket->AttachActor(EquippedWeapon, Character->GetMesh());
-        }
+        AttachActorToSocket(EquippedWeapon, RightHandSocketName);
         // Make sure we set owner of weapon so that weapon will be replicated wih player pawn
         EquippedWeapon->SetOwner(Character);
         EquippedWeapon->UpdateHUDAmmo();
         EquippedWeapon->ShowPickupWidget(false);
 
-        const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
-        CarriedAmmo = CarriedAmmoMap.Contains(WeaponType) ? CarriedAmmoMap[WeaponType] : 0;
-        UpdateHUDCarriedAmmo();
+        UpdateCarriedAmmo();
 
         StopOrientingRotationToMovement();
         PlayEquipSound();
@@ -575,9 +593,7 @@ void UCombatComponent::FinishReloading()
             const EWeaponType WeaponType = EquippedWeapon->GetWeaponType();
             check(CarriedAmmoMap.Contains(WeaponType));
             CarriedAmmoMap[WeaponType] -= SlotsToReload;
-            // Update cached value as well
-            CarriedAmmo = CarriedAmmoMap[WeaponType];
-            UpdateHUDCarriedAmmo();
+            UpdateCarriedAmmo();
             EquippedWeapon->AddAmmo(SlotsToReload);
         }
     }
@@ -595,9 +611,8 @@ void UCombatComponent::ShotgunShellReload()
         if (CarriedAmmoMap.Contains(WeaponType))
         {
             CarriedAmmoMap[WeaponType] -= 1;
-            CarriedAmmo = CarriedAmmoMap[WeaponType];
         }
-        UpdateHUDCarriedAmmo();
+        UpdateCarriedAmmo();
         EquippedWeapon->AddAmmo(1);
         bCanFire = true;
         // If the shotgun is full then jump to the end of the animation
