@@ -12,9 +12,9 @@
 #include "Weapon/Weapon.h"
 #include "Weapon/WeaponTypes.h"
 
-static const FName PistolHandSocketName("PistolSocket");
-static const FName LeftHandSocketName("LeftHandSocket");
-static const FName RightHandSocketName("RightHandSocket");
+extern const FName PistolHandSocketName("PistolSocket");
+extern const FName LeftHandSocketName("LeftHandSocket");
+extern const FName RightHandSocketName("RightHandSocket");
 
 UCombatComponent::UCombatComponent()
 {

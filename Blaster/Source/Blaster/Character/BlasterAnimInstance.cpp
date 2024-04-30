@@ -1,12 +1,10 @@
 #include "Character/BlasterAnimInstance.h"
+#include "BlasterComponents/CombatComponent.h"
 #include "Character/BlasterCharacter.h"
 #include "Character/CombatState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Weapon/Weapon.h"
-
-// The name of the socket that must be on every weapon so that they have IK and LH links up
-static const FName LeftHandSocketName("LeftHandSocket");
 
 // The name of the bone that holds the weapon
 static const FName RightHandBoneName("hand_r");

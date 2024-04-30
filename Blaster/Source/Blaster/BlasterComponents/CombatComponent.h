@@ -12,6 +12,10 @@ class ABlasterPlayerController;
 class ABlasterCharacter;
 class AWeapon;
 
+extern const FName PistolHandSocketName;
+extern const FName LeftHandSocketName;
+extern const FName RightHandSocketName;
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UCombatComponent final : public UActorComponent
 {
