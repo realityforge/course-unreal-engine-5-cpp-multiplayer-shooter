@@ -45,6 +45,11 @@ Shorthand notes of where to go next with this experiment:
   * Add check to ensure properties are either DefaultsOnly etc
   * Add matcher so can match native classes from specific modules
   * Add matcher so can match meta=(IsBlueprintBase=true)
+* ControlRig checks:
+  * Ensure functions have groups/categories and descriptions
+  * Ensure variables have groups/categories and descriptions
+  * Ensure that there are no loose nodes
+  * Ensure that Blueprint is compiled
 * Blueprint checks:
   * Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
   * Add check that all private Blueprint functions are called
