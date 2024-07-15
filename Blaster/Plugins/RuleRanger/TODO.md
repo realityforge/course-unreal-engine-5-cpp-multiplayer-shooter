@@ -50,6 +50,7 @@ Shorthand notes of where to go next with this experiment:
   * Ensure variables have groups/categories and descriptions
   * Ensure that there are no loose nodes
   * Ensure that Blueprint is compiled
+  * Add "_FunctionLibrary" to ControlRigs that are just collections of functions and no ForwardSolve? Do it via Variants mechanism
 * Blueprint checks:
   * Add check to ensure that every Blueprint (that inherits from a specific class?) has a Thumbnail specified
   * Add check that all private Blueprint functions are called
