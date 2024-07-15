@@ -37,6 +37,10 @@ Shorthand notes of where to go next with this experiment:
   * Ensure that parameters of specific name/type exist on a material ... or a material property? (Useful when using to create dynamic material instance and use strings to match parameters)
   * Ensure that materials associated with Skeletons that have Material type animation curves, have materials with parameters that match.
   * Ensure that there are no gangling nodes in material
+  * If the material does not specify roughness value/texture then suggest enabling fully rough (as long as metadata "DefaultRoughnessAllowed" metadata key set)
+  * If the material does not specify normal map then disable "Tangent Space Normals"
+  * Add rule to enforce setting of "Automatically set usage" setting
+  * Add rules to check which materials usages are set
 * Native Class checks:
   * Add naming convention check for native classes/structs
   * Add naming convention check for native classes/structs properties and functions
