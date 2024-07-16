@@ -76,7 +76,6 @@ Shorthand notes of where to go next with this experiment:
   * Ensure naming conventions for AnimationSlot Group/Name
 * Niagara checks:
   * Ensure every Niagara system has an "Effect Type" associated with it.
-  * Ensure Niagara Systems do not have disabled Emitters
 * Texture type checks:
   * "_R": Roughness
   * "_AO": AmbientOcclusion
