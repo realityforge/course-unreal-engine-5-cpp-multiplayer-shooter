@@ -87,9 +87,6 @@ Shorthand notes of where to go next with this experiment:
   * Ensure StaticMesh has valid/non-overlapping Lightmap UVs
   * Ensure StaticMesh has NO Lightmap UVs (when not using lightmass)
   * Ensure StaticMesh has UVs in Channel0 (for when material only uses world space coordinates)
-* Rule Ranger:
-  * Ensure referenced Rules Load
-  * Ensure referenced RuleSets Load
 
 Add Action that applies a layout for textures based on metadata and types? Maybe something like:
 Possible Directory layout:
