@@ -17,8 +17,8 @@
 
 void UEnsureNoDisabledEmittersAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
+    // ReSharper disable once CppTooWideScopeInitStatement
     const auto System = CastChecked<UNiagaraSystem>(Object);
-
     for (const FNiagaraEmitterHandle& Handle : System->GetEmitterHandles())
     {
         if (!Handle.GetIsEnabled())
