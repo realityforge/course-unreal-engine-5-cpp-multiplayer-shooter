@@ -32,6 +32,10 @@ public:
     UPROPERTY(EditDefaultsOnly, Category = "Rule Ranger")
     FText Description;
 
+    /** A set of RuleSets that this ruleSet aggregates. These rules are applied prior to the individual rules. */
+    UPROPERTY(EditDefaultsOnly, Category = "Rules", meta = (AllowAbstract = "false", DisplayThumbnail = "false"))
+    TArray<TObjectPtr<URuleRangerRuleSet>> RuleSets;
+
     /** A set of rules to be applied to different types. */
     UPROPERTY(EditDefaultsOnly, Category = "Rules", meta = (AllowAbstract = "false", DisplayThumbnail = "false"))
     TArray<TObjectPtr<URuleRangerRule>> Rules;
