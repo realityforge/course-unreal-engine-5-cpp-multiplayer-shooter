@@ -1,0 +1,4 @@
+---,ObjectType,Variant,Prefix,Suffix
+MoviePipelineQueue,"/Script/MovieRenderPipelineCore.MoviePipelineQueue","","MRPQ_",""
+MoviePipelineShotConfig,"/Script/MovieRenderPipelineCore.MoviePipelineShotConfig","","","_MoviePipelineShotConfig"
+MoviePipelinePrimaryConfig,"/Script/MovieRenderPipelineCore.MoviePipelinePrimaryConfig","","","_MoviePipelinePrimaryConfig"

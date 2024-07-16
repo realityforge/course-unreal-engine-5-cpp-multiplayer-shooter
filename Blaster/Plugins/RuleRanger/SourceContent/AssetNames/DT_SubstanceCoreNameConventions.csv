@@ -1,0 +1,3 @@
+---,ObjectType,Variant,Prefix,Suffix
+SubstanceGraphInstance,"/Script/SubstanceCore.SubstanceGraphInstance","","SGI_",""
+SubstanceInstanceFactory,"/Script/SubstanceCore.SubstanceInstanceFactory","","SIF_",""
