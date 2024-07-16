@@ -18,6 +18,7 @@
 #include "RuleRangerDeveloperSettings.h"
 #include "RuleRangerLogging.h"
 #include "RuleRangerRule.h"
+#include "RuleRangerRuleExclusion.h"
 #include "RuleRangerRuleSet.h"
 #include "Subsystems/EditorAssetSubsystem.h"
 #include "Subsystems/ImportSubsystem.h"
@@ -77,6 +78,7 @@ void URuleRangerEditorSubsystem::OnAssetPostImport([[maybe_unused]] UFactory* Fa
 
 bool URuleRangerEditorSubsystem::ProcessRuleSetForObject(URuleRangerConfig* const Config,
                                                          URuleRangerRuleSet* const RuleSet,
+                                                         TArray<URuleRangerRuleExclusion*> Exclusions,
                                                          UObject* Object,
                                                          const FRuleRangerRuleFn& ProcessRuleFunction)
 {
@@ -85,6 +87,23 @@ bool URuleRangerEditorSubsystem::ProcessRuleSetForObject(URuleRangerConfig* cons
            TEXT("ProcessRule: Processing Rule Set %s for object %s"),
            *RuleSet->GetName(),
            *Object->GetName());
+
+    for (auto ExclusionIt = Exclusions.CreateIterator(); ExclusionIt; ++ExclusionIt)
+    {
+        if (const auto Exclusion = *ExclusionIt)
+        {
+            if (Exclusion->RuleSets.Contains(RuleSet))
+            {
+                UE_LOG(RuleRanger,
+                       VeryVerbose,
+                       TEXT("ProcessRule: Rule Set %s excluded for object %s due to exclusion rule. Reason: %s"),
+                       *RuleSet->GetName(),
+                       *Object->GetName(),
+                       *Exclusion->Description.ToString());
+                return true;
+            }
+        }
+    }
 
     for (auto RuleSetIt = RuleSet->RuleSets.CreateIterator(); RuleSetIt; ++RuleSetIt)
     {
@@ -95,7 +114,7 @@ bool URuleRangerEditorSubsystem::ProcessRuleSetForObject(URuleRangerConfig* cons
                    TEXT("ProcessRule: Processing Nested Rule Set %s for object %s"),
                    *NestedRuleSet->GetName(),
                    *Object->GetName());
-            if (!ProcessRuleSetForObject(Config, NestedRuleSet, Object, ProcessRuleFunction))
+            if (!ProcessRuleSetForObject(Config, NestedRuleSet, Exclusions, Object, ProcessRuleFunction))
             {
                 return false;
             }
@@ -121,6 +140,23 @@ bool URuleRangerEditorSubsystem::ProcessRuleSetForObject(URuleRangerConfig* cons
         // ReSharper disable once CppTooWideScopeInitStatement
         if (const auto Rule = RulePtr.Get(); IsValid(Rule))
         {
+            for (auto ExclusionIt = Exclusions.CreateIterator(); ExclusionIt; ++ExclusionIt)
+            {
+                if (const auto Exclusion = *ExclusionIt)
+                {
+                    if (Exclusion->Rules.Contains(Rule))
+                    {
+                        UE_LOG(RuleRanger,
+                               VeryVerbose,
+                               TEXT("ProcessRule: Rule %s excluded for object %s due to exclusion rule. Reason: %s"),
+                               *Rule->GetName(),
+                               *Object->GetName(),
+                               *Exclusion->Description.ToString());
+                        return true;
+                    }
+                }
+            }
+
             if (!ProcessRuleFunction(Rule, Object))
             {
                 UE_LOG(RuleRanger,
@@ -175,11 +211,24 @@ void URuleRangerEditorSubsystem::ProcessRule(UObject* Object, const FRuleRangerR
             {
                 if (Config->ConfigMatches(Path))
                 {
+
+                    TArray<URuleRangerRuleExclusion*> Exclusions;
+                    for (auto ExclusionIt = Config->Exclusions.CreateIterator(); ExclusionIt; ++ExclusionIt)
+                    {
+                        if (const auto Exclusion = ExclusionIt->Get())
+                        {
+                            if (Exclusion->ExclusionMatches(*Object, Path))
+                            {
+                                Exclusions.Add(Exclusion);
+                            }
+                        }
+                    }
+
                     for (auto RuleSetIt = Config->RuleSets.CreateIterator(); RuleSetIt; ++RuleSetIt)
                     {
                         if (const auto RuleSet = RuleSetIt->Get())
                         {
-                            if (!ProcessRuleSetForObject(Config, RuleSet, Object, ProcessRuleFunction))
+                            if (!ProcessRuleSetForObject(Config, RuleSet, Exclusions, Object, ProcessRuleFunction))
                             {
                                 return;
                             }
@@ -278,15 +327,12 @@ bool URuleRangerEditorSubsystem::IsMatchingRulePresent(UObject* InObject, const 
                             {
                                 return true;
                             }
-                            else
-                            {
-                                UE_LOG(RuleRanger,
-                                       Error,
-                                       TEXT("IsMatchingRulePresent: Invalid RuleSet skipped when processing "
-                                            "rules for %s in config %s"),
-                                       *InObject->GetName(),
-                                       *Config->GetName());
-                            }
+                            UE_LOG(RuleRanger,
+                                   Error,
+                                   TEXT("IsMatchingRulePresent: Invalid RuleSet skipped when processing "
+                                        "rules for %s in config %s"),
+                                   *InObject->GetName(),
+                                   *Config->GetName());
                         }
                     }
                 }
@@ -344,7 +390,7 @@ bool URuleRangerEditorSubsystem::ProcessOnAssetPostImportRule(const bool bIsReim
             ActionContext->ClearContext();
             return false;
         }
-        else if (!Rule->bContinueOnError && ERuleRangerActionState::AS_Error == State)
+        if (!Rule->bContinueOnError && ERuleRangerActionState::AS_Error == State)
         {
             UE_LOG(RuleRanger,
                    VeryVerbose,
@@ -397,7 +443,7 @@ bool URuleRangerEditorSubsystem::ProcessDemandScan(URuleRangerRule* Rule, UObjec
             ActionContext->ClearContext();
             return false;
         }
-        else if (!Rule->bContinueOnError && ERuleRangerActionState::AS_Error == State)
+        if (!Rule->bContinueOnError && ERuleRangerActionState::AS_Error == State)
         {
             UE_LOG(RuleRanger,
                    VeryVerbose,
@@ -450,7 +496,7 @@ bool URuleRangerEditorSubsystem::ProcessDemandScanAndFix(URuleRangerRule* Rule, 
             ActionContext->ClearContext();
             return false;
         }
-        else if (!Rule->bContinueOnError && ERuleRangerActionState::AS_Error == State)
+        if (!Rule->bContinueOnError && ERuleRangerActionState::AS_Error == State)
         {
             UE_LOG(RuleRanger,
                    VeryVerbose,

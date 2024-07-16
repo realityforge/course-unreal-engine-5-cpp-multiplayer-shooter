@@ -17,6 +17,7 @@
 #include "Engine/DataAsset.h"
 #include "RuleRangerConfig.generated.h"
 
+class URuleRangerRuleExclusion;
 class URuleRangerRuleSet;
 
 /**
@@ -35,6 +36,10 @@ public:
     /** A set of rule sets to be applied to directories. */
     UPROPERTY(EditDefaultsOnly, Category = "Rule Sets", meta = (AllowAbstract = "false", DisplayThumbnail = "false"))
     TArray<TObjectPtr<URuleRangerRuleSet>> RuleSets;
+
+    /** A set of exclusions when applying rules. */
+    UPROPERTY(EditDefaultsOnly, Category = "Rule Sets", meta = (AllowAbstract = "false", DisplayThumbnail = "false"))
+    TArray<TObjectPtr<URuleRangerRuleExclusion>> Exclusions;
 
     bool ConfigMatches(const FString& Path);
 };

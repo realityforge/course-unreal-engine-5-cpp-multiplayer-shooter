@@ -21,6 +21,7 @@
 #include <functional>
 #include "RuleRangerEditorSubsystem.generated.h"
 
+class URuleRangerRuleExclusion;
 class URuleRangerRule;
 class URuleRangerActionContext;
 class URuleRangerConfig;
@@ -71,6 +72,7 @@ private:
 
     bool ProcessRuleSetForObject(URuleRangerConfig* const Config,
                                  URuleRangerRuleSet* const RuleSet,
+                                 TArray<URuleRangerRuleExclusion*> Exclusions,
                                  UObject* Object,
                                  const FRuleRangerRuleFn& ProcessRuleFunction);
 
