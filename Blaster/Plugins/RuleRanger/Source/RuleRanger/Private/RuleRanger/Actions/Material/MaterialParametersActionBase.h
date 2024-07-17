@@ -15,22 +15,31 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MaterialParametersActionBase.h"
 #include "RuleRangerAction.h"
-#include "EnsureMaterialParametersHaveDescriptionsAction.generated.h"
+#include "MaterialParametersActionBase.generated.h"
 
 /**
- * Action to check that the parameters defined in the Material have descriptions.
+ * Base actions for analyzing Material Parameters.
  */
-UCLASS(DisplayName = "Ensure Material Parameters Have Descriptions")
-class RULERANGER_API UEnsureMaterialParametersHaveDescriptionsAction final : public UMaterialParametersActionBase
+UCLASS(Abstract)
+class RULERANGER_API UMaterialParametersActionBase : public URuleRangerAction
 {
     GENERATED_BODY()
+
+    void AnalyzeParameters(URuleRangerActionContext* ActionContext,
+                           const UMaterial* const Material,
+                           EMaterialParameterType MaterialParameterType,
+                           const TMap<FMaterialParameterInfo, FMaterialParameterMetadata>& Parameters) const;
 
 protected:
     virtual void AnalyzeParameter(URuleRangerActionContext* ActionContext,
                                   const UMaterial* Material,
                                   EMaterialParameterType Type,
                                   const FMaterialParameterInfo& Info,
-                                  const FMaterialParameterMetadata& Metadata) const override;
+                                  const FMaterialParameterMetadata& Metadata) const;
+
+public:
+    virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;
+
+    virtual UClass* GetExpectedType() override;
 };
