@@ -52,7 +52,8 @@ bool UEnsureBlueprintContainsNoUnlinkedNodesAction::ShouldHaveLinks(const TObjec
     }
 }
 
-void UEnsureBlueprintContainsNoUnlinkedNodesAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
+void UEnsureBlueprintContainsNoUnlinkedNodesAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
+                                                                         UObject* Object)
 {
     const auto Blueprint = CastChecked<UBlueprint>(Object);
     TArray<UEdGraph*> Graphs;
@@ -81,6 +82,7 @@ void UEnsureBlueprintContainsNoUnlinkedNodesAction::Apply_Implementation(URuleRa
                 }
 
                 bool bInputExecNotLinked = false;
+                int32 InputExecLinkCount = 0;
                 bool bOutputNonExecLinked = false;
                 for (const auto Pin : Node->GetAllPins())
                 {
@@ -89,16 +91,26 @@ void UEnsureBlueprintContainsNoUnlinkedNodesAction::Apply_Implementation(URuleRa
                     {
                         bOutputNonExecLinked = true;
                     }
-                    else if (EGPD_Input == Pin->Direction && (UEdGraphSchema_K2::IsExecPin(*Pin) && !bPinLinked))
+                    else if (EGPD_Input == Pin->Direction && UEdGraphSchema_K2::IsExecPin(*Pin))
                     {
-                        bInputExecNotLinked = true;
+                        if (bPinLinked)
+                        {
+                            // Some nodes have multiple Input Exec pins (i.e. Timeline node).
+                            // As long as at least one is connected then we consider the node used
+                            // so we also track the count that are linked and use it later
+                            InputExecLinkCount++;
+                        }
+                        else
+                        {
+                            bInputExecNotLinked = true;
+                        }
                     }
                 }
 
                 if (Node.IsA(UAnimStateNode::StaticClass()))
                 {
-                    // State Machine Nodes always have outputs and we do not care
-                    // when they are blank so we fake a link to avoid the error
+                    // State Machine Nodes always have outputs, and we do not care
+                    // when they are blank, so we fake a link to avoid the error
                     bOutputNonExecLinked = true;
                 }
 
@@ -118,7 +130,7 @@ void UEnsureBlueprintContainsNoUnlinkedNodesAction::Apply_Implementation(URuleRa
                             *NodeTitle,
                             *GraphName)));
                     }
-                    else if (bInputExecNotLinked)
+                    else if (bInputExecNotLinked && 0 == InputExecLinkCount)
                     {
                         ActionContext->Error(FText::FromString(
                             FString::Printf(TEXT("Blueprint has a node named '%s' in '%s' missing an exec input pin. "
@@ -126,7 +138,7 @@ void UEnsureBlueprintContainsNoUnlinkedNodesAction::Apply_Implementation(URuleRa
                                             *NodeTitle,
                                             *GraphName)));
                     }
-                    else // (!bOutputNonExecLinked && !bHasExecPin && bOutputPin)
+                    else if (!bOutputNonExecLinked && !bHasExecPin && bOutputPin)
                     {
                         ActionContext->Error(FText::FromString(FString::Printf(
                             TEXT(

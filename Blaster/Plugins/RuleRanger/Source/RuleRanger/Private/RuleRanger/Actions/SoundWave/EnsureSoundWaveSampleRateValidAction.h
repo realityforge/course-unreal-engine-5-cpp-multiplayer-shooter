@@ -29,7 +29,7 @@ class RULERANGER_API UEnsureSoundWaveSampleRateValidAction final : public URuleR
 
     /** The set of valid sample rates. */
     UPROPERTY(EditDefaultsOnly)
-    TArray<float> ValidSampleRates;
+    TArray<int32> ValidSampleRates;
 
 public:
     UEnsureSoundWaveSampleRateValidAction();

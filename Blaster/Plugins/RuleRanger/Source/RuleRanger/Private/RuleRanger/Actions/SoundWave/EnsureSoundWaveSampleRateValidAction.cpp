@@ -16,7 +16,7 @@
 
 UEnsureSoundWaveSampleRateValidAction::UEnsureSoundWaveSampleRateValidAction()
 {
-    ValidSampleRates.Add(48000.0f);
+    ValidSampleRates.Add(48000);
 }
 
 void UEnsureSoundWaveSampleRateValidAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
@@ -26,21 +26,21 @@ void UEnsureSoundWaveSampleRateValidAction::Apply_Implementation(URuleRangerActi
 
     // ReSharper disable once CppTooWideScopeInitStatement
     const float SampleRate = SoundWave->GetSampleRateForCurrentPlatform();
-    if (!ValidSampleRates.Contains(SampleRate))
+    if (!ValidSampleRates.Contains((int32)SampleRate))
     {
         FString ValidValues{ "" };
-        for (const float ValidSampleRate : ValidSampleRates)
+        for (const int32 ValidSampleRate : ValidSampleRates)
         {
             if (0 != ValidValues.Len())
             {
                 ValidValues.Append(", ");
             }
-            ValidValues.Appendf(TEXT("%f"), ValidSampleRate);
+            ValidValues.Appendf(TEXT("%d"), ValidSampleRate);
         }
 
         const auto& ErrorMessage = FString::Printf(TEXT("SoundWave has a sample rate of %f but must have one of: %s"),
                                                    SampleRate,
-                                                   *FString::Join(ValidValues, TEXT(", ")));
+                                                   *ValidValues);
         ActionContext->Error(FText::FromString(ErrorMessage));
     }
 }
