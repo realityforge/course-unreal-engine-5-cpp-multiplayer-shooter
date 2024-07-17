@@ -130,7 +130,6 @@ void UEnsureMaterialParametersHaveDescriptionsAction::AnalyzeParameter(URuleRang
                                                                        FMaterialParameterInfo MaterialParameterInfo,
                                                                        FMaterialParameterMetadata Metadata)
 {
-    //TODO: Add this into the list of default rules
     //TODO: Extract out superclass that can be used to check parameter names
     //TODO: Code cleanup
 
