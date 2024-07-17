@@ -17,19 +17,27 @@
 #include "CoreMinimal.h"
 #include "MaterialParametersActionBase.h"
 #include "RuleRangerAction.h"
-#include "EnsureMaterialParametersHaveDescriptionsAction.generated.h"
+#include "EnsureMaterialParametersHaveGroupsAction.generated.h"
 
 /**
  * Action to check that the parameters defined in the Material have descriptions.
  */
-UCLASS(DisplayName = "Ensure Material Parameters Have Descriptions")
-class RULERANGER_API UEnsureMaterialParametersHaveDescriptionsAction final : public UMaterialParametersActionBase
+UCLASS(DisplayName = "Ensure Material Parameters Have Groups")
+class RULERANGER_API UEnsureMaterialParametersHaveGroupsAction final : public UMaterialParametersActionBase
 {
     GENERATED_BODY()
+
+    /** The number of parameters that triggers the requirement that all parameters have a group. */
+    UPROPERTY(EditAnywhere)
+    int32 Threshold{ 5 };
 
 protected:
     virtual void AnalyzeParameter(URuleRangerActionContext* ActionContext,
                                   const UMaterial* Material,
                                   const FMaterialParameterInfo& Info,
                                   const FMaterialParameterMetadata& Metadata) const override;
+    virtual bool
+    ShouldAnalyzeParameters(URuleRangerActionContext* ActionContext,
+                            const UMaterial* const Material,
+                            const TMap<FMaterialParameterInfo, FMaterialParameterMetadata>& Parameters) const override;
 };

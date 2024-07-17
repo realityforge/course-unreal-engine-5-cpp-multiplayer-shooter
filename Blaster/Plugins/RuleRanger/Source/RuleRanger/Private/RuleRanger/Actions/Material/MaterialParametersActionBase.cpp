@@ -16,7 +16,6 @@
 
 void UMaterialParametersActionBase::AnalyzeParameter(URuleRangerActionContext* ActionContext,
                                                      const UMaterial* const Material,
-                                                     EMaterialParameterType Type,
                                                      const FMaterialParameterInfo& Info,
                                                      const FMaterialParameterMetadata& Metadata) const
 {
@@ -26,13 +25,23 @@ void UMaterialParametersActionBase::AnalyzeParameter(URuleRangerActionContext* A
 void UMaterialParametersActionBase::AnalyzeParameters(
     URuleRangerActionContext* ActionContext,
     const UMaterial* const Material,
-    const EMaterialParameterType MaterialParameterType,
     const TMap<FMaterialParameterInfo, FMaterialParameterMetadata>& Parameters) const
 {
-    for (auto ParameterIt = Parameters.CreateConstIterator(); ParameterIt; ++ParameterIt)
+    if (ShouldAnalyzeParameters(ActionContext, Material, Parameters))
     {
-        AnalyzeParameter(ActionContext, Material, MaterialParameterType, ParameterIt->Key, ParameterIt->Value);
+        for (auto ParameterIt = Parameters.CreateConstIterator(); ParameterIt; ++ParameterIt)
+        {
+            AnalyzeParameter(ActionContext, Material, ParameterIt->Key, ParameterIt->Value);
+        }
     }
+}
+
+bool UMaterialParametersActionBase::ShouldAnalyzeParameters(
+    URuleRangerActionContext* ActionContext,
+    const UMaterial* const Material,
+    const TMap<FMaterialParameterInfo, FMaterialParameterMetadata>& Parameters) const
+{
+    return true;
 }
 
 void UMaterialParametersActionBase::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
@@ -42,50 +51,37 @@ void UMaterialParametersActionBase::Apply_Implementation(URuleRangerActionContex
 
     LogInfo(Material, FString::Printf(TEXT("Processing Material named '%s'."), *Material->GetName()));
 
+    TMap<FMaterialParameterInfo, FMaterialParameterMetadata> AllParameters;
     TMap<FMaterialParameterInfo, FMaterialParameterMetadata> Parameters;
 
     Material->GetAllParametersOfType(EMaterialParameterType::Scalar, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::Scalar, Parameters);
-
-    Parameters.Reset();
+    AllParameters.Append(Parameters);
 
     Material->GetAllParametersOfType(EMaterialParameterType::Vector, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::Vector, Parameters);
-
-    Parameters.Reset();
+    AllParameters.Append(Parameters);
 
     Material->GetAllParametersOfType(EMaterialParameterType::DoubleVector, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::DoubleVector, Parameters);
-
-    Parameters.Reset();
+    AllParameters.Append(Parameters);
 
     Material->GetAllParametersOfType(EMaterialParameterType::Texture, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::Texture, Parameters);
-
-    Parameters.Reset();
+    AllParameters.Append(Parameters);
 
     Material->GetAllParametersOfType(EMaterialParameterType::Font, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::Font, Parameters);
-
-    Parameters.Reset();
+    AllParameters.Append(Parameters);
 
     Material->GetAllParametersOfType(EMaterialParameterType::RuntimeVirtualTexture, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::RuntimeVirtualTexture, Parameters);
-
-    Parameters.Reset();
+    AllParameters.Append(Parameters);
 
     Material->GetAllParametersOfType(EMaterialParameterType::SparseVolumeTexture, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::SparseVolumeTexture, Parameters);
-
-    Parameters.Reset();
+    AllParameters.Append(Parameters);
 
     Material->GetAllParametersOfType(EMaterialParameterType::StaticSwitch, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::StaticSwitch, Parameters);
-
-    Parameters.Reset();
+    AllParameters.Append(Parameters);
 
     Material->GetAllParametersOfType(EMaterialParameterType::StaticComponentMask, Parameters);
-    AnalyzeParameters(ActionContext, Material, EMaterialParameterType::StaticComponentMask, Parameters);
+    AllParameters.Append(Parameters);
+
+    AnalyzeParameters(ActionContext, Material, AllParameters);
 }
 
 UClass* UMaterialParametersActionBase::GetExpectedType()

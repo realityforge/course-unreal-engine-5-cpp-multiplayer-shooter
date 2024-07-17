@@ -16,7 +16,6 @@
 
 void UEnsureMaterialParametersHaveDescriptionsAction::AnalyzeParameter(URuleRangerActionContext* ActionContext,
                                                                        const UMaterial* const Material,
-                                                                       [[maybe_unused]] EMaterialParameterType Type,
                                                                        const FMaterialParameterInfo& Info,
                                                                        const FMaterialParameterMetadata& Metadata) const
 {

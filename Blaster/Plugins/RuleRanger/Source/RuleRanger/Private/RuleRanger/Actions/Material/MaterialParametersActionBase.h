@@ -28,13 +28,16 @@ class RULERANGER_API UMaterialParametersActionBase : public URuleRangerAction
 
     void AnalyzeParameters(URuleRangerActionContext* ActionContext,
                            const UMaterial* const Material,
-                           EMaterialParameterType MaterialParameterType,
                            const TMap<FMaterialParameterInfo, FMaterialParameterMetadata>& Parameters) const;
 
 protected:
+    virtual bool
+    ShouldAnalyzeParameters(URuleRangerActionContext* ActionContext,
+                            const UMaterial* const Material,
+                            const TMap<FMaterialParameterInfo, FMaterialParameterMetadata>& Parameters) const;
+
     virtual void AnalyzeParameter(URuleRangerActionContext* ActionContext,
                                   const UMaterial* Material,
-                                  EMaterialParameterType Type,
                                   const FMaterialParameterInfo& Info,
                                   const FMaterialParameterMetadata& Metadata) const;
 
