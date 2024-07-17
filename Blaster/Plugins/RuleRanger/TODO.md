@@ -32,7 +32,6 @@ Shorthand notes of where to go next with this experiment:
   * Ensure some name patterns (i.e. *Base) require (Abstract) UCLASS specifier
 * Material checks:
   * Ensure parameters have group/categories
-  * Ensure parameters have descriptions
   * Ensure parameters follow naming convention
   * Ensure that parameters of specific name/type exist on a material ... or a material property? (Useful when using to create dynamic material instance and use strings to match parameters)
   * Ensure that materials associated with Skeletons that have Material type animation curves, have materials with parameters that match.
