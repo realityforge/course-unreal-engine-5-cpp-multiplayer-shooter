@@ -28,17 +28,17 @@ class RULERANGER_API UEnsureMaterialParametersHaveDescriptionsAction final : pub
 
     void AnalyzeParameters(URuleRangerActionContext* ActionContext,
                            UObject* Object,
-                           UMaterial* const Material,
+                           const UMaterial* const Material,
                            EMaterialParameterType Type,
-                           TMap<FMaterialParameterInfo, FMaterialParameterMetadata> Parameters);
+                           TMap<FMaterialParameterInfo, FMaterialParameterMetadata> Parameters) const;
 
 protected:
     void AnalyzeParameter(URuleRangerActionContext* ActionContext,
                           UObject* Object,
-                          UMaterial* Material,
+                          const UMaterial* Material,
                           EMaterialParameterType Type,
-                          FMaterialParameterInfo MaterialParameterInfo,
-                          FMaterialParameterMetadata Metadata);
+                          const FMaterialParameterInfo& MaterialParameterInfo,
+                          const FMaterialParameterMetadata& Metadata) const;
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;

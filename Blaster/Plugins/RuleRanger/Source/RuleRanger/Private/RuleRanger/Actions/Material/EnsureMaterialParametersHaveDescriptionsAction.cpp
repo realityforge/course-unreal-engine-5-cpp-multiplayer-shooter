@@ -13,133 +13,23 @@
  */
 
 #include "EnsureMaterialParametersHaveDescriptionsAction.h"
-#include "Materials/MaterialExpressionParameter.h"
 
-
-//
-// bool UEnsureMaterialParametersHaveDescriptionsAction::ShouldAnalyzeFunction(UEdGraph* Graph,
-//                                                                             UK2Node_FunctionEntry* FunctionEntry) const
-// {
-//     // Only analyze variables in graphs if we should check local variables
-//     return bCheckLocalVariables && Super::ShouldAnalyzeFunction(Graph, FunctionEntry);
-// }
-//
-// void UEnsureMaterialParametersHaveDescriptionsAction::AnalyzeVariable(URuleRangerActionContext* ActionContext,
-//                                                                       UBlueprint* Blueprint,
-//                                                                       const FBPVariableDescription& Variable,
-//                                                                       UK2Node_FunctionEntry* FunctionEntry,
-//                                                                       UEdGraph* Graph)
-// {
-//     bool bCheckVariable = true;
-//     if (!bCheckLocalVariables && Graph)
-//     {
-//         LogInfo(Blueprint,
-//                 FString::Printf(TEXT("Skipping check of local variable named "
-//                                      "'%s' in function named '%s' as "
-//                                      "bCheckLocalVariables is set to false."),
-//                                 *Variable.VarName.ToString(),
-//                                 *Graph->GetName()));
-//         bCheckVariable = false;
-//     }
-//     else if (!bCheckInstanceEditableVariables
-//              && CPF_DisableEditOnInstance != (CPF_DisableEditOnInstance & Variable.PropertyFlags))
-//     {
-//         LogInfo(Blueprint,
-//                 FString::Printf(TEXT("Skipping check of variable named "
-//                                      "'%s' as bCheckInstanceEditableVariables is set to "
-//                                      "false and the variable is an instance editable variable."),
-//                                 *Variable.VarName.ToString()));
-//         bCheckVariable = false;
-//     }
-//
-//     if (!Graph && bCheckVariable && !bCheckTransientVariables
-//         && CPF_Transient == (CPF_Transient & Variable.PropertyFlags))
-//     {
-//         LogInfo(Blueprint,
-//                 FString::Printf(TEXT("Skipping check of variable named "
-//                                      "'%s' as bCheckTransientVariables is set to "
-//                                      "false and the variable is a transient variable."),
-//                                 *Variable.VarName.ToString()));
-//         bCheckVariable &= false;
-//     }
-//
-//     // ReSharper disable once CppTooWideScopeInitStatement
-//     const auto Property = FindUFieldOrFProperty<FProperty>(Blueprint->GeneratedClass, Variable.VarName);
-//     if (!Graph && bCheckVariable && !bCheckPrivateVariables
-//         && (Property && Property->GetBoolMetaData(FName("BlueprintPrivate"))))
-//     {
-//         LogInfo(Blueprint,
-//                 FString::Printf(TEXT("Skipping check of variable named "
-//                                      "'%s' as bCheckPrivateVariables is set to "
-//                                      "false and the variable is a private variable."),
-//                                 *Variable.VarName.ToString()));
-//         bCheckVariable &= false;
-//     }
-//
-//     if (bCheckVariable)
-//     {
-//         if (!Variable.HasMetaData(FBlueprintMetadata::MD_Tooltip)
-//             || 0 == Variable.GetMetaData(FBlueprintMetadata::MD_Tooltip).Len())
-//         {
-//             const FString Name = Variable.VarName.ToString();
-//             const FText TypeName = UEdGraphSchema_K2::TypeToText(Variable.VarType);
-//             if (Graph)
-//             {
-//                 const auto& ErrorMessage = FString::Printf(TEXT("Blueprint contains a local variable "
-//                                                                 "named '%s' in the function "
-//                                                                 "named '%s' that is expected "
-//                                                                 "to have a description but does not."),
-//                                                            *Name,
-//                                                            *Graph->GetName());
-//                 ActionContext->Error(FText::FromString(ErrorMessage));
-//             }
-//             else
-//             {
-//                 const auto& ErrorMessage = FString::Printf(TEXT("Blueprint contains a variable "
-//                                                                 "named '%s' that is expected "
-//                                                                 "to have a description but does not."),
-//                                                            *Name);
-//                 ActionContext->Error(FText::FromString(ErrorMessage));
-//             }
-//         }
-//         else
-//         {
-//             if (Graph)
-//             {
-//                 LogInfo(Blueprint,
-//                         FString::Printf(TEXT("Local variable "
-//                                              "named '%s' in the function "
-//                                              "named '%s' has a description as expected."),
-//                                         *Variable.VarName.ToString(),
-//                                         *Graph->GetName()));
-//             }
-//             else
-//             {
-//                 LogInfo(Blueprint,
-//                         FString::Printf(TEXT("Variable named '%s' has a description as expected."),
-//                                         *Variable.VarName.ToString()));
-//             }
-//         }
-//     }
-// }
-
-void UEnsureMaterialParametersHaveDescriptionsAction::AnalyzeParameter(URuleRangerActionContext* ActionContext,
-                                                                       UObject* Object,
-                                                                       UMaterial* const Material,
-                                                                       EMaterialParameterType Type,
-                                                                       FMaterialParameterInfo MaterialParameterInfo,
-                                                                       FMaterialParameterMetadata Metadata)
+void UEnsureMaterialParametersHaveDescriptionsAction::AnalyzeParameter(
+    URuleRangerActionContext* ActionContext,
+    [[maybe_unused]] UObject* Object,
+    const UMaterial* const Material,
+    [[maybe_unused]] EMaterialParameterType Type,
+    const FMaterialParameterInfo& MaterialParameterInfo,
+    const FMaterialParameterMetadata& Metadata) const
 {
-    //TODO: Extract out superclass that can be used to check parameter names
-    //TODO: Code cleanup
+    // TODO: Extract out superclass that can be used to check parameter names
 
     if (Metadata.Description.TrimStartAndEnd().IsEmpty())
     {
-        ActionContext->Error(FText::FromString(FString::Printf(
-            TEXT("Material contains a parameter named '%s' that is expected "
-                "to have a description but does not."),
-            *MaterialParameterInfo.Name.ToString())));
-
+        ActionContext->Error(
+            FText::FromString(FString::Printf(TEXT("Material contains a parameter named '%s' that is expected "
+                                                   "to have a description but does not."),
+                                              *MaterialParameterInfo.Name.ToString())));
     }
     else
     {
@@ -149,14 +39,14 @@ void UEnsureMaterialParametersHaveDescriptionsAction::AnalyzeParameter(URuleRang
     }
 }
 
-void UEnsureMaterialParametersHaveDescriptionsAction::AnalyzeParameters(URuleRangerActionContext* ActionContext,
-                                                                        UObject* Object,
-                                                                        UMaterial* const Material,
-                                                                        const EMaterialParameterType Type,
-                                                                        TMap<FMaterialParameterInfo,
-                                                                             FMaterialParameterMetadata> Parameters)
+void UEnsureMaterialParametersHaveDescriptionsAction::AnalyzeParameters(
+    URuleRangerActionContext* ActionContext,
+    UObject* Object,
+    const UMaterial* const Material,
+    const EMaterialParameterType Type,
+    const TMap<FMaterialParameterInfo, FMaterialParameterMetadata> Parameters) const
 {
-    for (auto ParameterIt = Parameters.CreateIterator(); ParameterIt; ++ParameterIt)
+    for (auto ParameterIt = Parameters.CreateConstIterator(); ParameterIt; ++ParameterIt)
     {
         AnalyzeParameter(ActionContext, Object, Material, Type, ParameterIt->Key, ParameterIt->Value);
     }
