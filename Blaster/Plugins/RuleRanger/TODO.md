@@ -37,7 +37,6 @@ Shorthand notes of where to go next with this experiment:
   * Ensure that there are no dangling nodes in material
   * If the material does not specify roughness value/texture then suggest enabling fully rough (as long as metadata "DefaultRoughnessAllowed" metadata key set)
   * If the material does not specify normal map then disable "Tangent Space Normals"
-  * Add rule to enforce setting of "Automatically set usage" setting
   * Add rules to check which materials usages are set
   * Ensure that all Texture Sampler nodes have set the setting "Sampler Source" to "Shared: Wrap" or "Shared: Clamp" if
     the associated Texture has the same sampler settings as the world. Use `FGLTFTextureUtilities::GetDefaultFilter(LODGroup)`
