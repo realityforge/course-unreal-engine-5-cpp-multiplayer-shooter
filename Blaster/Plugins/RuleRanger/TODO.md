@@ -57,6 +57,7 @@ TextureFilter FGLTFTextureUtilities::GetDefaultFilter(TextureGroup LODGroup)
 	}
 }
 ```
+* Can we make a asset validator that makes sure that certain assets are not baked/packaged?
 * Native Class checks:
   * Add naming convention check for native classes/structs
   * Add naming convention check for native classes/structs properties and functions
