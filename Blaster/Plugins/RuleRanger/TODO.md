@@ -30,6 +30,10 @@ Shorthand notes of where to go next with this experiment:
   * Add regex per-type for nested names? or global regex for internal names?
   * Ensure that classes (C++ and Blueprint) have a "basename" that ends with Base rather than starts with Base. i.e. Prefer FooBase over BaseFoo
   * Ensure some name patterns (i.e. *Base) require (Abstract) UCLASS specifier
+* Material Function checks:
+  * Ensure that inputs names match pattern
+  * Ensure that descriptions for inputs present
+  * Ensure that the override name matches a pattern if exposed to library
 * Material checks:
   * Ensure that parameters of specific name/type exist on a material ... or a material property? (Useful when using to create dynamic material instance and use strings to match parameters)
   * Ensure that materials associated with Skeletons that have Material type animation curves, have materials with parameters that match.
