@@ -104,10 +104,6 @@ TextureFilter FGLTFTextureUtilities::GetDefaultFilter(TextureGroup LODGroup)
   * Ensure StaticMesh has NO Lightmap UVs (when not using lightmass)
   * Ensure StaticMesh has UVs in Channel0 (for when material only uses world space coordinates)
 
-* Add options to recompile NiagaraSystems/Blueprints if they have an unknown compilation status. They have an
-  unknown status when they have yet to be loaded and forcing a compile will just make sure that the compilation
-  status has been checked. The flag controlling this should be on by default.
-
 Add Action that applies a layout for textures based on metadata and types? Maybe something like:
 Possible Directory layout:
  `Characters/[CharacterName]/Animations`

@@ -125,7 +125,26 @@ void UCheckNiagaraSystemCompileStatusAction::Apply_Implementation(URuleRangerAct
             return;
         }
     }
-
+    if (System->NeedsRequestCompile())
+    {
+        // If the system needs a recompile and we attempt to get status, we will get an Unknown Status.
+        // This code just makes sure that any pending compilation request has completed and thus when we are running
+        // the rule the system is correctly prepared.
+        if (!System->HasOutstandingCompilationRequests(true))
+        {
+            LogInfo(Object, FString::Printf(TEXT("NiagaraSystem has NeedsRequestCompile set, Requesting compile...")));
+            System->RequestCompile(false);
+        }
+        else
+        {
+            LogInfo(
+                Object,
+                FString::Printf(TEXT(
+                    "NiagaraSystem has NeedsRequestCompile set but request already pending. Waiting for compilation to complete...")));
+        }
+        System->WaitForCompilationComplete(true);
+        LogInfo(Object, FString::Printf(TEXT("NiagaraSystem compilation complete.")));
+    }
     for (const FNiagaraEmitterHandle& Handle : System->GetEmitterHandles())
     {
         if (const auto& EmitterData = Handle.GetEmitterData())
