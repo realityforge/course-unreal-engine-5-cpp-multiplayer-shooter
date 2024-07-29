@@ -58,7 +58,7 @@ bool UCheckNiagaraSystemCompileStatusAction::ValidateScript(URuleRangerActionCon
                                                   *Name,
                                                   *ContainerContext)));
             return false;
-            ;
+
         case ENiagaraScriptCompileStatus::NCS_UpToDateWithWarnings:
         case ENiagaraScriptCompileStatus::NCS_ComputeUpToDateWithWarnings:
             if (bErrorOnUpToDateWithWarnings)
