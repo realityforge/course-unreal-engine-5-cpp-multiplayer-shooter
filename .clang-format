@@ -13,6 +13,7 @@
 # For documentation on how to edit this file see https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 # and to experiment you can use https://zed0.co.uk/clang-format-configurator/
 
+---
 Language: Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
@@ -52,27 +53,34 @@ Cpp11BracedListStyle: false
 EmptyLineBeforeAccessModifier: Always
 IndentCaseBlocks: false
 IndentCaseLabels: true
+InsertBraces: true
 IndentPPDirectives: BeforeHash
 IndentWidth: 4
+InsertNewlineAtEOF: true
 NamespaceIndentation: All
 PointerAlignment: Left
 SortIncludes: true
+SortUsingDeclarations: LexicographicNumeric
 SpaceBeforeCaseColon: false
 StatementMacros:
   - UPROPERTY
   - UFUNCTION
   - UCLASS
   - USTRUCT
+  - UE_DECLARE_GAMEPLAY_TAG_EXTERN
+  - UE_DEFINE_GAMEPLAY_TAG
   - UENUM
   - UINTERFACE
   - GENERATED_BODY
+# This is available with clang-format v19
+# BreakTemplateDeclarationsStyle: Yes
+AlwaysBreakTemplateDeclarations: true
 TabWidth: 4
 BinPackParameters: false
 AllowAllParametersOfDeclarationOnNextLine: false
 BinPackArguments: false
-InsertNewlineAtEOF: true
-InsertBraces: true
 AllowAllArgumentsOnNextLine: false
+ReflowComments: true
 UseTab: Never
 IncludeBlocks:   Merge
 IncludeCategories:
@@ -87,3 +95,11 @@ IncludeCategories:
   - Regex:           '^<.*>'
     Priority:        4
 IncludeIsMainRegex: '([-_](test|unittest))?$'
+---
+Language:        CSharp
+BasedOnStyle:  Microsoft
+InsertNewlineAtEOF: true
+---
+Language: Json
+SpaceBeforeJsonColon: false
+InsertNewlineAtEOF: true
