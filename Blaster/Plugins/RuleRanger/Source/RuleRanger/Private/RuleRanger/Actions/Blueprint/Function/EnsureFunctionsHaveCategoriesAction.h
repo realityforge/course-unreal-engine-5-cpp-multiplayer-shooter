@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BlueprintFunctionActionBase.h"
+#include "BlueprintFunctionAccessFilteringActionBase.h"
 #include "CoreMinimal.h"
 #include "K2Node_FunctionEntry.h"
 #include "RuleRangerAction.h"
@@ -34,7 +34,8 @@ class RULERANGER_API UEnsureFunctionsHaveCategoriesAction final : public UBluepr
     int32 Threshold{ 5 };
 
 protected:
-    virtual bool ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const override;
+    virtual bool ShouldAnalyzeFunctions(UBlueprint* Blueprint,
+                                        const TArray<UK2Node_FunctionEntry*>& Functions) const override;
 
     virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                  UBlueprint* Blueprint,

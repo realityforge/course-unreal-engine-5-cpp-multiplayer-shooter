@@ -11,10 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "RemoveNameSuffixAction.h"
 #include "Editor.h"
 #include "RuleRanger/RuleRangerUtilities.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(RemoveNameSuffixAction)
 
 void URemoveNameSuffixAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
@@ -24,6 +25,7 @@ void URemoveNameSuffixAction::Apply_Implementation(URuleRangerActionContext* Act
     }
     else
     {
+        // ReSharper disable once CppTooWideScopeInitStatement
         const FString OriginalName{ Object->GetName() };
         if (OriginalName.EndsWith(Suffix, bCaseSensitive ? ESearchCase::CaseSensitive : ESearchCase::IgnoreCase))
         {

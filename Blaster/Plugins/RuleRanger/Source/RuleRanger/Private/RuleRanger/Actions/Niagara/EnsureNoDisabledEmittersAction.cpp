@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureNoDisabledEmittersAction.h"
 #include "NiagaraSystem.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureNoDisabledEmittersAction)
 
 void UEnsureNoDisabledEmittersAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {

@@ -11,13 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureFunctionsHaveCategoriesAction.h"
 
-bool UEnsureFunctionsHaveCategoriesAction::ShouldAnalyzeBlueprint(UBlueprint* Blueprint) const
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureFunctionsHaveCategoriesAction)
+
+bool UEnsureFunctionsHaveCategoriesAction::ShouldAnalyzeFunctions(UBlueprint* Blueprint,
+                                                                  const TArray<UK2Node_FunctionEntry*>& Functions) const
 {
-    // -1 to skip the construction graph
-    const int32 FunctionCount = Blueprint->FunctionGraphs.Num() - 1;
+    const int32 FunctionCount = Functions.Num();
     const bool bAnalyze = FunctionCount >= Threshold;
     if (!bAnalyze)
     {

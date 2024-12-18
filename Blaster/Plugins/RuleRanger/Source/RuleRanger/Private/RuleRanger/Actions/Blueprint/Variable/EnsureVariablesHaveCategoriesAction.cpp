@@ -11,10 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureVariablesHaveCategoriesAction.h"
 #include "K2Node_FunctionEntry.h"
 #include "Kismet2/BlueprintEditorUtils.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureVariablesHaveCategoriesAction)
 
 bool UEnsureVariablesHaveCategoriesAction::ShouldAnalyzeBlueprintVariables(UBlueprint* Blueprint) const
 {

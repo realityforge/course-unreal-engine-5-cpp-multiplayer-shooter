@@ -18,6 +18,8 @@
 #include "EditorValidatorBase.h"
 #include "RuleRangerEditorValidator.generated.h"
 
+class URuleRangerRuleSet;
+class URuleRangerConfig;
 class URuleRangerActionContext;
 class URuleRangerRule;
 
@@ -31,24 +33,34 @@ class URuleRangerEditorValidator : public UEditorValidatorBase
 
 public:
     URuleRangerEditorValidator();
-    virtual bool CanValidate_Implementation(const EDataValidationUsecase InUsecase) const override;
-    virtual bool CanValidateAsset_Implementation(UObject* InAsset) const override;
-    virtual EDataValidationResult ValidateLoadedAsset_Implementation(UObject* InAsset,
-                                                                     TArray<FText>& ValidationErrors) override;
+    virtual bool CanValidateAsset_Implementation(const FAssetData& InAssetData,
+                                                 UObject* InAsset,
+                                                 FDataValidationContext& InContext) const override;
+    virtual EDataValidationResult ValidateLoadedAsset_Implementation(const FAssetData& InAssetData,
+                                                                     UObject* InAsset,
+                                                                     FDataValidationContext& Context) override;
 
 private:
     UPROPERTY(VisibleAnywhere)
     URuleRangerActionContext* ActionContext{ nullptr };
 
     /**
-     * Function invoked when each rules is applied to an object.
+     * Function invoked when each rule is applied to an object.
      *
-     * @param ValidationErrors A place to collect errors if any occur.
+     * @param Config The config that transitively contained the Rule.
+     * @param RuleSet The RuleSet that directly contained the Rule.
      * @param Rule The rule to apply.
      * @param InObject the object to apply rule to.
+     * @param Context the validation context.
      * @return true to keep processing, false if no more rules should be applied to object.
      */
-    bool ProcessRule(TArray<FText>& ValidationErrors, URuleRangerRule* Rule, UObject* InObject);
+    bool ProcessRule(URuleRangerConfig* const Config,
+                     URuleRangerRuleSet* const RuleSet,
+                     URuleRangerRule* Rule,
+                     UObject* InObject,
+                     FDataValidationContext& Context);
 
-    bool WillRuleRun(URuleRangerRule* Rule, UObject* InObject) const;
+    bool WillRuleRunInDataValidationUsecase(const URuleRangerRule* Rule,
+                                            const UObject* InObject,
+                                            EDataValidationUsecase DataValidationUsecase) const;
 };

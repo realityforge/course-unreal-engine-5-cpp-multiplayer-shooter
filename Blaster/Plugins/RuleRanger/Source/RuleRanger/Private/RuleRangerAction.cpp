@@ -14,6 +14,8 @@
 #include "RuleRangerAction.h"
 #include "RuleRangerActionContext.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(RuleRangerAction)
+
 void URuleRangerAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) {}
 
 UClass* URuleRangerAction::GetExpectedType()

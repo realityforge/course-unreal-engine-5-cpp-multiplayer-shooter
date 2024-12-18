@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureRuleRangerSetHasDescriptionAction.h"
 #include "RuleRangerRuleSet.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureRuleRangerSetHasDescriptionAction)
 
 void UEnsureRuleRangerSetHasDescriptionAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
                                                                     UObject* Object)
@@ -24,7 +25,6 @@ void UEnsureRuleRangerSetHasDescriptionAction::Apply_Implementation(URuleRangerA
         {
             ActionContext->Error(FText::FromString(
                 TEXT("RuleRangerRuleSet has a blank description. Please add a description to the RuleSet.")));
-
         }
     }
 }

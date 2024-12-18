@@ -11,7 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureFunctionsMaxNodeCountAction.h"
 #include "EdGraphNode_Comment.h"
 #include "K2Node_BreakStruct.h"
@@ -25,6 +24,8 @@
 #include "K2Node_TemporaryVariable.h"
 #include "K2Node_Tunnel.h"
 #include "K2Node_VariableGet.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureFunctionsMaxNodeCountAction)
 
 bool UEnsureFunctionsMaxNodeCountAction::IsNodeTrivial(const UEdGraphNode* Node)
 {

@@ -16,32 +16,33 @@ using UnrealBuildTool;
 
 public class RuleRanger : ModuleRules
 {
-	public RuleRanger(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-		PublicIncludePaths.AddRange(new string[] { });
-		PrivateIncludePaths.AddRange(new string[] { });
-		PublicDependencyModuleNames.AddRange(new[] { "ContentBrowser", "Core" });
-		PrivateDependencyModuleNames.AddRange(
-			new[]
-			{
-				"AnimGraph",
-				"AssetTools",
-				"CoreUObject",
-				"BlueprintGraph",
-				"DataValidation",
-				"DeveloperSettings",
-				"EditorSubsystem",
-				"Engine",
-				"Projects", // IPluginManager
-				"MessageLog",
-				"NiagaraEditor",
-				"Niagara",
-				"Slate",
-				"SlateCore",
-				"UnrealEd"
-			});
-		PrivateIncludePathModuleNames.AddRange(new[] { "MessageLog" });
-		DynamicallyLoadedModuleNames.AddRange(new string[] { });
-	}
+    public RuleRanger(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+        PublicIncludePaths.AddRange(new string[] {});
+        PrivateIncludePaths.AddRange(new string[] {});
+        PublicDependencyModuleNames.AddRange(new[] { "ContentBrowser", "Core" });
+        // clang-format off
+        PrivateDependencyModuleNames.AddRange(new[] {
+                "AnimGraph",
+                "AssetTools",
+                "CoreUObject",
+                "BlueprintGraph",
+                "DataValidation",
+                "DeveloperSettings",
+                "EditorSubsystem",
+                "Engine",
+                "Kismet",
+                "Projects", // IPluginManager
+                "MessageLog",
+                "NiagaraEditor",
+                "Niagara",
+                "Slate",
+                "SlateCore",
+                "UnrealEd"
+            });
+		// clang-format on                    
+        PrivateIncludePathModuleNames.AddRange(new[] { "MessageLog" });
+        DynamicallyLoadedModuleNames.AddRange(new string[] {});
+    }
 }

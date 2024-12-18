@@ -42,11 +42,15 @@ struct FNameConvention final : public FTableRowBase
 
     /** The prefix to add to the name (if any). */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString Prefix{ TEXT("") };
+    FString Prefix{ "" };
 
     /** The suffix to add to the name (if any). */
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString Suffix{ TEXT("") };
+    FString Suffix{ "" };
+
+    /** An explanation of the convention. */
+    UPROPERTY(EditAnywhere)
+    FString Description{ "" };
 
     FORCEINLINE bool operator<(const FNameConvention& Other) const
     {
@@ -54,6 +58,55 @@ struct FNameConvention final : public FTableRowBase
             : Other.Variant.Equals(NameConvention_DefaultVariant) ? true
             : Prefix != Other.Prefix                              ? Prefix < Other.Prefix
                                                                   : Suffix < Other.Suffix;
+    }
+
+    FORCEINLINE bool operator!=(const FNameConvention& Other) const { return !(*this == Other); }
+
+    FORCEINLINE bool operator==(const FNameConvention& Other) const
+    {
+        return ObjectType == Other.ObjectType && Variant.Equals(Other.Variant) && Prefix.Equals(Other.Prefix)
+            && Suffix.Equals(Other.Suffix);
+    }
+};
+
+/**
+ * Deprecated Name conventions that should be removed before applying other naming rules.
+ *
+ * These rules are either ones builtin to the engine (i.e. `_Inst` suffix when creating
+ * instances of various types from within the editor) or were used historically. (Thus many
+ * assets follow convention, and we want an easy way to rename them to the new conventions.)
+ */
+USTRUCT(BlueprintType)
+struct FDeprecatedNameConvention final : public FTableRowBase
+{
+    GENERATED_BODY();
+
+    /** The object type that this name convention applied to. */
+    UPROPERTY(EditAnywhere, meta = (AllowAbstract))
+    TSoftClassPtr<UObject> ObjectType{ nullptr };
+
+    /** The prefix to remove from the name (if any). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FString Prefix{ "" };
+
+    /** The suffix to remove from the name (if any). */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FString Suffix{ "" };
+
+    /** An explanation of the deprecation. */
+    UPROPERTY(EditAnywhere)
+    FString Description{ "" };
+
+    FORCEINLINE bool operator<(const FDeprecatedNameConvention& Other) const
+    {
+        return Prefix != Other.Prefix ? Prefix < Other.Prefix : Suffix < Other.Suffix;
+    }
+
+    FORCEINLINE bool operator!=(const FDeprecatedNameConvention& Other) const { return !(*this == Other); }
+
+    FORCEINLINE bool operator==(const FDeprecatedNameConvention& Other) const
+    {
+        return ObjectType == Other.ObjectType && Prefix.Equals(Other.Prefix) && Suffix.Equals(Other.Suffix);
     }
 };
 
@@ -66,30 +119,45 @@ class RULERANGER_API UEnsureNameFollowsConventionAction : public URuleRangerActi
 {
     GENERATED_BODY()
 
-    /** The array of tables that contains the object naming rules */
-    UPROPERTY(EditAnywhere,
+    /** The array of tables that contains the deprecated naming rules */
+    UPROPERTY(EditAnywhere, meta = (RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.DeprecatedNameConvention"))
+    TArray<TObjectPtr<UDataTable>> DeprecatedConventionsTables;
 
-              meta = (RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.NameConvention"))
-    TArray<UDataTable*> NameConventionsTables;
+    /** The array of tables that contains the object naming rules */
+    UPROPERTY(EditAnywhere, meta = (RequiredAssetDataTags = "RowStructure=/Script/RuleRanger.NameConvention"))
+    TArray<TObjectPtr<UDataTable>> NameConventionsTables;
 
     /** Should the action issue a message log when it attempts to process an object that has no naming convention? */
     UPROPERTY(EditAnywhere)
-    bool bNotifyIfNameConventionMissing;
+    bool bNotifyIfNameConventionMissing{ false };
+
+    /** Cache for looking up deprecated rules. */
+    TMap<TObjectPtr<UClass>, TArray<FDeprecatedNameConvention>> DeprecatedConventionsCache;
 
     /** Cache for looking up rules. */
-    TMap<TObjectPtr<UClass>, TArray<FNameConvention>> NameConventionsCache;
+    TMap<TObjectPtr<UClass>, TArray<FNameConvention>> ConventionsCache;
 
     /** Handle for delegate called when any object modified in editor. */
     FDelegateHandle OnObjectModifiedDelegateHandle;
 
     /** Callback when any object is modified in the editor. */
-    void ResetCacheIfTableModified(UObject* Object);
+    void ResetCachesIfTablesModified(UObject* Object);
 
     /** Method to clear cache. */
-    void ResetNameConventionsCache();
+    void ResetCaches();
 
-    /** Method to build cache if necessary. */
-    void RebuildNameConventionsCacheIfNecessary();
+    /** Method to build convention cache if necessary. */
+    void RebuildConventionCacheIfNecessary();
+
+    /** Method to build deprecated convention cache if necessary. */
+    void RebuildDeprecatedConventionCacheIfNecessary();
+
+    bool FindMatchingNameConvention(URuleRangerActionContext* ActionContext,
+                                    const UObject* Object,
+                                    const TArray<UClass*>& Classes,
+                                    const FString& Variant,
+                                    FNameConvention& MatchingConvention) const;
+    void RebuildCachesIfNecessary();
 
 public:
     virtual void Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object) override;

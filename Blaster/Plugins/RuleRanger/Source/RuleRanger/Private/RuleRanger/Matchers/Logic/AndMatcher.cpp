@@ -13,7 +13,9 @@
  */
 #include "AndMatcher.h"
 
-bool UAndMatcher::Test_Implementation(UObject* Object)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(AndMatcher)
+
+bool UAndMatcher::Test_Implementation(UObject* Object) const
 {
     if (IsValid(Object))
     {

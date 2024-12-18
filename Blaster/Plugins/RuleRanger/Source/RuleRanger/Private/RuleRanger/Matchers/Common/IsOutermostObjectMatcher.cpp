@@ -14,7 +14,9 @@
 
 #include "IsOutermostObjectMatcher.h"
 
-bool UIsOutermostObjectMatcher::Test_Implementation(UObject* Object)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(IsOutermostObjectMatcher)
+
+bool UIsOutermostObjectMatcher::Test_Implementation(UObject* Object) const
 {
     return Object->GetOutermost() == Object;
 }

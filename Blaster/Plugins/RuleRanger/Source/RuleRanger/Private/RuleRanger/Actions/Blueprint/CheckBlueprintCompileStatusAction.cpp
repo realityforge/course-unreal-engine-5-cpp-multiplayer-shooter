@@ -11,13 +11,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "CheckBlueprintCompileStatusAction.h"
+#include "BlueprintCompilationManager.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(CheckBlueprintCompileStatusAction)
 
 void UCheckBlueprintCompileStatusAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto Blueprint = CastChecked<UBlueprint>(Object);
+    if ((BS_Dirty == Blueprint->Status || BS_Unknown == Blueprint->Status) && !ActionContext->IsDryRun())
+    {
+        LogInfo(Object,
+                FString::Printf(TEXT("Blueprint compile status is %s, attempting to recompile "
+                                     "as RuleRanger is not in DryRun mode."),
+                                (BS_Dirty == Blueprint->Status ? TEXT("Dirty") : TEXT("Unknown"))));
+        if (!Blueprint->bBeingCompiled)
+        {
+            const FBPCompileRequest Request(Blueprint, EBlueprintCompileOptions::None, nullptr);
+            FBlueprintCompilationManager::CompileSynchronously(Request);
+        }
+        else
+        {
+            LogInfo(Object,
+                    FString::Printf(TEXT("Blueprint is being compiled. "
+                                         "Waiting for compilation to complete...")));
+            FBlueprintCompilationManager::FlushCompilationQueue(nullptr);
+        }
+        LogInfo(Object, FString::Printf(TEXT("Blueprint  compilation complete.")));
+    }
+
     switch (Blueprint->Status)
     {
         case BS_BeingCreated:

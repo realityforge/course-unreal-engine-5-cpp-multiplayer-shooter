@@ -11,11 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureAssetImportedFromDataSourceFolderAction.h"
 #include "Editor/EditorPerProjectUserSettings.h"
 #include "EditorFramework/AssetImportData.h"
 #include "UObject/PropertyAccessUtil.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureAssetImportedFromDataSourceFolderAction)
 
 void UEnsureAssetImportedFromDataSourceFolderAction::ValidateAssetImportData(
     URuleRangerActionContext* ActionContext,
@@ -149,9 +150,9 @@ void UEnsureAssetImportedFromDataSourceFolderAction::Apply_Implementation(URuleR
             }
             else if (!bSkipAssetsMissingAssetImportData)
             {
-                ActionContext->Error(FText::FromString(L"Asset missing AssetImportData and "
-                                                       "SkipAssetsMissingAssetImportData=false. Change setting "
-                                                       "or ensure asset has been imported correctly."));
+                ActionContext->Error(FText::FromString(TEXT("Asset missing AssetImportData and "
+                                                            "SkipAssetsMissingAssetImportData=false. Change setting "
+                                                            "or ensure asset has been imported correctly.")));
             }
         }
         else

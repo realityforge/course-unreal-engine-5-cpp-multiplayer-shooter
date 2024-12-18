@@ -14,6 +14,8 @@
 
 #include "EnsureTextureGroupValidAction.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureTextureGroupValidAction)
+
 void UEnsureTextureGroupValidAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
@@ -75,6 +77,6 @@ void UEnsureTextureGroupValidAction::Apply_Implementation(URuleRangerActionConte
     }
     else
     {
-        LogInfo(Texture, TEXT("Texture has a valid TextureGroup. No Aciton required."));
+        LogInfo(Texture, TEXT("Texture has a valid TextureGroup. No Action required."));
     }
 }

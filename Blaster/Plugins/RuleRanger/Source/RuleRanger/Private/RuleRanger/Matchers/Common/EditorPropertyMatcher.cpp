@@ -15,7 +15,9 @@
 #include "Editor.h"
 #include "Kismet/KismetStringLibrary.h"
 
-bool UEditorPropertyMatcher::TestEditorProperty(UObject* Object, UObject* Instance, FProperty* Property)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EditorPropertyMatcher)
+
+bool UEditorPropertyMatcher::TestEditorProperty(UObject* Object, UObject* Instance, FProperty* Property) const
 {
     if (const auto BoolProperty = CastField<const FBoolProperty>(Property))
     {

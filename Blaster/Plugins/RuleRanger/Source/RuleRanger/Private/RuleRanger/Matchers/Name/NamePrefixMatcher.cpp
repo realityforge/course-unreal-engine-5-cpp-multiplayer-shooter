@@ -14,7 +14,9 @@
 #include "NamePrefixMatcher.h"
 #include "Editor.h"
 
-bool UNamePrefixMatcher::Test_Implementation(UObject* Object)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(NamePrefixMatcher)
+
+bool UNamePrefixMatcher::Test_Implementation(UObject* Object) const
 {
     return Object->GetName().StartsWith(Prefix, bCaseSensitive ? ESearchCase::CaseSensitive : ESearchCase::IgnoreCase);
 }

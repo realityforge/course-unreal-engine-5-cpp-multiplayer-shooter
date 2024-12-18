@@ -31,5 +31,5 @@ class RULERANGER_API USourceFilenameStartsWithMatcher final : public USourcePath
     FString Text;
 
 protected:
-    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive) override;
+    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive) const override;
 };

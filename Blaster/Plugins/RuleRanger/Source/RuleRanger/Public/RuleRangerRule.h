@@ -95,4 +95,14 @@ public:
      */
     UFUNCTION(BlueprintNativeEvent, Category = "Rule Ranger")
     void Apply(URuleRangerActionContext* ActionContext, UObject* Object);
+
+    /**
+     * Run the matchers associated with the rule to see if actions will be invoked by this rule or whether no matcher
+     * match.
+     *
+     * @param ActionContext the context in which the actions are invoked.
+     * @param Object the object to apply the actions to.
+     * @return true if the rule matches, false otherwise.
+     */
+    bool Match(URuleRangerActionContext* ActionContext, UObject* Object) const;
 };

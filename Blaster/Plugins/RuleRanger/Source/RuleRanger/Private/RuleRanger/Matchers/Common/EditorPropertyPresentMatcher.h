@@ -27,5 +27,5 @@ class RULERANGER_API UEditorPropertyPresentMatcher final : public UEditorPropert
     GENERATED_BODY()
 
 protected:
-    virtual bool TestEditorProperty(UObject* Object, UObject* Instance, FProperty* Property) override;
+    virtual bool TestEditorProperty(UObject* Object, UObject* Instance, FProperty* Property) const override;
 };

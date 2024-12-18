@@ -13,7 +13,9 @@
  */
 #include "OrMatcher.h"
 
-bool UOrMatcher::Test_Implementation(UObject* Object)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(OrMatcher)
+
+bool UOrMatcher::Test_Implementation(UObject* Object) const
 {
     if (IsValid(Object))
     {

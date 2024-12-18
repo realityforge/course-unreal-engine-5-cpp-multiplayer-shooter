@@ -11,10 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "SetMetadataTagsAction.h"
 #include "Editor.h"
 #include "Subsystems/EditorAssetSubsystem.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(SetMetadataTagsAction)
 
 void USetMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
@@ -32,6 +33,7 @@ void USetMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* Acti
             }
             else
             {
+                // ReSharper disable once CppTooWideScopeInitStatement
                 FString ExistingValue = Subsystem->GetMetadataTag(Object, MetadataTag.Key);
                 if (ExistingValue.Equals(MetadataTag.Value))
                 {

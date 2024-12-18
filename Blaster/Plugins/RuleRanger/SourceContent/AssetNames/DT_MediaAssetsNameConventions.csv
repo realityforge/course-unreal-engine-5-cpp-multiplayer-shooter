@@ -1,4 +1,4 @@
----,ObjectType,Variant,Prefix,Suffix
-FileMediaSource,"/Script/MediaAssets.FileMediaSource","","FMS_",""
-MediaPlayer,"/Script/MediaAssets.MediaPlayer","","MP_",""
-MediaTexture,"/Script/MediaAssets.MediaTexture","","MT_",""
+---,ObjectType,Variant,Prefix,Suffix,Description
+FileMediaSource,"/Script/MediaAssets.FileMediaSource","","FMS_","",""
+MediaPlayer,"/Script/MediaAssets.MediaPlayer","","MP_","",""
+MediaTexture,"/Script/MediaAssets.MediaTexture","","MT_","",""

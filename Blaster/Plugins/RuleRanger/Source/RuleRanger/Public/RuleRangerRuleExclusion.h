@@ -13,7 +13,6 @@
  */
 #pragma once
 
-#include "RuleRangerObjectBase.h"
 #include "RuleRangerRuleExclusion.generated.h"
 
 class URuleRangerRule;

@@ -29,7 +29,8 @@ class URuleRangerContentBrowserExtensions;
 
 // Shape of function called to check whether rule will run or actually execute rule.
 // The actual function is determined by where it is used.
-using FRuleRangerRuleFn = std::function<bool(URuleRangerRule* Rule, UObject* InObject)>;
+using FRuleRangerRuleFn = std::function<
+    bool(URuleRangerConfig* const Config, URuleRangerRuleSet* const RuleSet, URuleRangerRule* Rule, UObject* InObject)>;
 
 /**
  * The subsystem responsible for managing callbacks to other subsystems such as ImportSubsystem callbacks.
@@ -79,12 +80,18 @@ private:
     /**
      * Function invoked when each rule is applied to an object during import.
      *
-     * @param bIsReimport A flag indicating whether it is an import or re-import action.
+     * @param Config The Config that transitively included this rule.
+     * @param RuleSet The RuleSet that directly included this rule.
      * @param Rule The rule to apply.
+     * @param bIsReimport A flag indicating whether it is an import or re-import action.
      * @param InObject the object to apply rule to.
      * @return true to keep processing, false if no more rules should be applied to object.
      */
-    bool ProcessOnAssetPostImportRule(const bool bIsReimport, URuleRangerRule* Rule, UObject* InObject);
+    bool ProcessOnAssetPostImportRule(URuleRangerConfig* const Config,
+                                      URuleRangerRuleSet* const RuleSet,
+                                      URuleRangerRule* Rule,
+                                      const bool bIsReimport,
+                                      UObject* InObject) const;
 
     /**
      * Function invoked when each rule is applied to an object when user requested an explicit scan.
@@ -93,7 +100,10 @@ private:
      * @param InObject the object to apply rule to.
      * @return true to keep processing, false if no more rules should be applied to object.
      */
-    bool ProcessDemandScan(URuleRangerRule* Rule, UObject* InObject);
+    bool ProcessDemandScan(URuleRangerConfig* const Config,
+                           URuleRangerRuleSet* const RuleSet,
+                           URuleRangerRule* Rule,
+                           UObject* InObject) const;
 
     /**
      * Function invoked when each rule is applied to an object when user requested an explicit scan and autofix.
@@ -102,5 +112,8 @@ private:
      * @param InObject the object to apply rule to.
      * @return true to keep processing, false if no more rules should be applied to object.
      */
-    bool ProcessDemandScanAndFix(URuleRangerRule* Rule, UObject* InObject);
+    bool ProcessDemandScanAndFix(URuleRangerConfig* const Config,
+                                 URuleRangerRuleSet* const RuleSet,
+                                 URuleRangerRule* Rule,
+                                 UObject* InObject) const;
 };

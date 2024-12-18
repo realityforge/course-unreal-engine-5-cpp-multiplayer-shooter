@@ -27,5 +27,5 @@ class RULERANGER_API UIsOutermostObjectMatcher final : public URuleRangerMatcher
     GENERATED_BODY()
 
 public:
-    virtual bool Test_Implementation(UObject* Object) override;
+    bool Test_Implementation(UObject* Object) const override;
 };

@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureMaxTextureResolutionAction.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureMaxTextureResolutionAction)
 
 void UEnsureMaxTextureResolutionAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {

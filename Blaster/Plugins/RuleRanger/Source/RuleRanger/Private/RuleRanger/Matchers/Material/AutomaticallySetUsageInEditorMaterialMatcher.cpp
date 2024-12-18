@@ -13,7 +13,9 @@
  */
 #include "AutomaticallySetUsageInEditorMaterialMatcher.h"
 
-bool UAutomaticallySetUsageInEditorMaterialMatcher::Test_Implementation(UObject* Object)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(AutomaticallySetUsageInEditorMaterialMatcher)
+
+bool UAutomaticallySetUsageInEditorMaterialMatcher::Test_Implementation(UObject* Object) const
 {
     const UMaterial* Material = Cast<UMaterial>(Object);
     return Material && Material->bAutomaticallySetUsageInEditor == bAutomaticallySetUsageInEditor;

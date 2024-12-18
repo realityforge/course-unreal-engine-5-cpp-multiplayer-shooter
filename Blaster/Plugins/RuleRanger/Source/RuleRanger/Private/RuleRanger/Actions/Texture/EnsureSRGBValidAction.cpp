@@ -14,6 +14,8 @@
 
 #include "EnsureSRGBValidAction.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureSRGBValidAction)
+
 void UEnsureSRGBValidAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
@@ -48,6 +50,6 @@ void UEnsureSRGBValidAction::Apply_Implementation(URuleRangerActionContext* Acti
     }
     else
     {
-        LogInfo(Texture, TEXT("Texture has a valid sRGB. No Aciton required."));
+        LogInfo(Texture, TEXT("Texture has a valid sRGB. No Action required."));
     }
 }

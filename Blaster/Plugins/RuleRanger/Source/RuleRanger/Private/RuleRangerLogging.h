@@ -17,3 +17,20 @@
 
 // Log category to use within the RuleRanger plugin
 DECLARE_LOG_CATEGORY_EXTERN(RuleRanger, Verbose, All);
+
+#define RR_LOG(Verbosity, Format, ...)                        \
+    {                                                         \
+        UE_LOG(RuleRanger, Verbosity, Format, ##__VA_ARGS__); \
+    }
+
+#define RR_ERROR_LOG(Format, ...) RR_LOG(Error, Format, ##__VA_ARGS__)
+#define RR_WARNING_LOG(Format, ...) RR_LOG(Warning, Format, ##__VA_ARGS__)
+#define RR_INFO_LOG(Format, ...) RR_LOG(Log, Format, ##__VA_ARGS__)
+#define RR_VERBOSE_LOG(Format, ...) RR_LOG(Verbose, Format, ##__VA_ARGS__)
+#define RR_VERY_VERBOSE_LOG(Format, ...) RR_LOG(VeryVerbose, Format, ##__VA_ARGS__)
+
+#define RR_ERROR_ALOG(Format, ...) RR_ERROR_LOG(TEXT(Format), ##__VA_ARGS__)
+#define RR_WARNING_ALOG(Format, ...) RR_WARNING_LOG(TEXT(Format), ##__VA_ARGS__)
+#define RR_INFO_ALOG(Format, ...) RR_INFO_LOG(TEXT(Format), ##__VA_ARGS__)
+#define RR_VERBOSE_ALOG(Format, ...) RR_VERBOSE_LOG(TEXT(Format), ##__VA_ARGS__)
+#define RR_VERY_VERBOSE_ALOG(Format, ...) RR_VERY_VERBOSE_LOG(TEXT(Format), ##__VA_ARGS__)

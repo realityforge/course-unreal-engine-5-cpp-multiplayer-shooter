@@ -1,2 +1,2 @@
----,ObjectType,Variant,Prefix,Suffix
-ControlRig,"/Script/ControlRig.ControlRig","","CR_",""
+---,ObjectType,Variant,Prefix,Suffix,Description
+ControlRig,"/Script/ControlRig.ControlRig","","CR_","",""

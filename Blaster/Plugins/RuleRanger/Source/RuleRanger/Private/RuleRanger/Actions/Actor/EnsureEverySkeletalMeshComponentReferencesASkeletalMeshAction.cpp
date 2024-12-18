@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureEverySkeletalMeshComponentReferencesASkeletalMeshAction.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureEverySkeletalMeshComponentReferencesASkeletalMeshAction)
 
 void UEnsureEverySkeletalMeshComponentReferencesASkeletalMeshAction::Apply_Implementation(
     URuleRangerActionContext* ActionContext,

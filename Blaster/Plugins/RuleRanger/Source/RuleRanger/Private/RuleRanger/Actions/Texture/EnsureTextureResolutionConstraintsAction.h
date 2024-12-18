@@ -16,40 +16,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "RuleRanger/DataTypes/TextureResolutionConstraint.h"
 #include "RuleRangerAction.h"
 #include "Texture2DActionBase.h"
 #include "EnsureTextureResolutionConstraintsAction.generated.h"
-
-/**
- * The rules around texture resolution.
- */
-UENUM(BlueprintType)
-enum class ETextureResolutionConstraint : uint8
-{
-    /**
-     * Both texture dimensions must be powers of two.
-     * This is to ensure that the texture can have useful mipmap generation.
-     */
-    PowerOfTwo UMETA(DisplayName = "Power Of Two"),
-    /**
-     * Both texture dimensions must be divisible by 4.
-     * Most texture compression formats require that the texture be divisible by 4 to use the texture compression
-     * format.
-     */
-    DivisibleByFour UMETA(DisplayString = "Divisible by 4"),
-    /**
-     * Both texture dimensions must be divisible by 8.
-     * Some texture compression formats require that the texture be divisible by 8 to use the texture compression
-     * format.
-     */
-    DivisibleByEight UMETA(DisplayString = "Divisible by 8"),
-    /**
-     * Both texture dimensions must be divisible by 12.
-     * Some texture compression formats require that the texture be divisible by 12 to use the texture compression
-     * format.
-     */
-    DivisibleByTwelve UMETA(DisplayString = "Divisible by 12")
-};
 
 /**
  * Action to check that a Texture dimensions comply with the specified constraint.

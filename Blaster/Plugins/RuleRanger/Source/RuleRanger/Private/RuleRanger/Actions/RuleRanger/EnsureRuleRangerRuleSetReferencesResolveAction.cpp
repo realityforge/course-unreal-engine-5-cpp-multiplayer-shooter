@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureRuleRangerRuleSetReferencesResolveAction.h"
 #include "RuleRangerRuleSet.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureRuleRangerRuleSetReferencesResolveAction)
 
 void UEnsureRuleRangerRuleSetReferencesResolveAction::Apply_Implementation(URuleRangerActionContext* ActionContext,
                                                                            UObject* Object)

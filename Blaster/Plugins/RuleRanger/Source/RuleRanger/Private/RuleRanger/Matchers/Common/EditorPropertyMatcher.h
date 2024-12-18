@@ -31,5 +31,5 @@ class RULERANGER_API UEditorPropertyMatcher final : public UEditorPropertyMatche
     FString Value{ TEXT("") };
 
 protected:
-    virtual bool TestEditorProperty(UObject* Object, UObject* Instance, FProperty* Property) override;
+    virtual bool TestEditorProperty(UObject* Object, UObject* Instance, FProperty* Property) const override;
 };

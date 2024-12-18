@@ -11,20 +11,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureFunctionsReturnAction.h"
 #include "K2Node_FunctionEntry.h"
 #include "K2Node_FunctionResult.h"
 
-bool UEnsureFunctionsReturnAction::ShouldAnalyzeGraph(UEdGraph* Graph) const
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureFunctionsReturnAction)
+
+bool UEnsureFunctionsReturnAction::ShouldAnalyzeGraph(UBlueprint* Blueprint, UEdGraph* Graph) const
 {
-    return Super::ShouldAnalyzeGraph(Graph) && UEdGraphSchema_K2::GN_AnimGraph != Graph->GetFName();
+    return Super::ShouldAnalyzeGraph(Blueprint, Graph) && UEdGraphSchema_K2::GN_AnimGraph != Graph->GetFName();
 }
 
 void UEnsureFunctionsReturnAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
-                                                       UBlueprint* Blueprint,
-                                                       UK2Node_FunctionEntry* FunctionEntry,
-                                                       UEdGraph* Graph)
+                                                   UBlueprint* Blueprint,
+                                                   UK2Node_FunctionEntry* FunctionEntry,
+                                                   UEdGraph* Graph)
 {
     // Find the list of result nodes
     TArray<UK2Node_FunctionResult*> ResultNodes;

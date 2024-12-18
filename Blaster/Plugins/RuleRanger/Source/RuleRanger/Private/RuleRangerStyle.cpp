@@ -23,23 +23,21 @@ void FRuleRangerStyle::Initialize()
 {
     if (!StyleInstance.IsValid())
     {
-        UE_LOG(RuleRanger, VeryVerbose, TEXT("FRuleRangerStyle::Initialize(): Creating StyleSet."));
+        RR_VERY_VERBOSE_ALOG("FRuleRangerStyle::Initialize(): Creating StyleSet.");
         StyleInstance = Create();
-        UE_LOG(RuleRanger, VeryVerbose, TEXT("FRuleRangerStyle::Initialize(): Registering StyleSet."));
+        RR_VERY_VERBOSE_ALOG("FRuleRangerStyle::Initialize(): Registering StyleSet.");
         FSlateStyleRegistry::RegisterSlateStyle(*StyleInstance);
     }
     else
     {
-        UE_LOG(RuleRanger,
-               VeryVerbose,
-               TEXT("FRuleRangerStyle::Initialize(): Skipping "
-                    "creation and registration of StyleSheet as already valid."));
+        RR_VERY_VERBOSE_ALOG("FRuleRangerStyle::Initialize(): Skipping "
+                             "creation and registration of StyleSheet as already valid.");
     }
 }
 
 void FRuleRangerStyle::Shutdown()
 {
-    UE_LOG(RuleRanger, VeryVerbose, TEXT("FRuleRangerStyle::Shutdown: Deregistering StyleSet."));
+    RR_VERY_VERBOSE_ALOG("FRuleRangerStyle::Shutdown: Deregistering StyleSet.");
     FSlateStyleRegistry::UnRegisterSlateStyle(*StyleInstance);
     ensure(StyleInstance.IsUnique());
     StyleInstance.Reset();

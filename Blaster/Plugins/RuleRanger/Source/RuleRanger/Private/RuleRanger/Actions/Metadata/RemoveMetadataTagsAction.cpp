@@ -11,10 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "RemoveMetadataTagsAction.h"
 #include "Editor.h"
 #include "Subsystems/EditorAssetSubsystem.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(RemoveMetadataTagsAction)
 
 void URemoveMetadataTagsAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {

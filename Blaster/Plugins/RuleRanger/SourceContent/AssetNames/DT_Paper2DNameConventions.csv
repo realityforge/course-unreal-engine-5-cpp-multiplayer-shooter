@@ -1,5 +1,6 @@
----,ObjectType,Variant,Prefix,Suffix
-PaperFlipbook,"/Script/Paper2D.PaperFlipbook","","PFB_",""
-Sprite,"/Script/Paper2D.PaperSprite","","SPR_",""
-TileMap,"/Script/Paper2D.PaperTileMap","","TM_",""
-TileSet,"/Script/Paper2D.PaperTileSet","","TS_",""
+---,ObjectType,Variant,Prefix,Suffix,Description
+PaperFlipbook,"/Script/Paper2D.PaperFlipbook","","PFB_","",""
+Sprite,"/Script/Paper2D.PaperSprite","","SPR_","",""
+TileMap,"/Script/Paper2D.PaperTileMap","","TM_","",""
+TileSet,"/Script/Paper2D.PaperTileSet","","TS_","",""
+PaperSpriteSheet,"/Script/PaperSpriteSheetImporter.PaperSpriteSheet","","SS_","",""

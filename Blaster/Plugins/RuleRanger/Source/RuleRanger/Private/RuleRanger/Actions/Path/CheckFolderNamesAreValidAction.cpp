@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "CheckFolderNamesAreValidAction.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(CheckFolderNamesAreValidAction)
 
 UCheckFolderNamesAreValidAction::UCheckFolderNamesAreValidAction()
 {
@@ -33,6 +34,9 @@ void UCheckFolderNamesAreValidAction::Apply_Implementation(URuleRangerActionCont
         return;
     }
     PathName.ParseIntoArray(Folders, TEXT("/"), true);
+
+    // Pop the last element so we are just checking folder and not asset name
+    Folders.Pop();
 
     const FRegexPattern Pattern(ValidFolderPattern,
                                 bCaseSensitive ? ERegexPatternFlags::None : ERegexPatternFlags::CaseInsensitive);

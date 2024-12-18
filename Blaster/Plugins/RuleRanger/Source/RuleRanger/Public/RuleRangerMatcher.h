@@ -34,5 +34,5 @@ public:
      * @return true if the asset is a match, false otherwise.
      */
     UFUNCTION(BlueprintNativeEvent, Category = "Rule Ranger")
-    bool Test(UObject* Object);
+    bool Test(UObject* Object) const;
 };

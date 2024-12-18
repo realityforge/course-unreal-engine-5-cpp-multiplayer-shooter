@@ -54,7 +54,8 @@ public:
      * @param Class The Type of the Object to return
      * @return The object of the target type or nullptr
      */
-    template <class T> FORCEINLINE static T* ToObject(UObject* InObject, UClass* Class)
+    template <class T>
+    FORCEINLINE static T* ToObject(UObject* InObject, UClass* Class)
     {
         if (IsA(InObject, Class))
         {
@@ -74,7 +75,8 @@ public:
         }
     }
 
-    template <class T> FORCEINLINE static T* ToObject(UObject* InObject)
+    template <class T>
+    FORCEINLINE static T* ToObject(UObject* InObject)
     {
         return ToObject<T>(InObject, T::StaticClass());
     }

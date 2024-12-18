@@ -41,10 +41,32 @@ protected:
      * Return true to analyze the particular Blueprint Graph/Function.
      * Useful to skip Construction graphs that are automatically created and can not be modified.
      *
+     * @param Blueprint the Blueprint.
      * @param Graph the function Graph.
      * @return true to analyze function, false otherwise.
      */
-    virtual bool ShouldAnalyzeGraph(UEdGraph* Graph) const;
+    virtual bool ShouldAnalyzeGraph(UBlueprint* Blueprint, UEdGraph* Graph) const;
+
+    /**
+     * Return true to analyze the particular Blueprint Function.
+     * Useful to filter functions from analysis.
+     *
+     * @param Blueprint the Blueprint.
+     * @param FunctionEntry The node representing the function entry point.
+     * @return true to analyze function, false otherwise.
+     */
+    virtual bool ShouldAnalyzeFunction(UBlueprint* Blueprint, UK2Node_FunctionEntry* FunctionEntry) const;
+
+    /**
+     * Return true to analyze the Functions.
+     * This has already been filtered down by ShouldAnalyzeFunction, and thus all functions will be analyzed if this
+     * function returns true.
+     *
+     * @param Blueprint the Blueprint.
+     * @param Functions The nodes representing the function entry points.
+     * @return true to analyze functions, false otherwise.
+     */
+    virtual bool ShouldAnalyzeFunctions(UBlueprint* Blueprint, const TArray<UK2Node_FunctionEntry*>& Functions) const;
 
     /**
      * Function to override to analyze a particular function.

@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "MaterialParametersActionBase.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(MaterialParametersActionBase)
 
 void UMaterialParametersActionBase::AnalyzeParameter(URuleRangerActionContext* ActionContext,
                                                      const UMaterial* const Material,

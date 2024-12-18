@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureFunctionsHaveDescriptionsAction.h"
 #include "K2Node_FunctionEntry.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureFunctionsHaveDescriptionsAction)
 
 void UEnsureFunctionsHaveDescriptionsAction::AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                                              UBlueprint* Blueprint,
@@ -25,13 +26,13 @@ void UEnsureFunctionsHaveDescriptionsAction::AnalyzeFunction(URuleRangerActionCo
         const bool bPublic = FUNC_Public & FunctionEntry->GetFunctionFlags();
         // ReSharper disable once CppTooWideScopeInitStatement
         const bool bProtected = FUNC_Protected & FunctionEntry->GetFunctionFlags();
-        if (bPublic || (bCheckProtectedFunctions && bProtected))
-        {
-            const auto& ErrorMessage = FString::Printf(
-                TEXT("Blueprint contains a %s function named '%s' that is expected to have a description."),
-                (bPublic ? TEXT("public") : TEXT("protected")),
-                *Graph->GetName());
-            ActionContext->Error(FText::FromString(ErrorMessage));
-        }
+
+        const auto& ErrorMessage =
+            FString::Printf(TEXT("Blueprint contains a %s function named '%s' that is expected to have a description."),
+                            (bPublic          ? TEXT("public")
+                                 : bProtected ? TEXT("protected")
+                                              : TEXT("private")),
+                            *Graph->GetName());
+        ActionContext->Error(FText::FromString(ErrorMessage));
     }
 }

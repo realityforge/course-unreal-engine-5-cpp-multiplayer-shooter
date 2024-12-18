@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "EnsureNeverStreamValidAction.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureNeverStreamValidAction)
 
 void UEnsureNeverStreamValidAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
@@ -49,6 +50,6 @@ void UEnsureNeverStreamValidAction::Apply_Implementation(URuleRangerActionContex
     }
     else
     {
-        LogInfo(Texture, TEXT("Texture has a valid NeverStream setting. No Aciton required."));
+        LogInfo(Texture, TEXT("Texture has a valid NeverStream setting. No Action required."));
     }
 }

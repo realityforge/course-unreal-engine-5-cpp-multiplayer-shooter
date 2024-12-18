@@ -12,3 +12,5 @@
  * limitations under the License.
  */
 #include "RuleRangerRuleSet.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(RuleRangerRuleSet)

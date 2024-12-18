@@ -33,6 +33,12 @@ public:
     UPROPERTY(EditDefaultsOnly, Category = "Rule Ranger", meta = (ContentDir))
     TArray<FDirectoryPath> Dirs;
 
+    /**
+     * A set of DataTables that are used to drive different actions.
+     */
+    UPROPERTY(EditDefaultsOnly, Category = "Rule Sets", meta = (DisplayThumbnail = "false"))
+    TArray<TObjectPtr<UDataTable>> DataTables;
+
     /** A set of rule sets to be applied to directories. */
     UPROPERTY(EditDefaultsOnly, Category = "Rule Sets", meta = (AllowAbstract = "false", DisplayThumbnail = "false"))
     TArray<TObjectPtr<URuleRangerRuleSet>> RuleSets;

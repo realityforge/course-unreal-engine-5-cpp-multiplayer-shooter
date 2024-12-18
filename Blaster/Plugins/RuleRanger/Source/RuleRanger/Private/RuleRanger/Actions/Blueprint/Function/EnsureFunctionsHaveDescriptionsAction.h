@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "BlueprintFunctionActionBase.h"
+#include "BlueprintFunctionAccessFilteringActionBase.h"
 #include "CoreMinimal.h"
 #include "K2Node_FunctionEntry.h"
 #include "RuleRangerAction.h"
@@ -24,13 +24,9 @@
  * Action to check that the functions defined in the Blueprint have descriptions.
  */
 UCLASS(DisplayName = "Ensure Blueprint Functions Have Descriptions")
-class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public UBlueprintFunctionActionBase
+class RULERANGER_API UEnsureFunctionsHaveDescriptionsAction final : public UBlueprintFunctionAccessFilteringActionBase
 {
     GENERATED_BODY()
-
-    /** Should the action check protected functions. */
-    UPROPERTY(EditAnywhere)
-    bool bCheckProtectedFunctions{ true };
 
 protected:
     virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,

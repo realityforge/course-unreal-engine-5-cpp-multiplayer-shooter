@@ -27,12 +27,12 @@ class RULERANGER_API USourcePathMatcherBase : public URuleRangerMatcher
     GENERATED_BODY()
 
 public:
-    virtual bool Test_Implementation(UObject* Object) override;
+    bool Test_Implementation(UObject* Object) const override;
 
 protected:
     /** A flag controlling whether matching is Case Sensitive or not. */
     UPROPERTY(EditAnywhere)
     bool bCaseSensitive{ false };
 
-    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive);
+    virtual bool Match(UObject* Object, const FString& SourcePath, bool bInCaseSensitive) const;
 };

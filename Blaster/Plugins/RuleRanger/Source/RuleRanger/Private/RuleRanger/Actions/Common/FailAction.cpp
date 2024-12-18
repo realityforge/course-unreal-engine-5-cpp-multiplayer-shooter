@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "FailAction.h"
+
+#include UE_INLINE_GENERATED_CPP_BY_NAME(FailAction)
 
 void UFailAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {

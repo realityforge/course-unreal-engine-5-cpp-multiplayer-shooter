@@ -20,28 +20,32 @@
 #include "EnsureVariablesHaveDescriptionsAction.generated.h"
 
 /**
- * Action to check that the variable defined in the Blueprint have descriptions.
+ * Action to check that the variables defined in the Blueprint have descriptions.
  */
 UCLASS(DisplayName = "Ensure Blueprint Variables Have Descriptions")
 class RULERANGER_API UEnsureVariablesHaveDescriptionsAction final : public UBlueprintVariableActionBase
 {
     GENERATED_BODY()
 
-    /** Should the action check instance editable variables. */
+    /** Should the action check instance editable variables? */
     UPROPERTY(EditAnywhere)
     bool bCheckInstanceEditableVariables{ true };
 
-    /** Should the action check instance editable variables. */
+    /** Should the action check non-instance editable variables? */
+    UPROPERTY(EditAnywhere)
+    bool bCheckNonInstanceEditableVariables{ true };
+
+    /** Should the action check transient variables? */
     UPROPERTY(EditAnywhere)
     bool bCheckTransientVariables{ false };
 
-    /** Should the action check private variables. */
+    /** Should the action check private variables? */
     UPROPERTY(EditAnywhere)
     bool bCheckPrivateVariables{ false };
 
-    /** Should the action check local variables in functions. */
+    /** Should the action check local variables in functions? */
     UPROPERTY(EditAnywhere)
-    bool bCheckLocalVariables{ true };
+    bool bCheckLocalVariables{ false };
 
 protected:
     virtual bool ShouldAnalyzeFunction(UEdGraph* Graph, UK2Node_FunctionEntry* FunctionEntry) const override;

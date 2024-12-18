@@ -34,5 +34,5 @@ public:
     UPROPERTY(EditAnywhere)
     bool bCaseSensitive{ true };
 
-    virtual bool Test_Implementation(UObject* Object) override;
+    bool Test_Implementation(UObject* Object) const override;
 };

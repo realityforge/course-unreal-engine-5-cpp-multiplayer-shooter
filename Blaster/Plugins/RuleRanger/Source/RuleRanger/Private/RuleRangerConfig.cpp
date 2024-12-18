@@ -13,6 +13,8 @@
  */
 #include "RuleRangerConfig.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(RuleRangerConfig)
+
 bool URuleRangerConfig::ConfigMatches(const FString& Path)
 {
     for (auto Dir = Dirs.CreateIterator(); Dir; ++Dir)

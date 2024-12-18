@@ -17,6 +17,8 @@
 #include "UObject/Interface.h"
 #include "RuleRangerActionContext.generated.h"
 
+class URuleRangerRuleSet;
+class URuleRangerConfig;
 class URuleRangerRule;
 
 UENUM(BlueprintType)
@@ -119,12 +121,24 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Rule Ranger")
     virtual void Fatal(const FText& InMessage);
 
-    void ResetContext(URuleRangerRule* InRule, UObject* InObject, ERuleRangerActionTrigger InActionTrigger);
+    void ResetContext(URuleRangerConfig* const InConfig,
+                      URuleRangerRuleSet* const InRuleSet,
+                      URuleRangerRule* InRule,
+                      UObject* InObject,
+                      ERuleRangerActionTrigger InActionTrigger);
     void ClearContext();
 
     void EmitMessageLogs();
 
 private:
+    /** A reference to the RuleRangerConfig that transitively included this Action. */
+    UPROPERTY(Transient)
+    TObjectPtr<URuleRangerConfig> Config;
+
+    /** A reference to the RuleRangerRuleSet that directly included this Action. */
+    UPROPERTY(Transient)
+    TObjectPtr<URuleRangerRuleSet> RuleSet;
+
     /** The rule that contains the associated action that is using the context. */
     UPROPERTY(Transient)
     TObjectPtr<URuleRangerRule> Rule;
@@ -160,6 +174,9 @@ private:
     FText ToMessage(const FText& InMessage) const;
 
 public:
+    FORCEINLINE URuleRangerConfig const* GetOwnerConfig() const { return Config; }
+    FORCEINLINE URuleRangerRuleSet const* GetOwnerRuleSet() const { return RuleSet; }
+
     FORCEINLINE TArray<FText>& GetInfoMessages() { return InfoMessages; }
     FORCEINLINE TArray<FText>& GetWarningMessages() { return WarningMessages; }
     FORCEINLINE TArray<FText>& GetErrorMessages() { return ErrorMessages; }

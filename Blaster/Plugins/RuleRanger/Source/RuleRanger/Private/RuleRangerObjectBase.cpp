@@ -15,22 +15,14 @@
 #include "RuleRangerObjectBase.h"
 #include "RuleRangerLogging.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(RuleRangerObjectBase)
+
 void URuleRangerObjectBase::LogInfo(const UObject* const Object, const FString& Message) const
 {
-    UE_LOG(RuleRanger,
-           VeryVerbose,
-           TEXT("%s:%s: %s"),
-           *GetClass()->GetName(),
-           Object ? *Object->GetName() : TEXT("-"),
-           *Message);
+    RR_VERY_VERBOSE_ALOG("%s:%s: %s", *GetClass()->GetName(), Object ? *Object->GetName() : TEXT("-"), *Message);
 }
 
 void URuleRangerObjectBase::LogError(const UObject* const Object, const FString& Message) const
 {
-    UE_LOG(RuleRanger,
-           Error,
-           TEXT("%s:%s: %s"),
-           *GetClass()->GetName(),
-           Object ? *Object->GetName() : TEXT("-"),
-           *Message);
+    RR_ERROR_ALOG("%s:%s: %s", *GetClass()->GetName(), Object ? *Object->GetName() : TEXT("-"), *Message);
 }

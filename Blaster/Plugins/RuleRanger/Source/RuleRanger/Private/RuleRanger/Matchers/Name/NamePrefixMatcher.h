@@ -34,5 +34,5 @@ class RULERANGER_API UNamePrefixMatcher final : public URuleRangerMatcher
     bool bCaseSensitive{ true };
 
 public:
-    virtual bool Test_Implementation(UObject* Object) override;
+    virtual bool Test_Implementation(UObject* Object) const override;
 };

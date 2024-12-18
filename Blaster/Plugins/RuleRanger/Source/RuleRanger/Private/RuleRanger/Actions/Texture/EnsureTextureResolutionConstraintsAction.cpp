@@ -14,6 +14,8 @@
 
 #include "EnsureTextureResolutionConstraintsAction.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureTextureResolutionConstraintsAction)
+
 void UEnsureTextureResolutionConstraintsAction::CheckPowerOfTwo(URuleRangerActionContext* ActionContext,
                                                                 const UTexture2D* const Texture) const
 {
@@ -59,7 +61,7 @@ void UEnsureTextureResolutionConstraintsAction::CheckPowerOfTwo(URuleRangerActio
     }
     else
     {
-        LogInfo(Texture, TEXT("Texture dimensions are a power of two. No Aciton required."));
+        LogInfo(Texture, TEXT("Texture dimensions are a power of two. No Action required."));
     }
 }
 
@@ -113,7 +115,7 @@ void UEnsureTextureResolutionConstraintsAction::CheckDivisibleConstraint(URuleRa
     else
     {
         LogInfo(Texture,
-                FString::Printf(TEXT(" Texture dimensions are divisible by %d. No Aciton required."), Divisor));
+                FString::Printf(TEXT(" Texture dimensions are divisible by %d. No Action required."), Divisor));
     }
 }
 
@@ -125,7 +127,7 @@ void UEnsureTextureResolutionConstraintsAction::Apply_Implementation(URuleRanger
     {
         CheckPowerOfTwo(ActionContext, Texture);
     }
-    else
+    else if (ETextureResolutionConstraint::Auto != Constraint)
     {
         CheckDivisibleConstraint(ActionContext, Texture);
     }

@@ -31,5 +31,5 @@ class RULERANGER_API UTextureGroupMatcher final : public URuleRangerMatcher
     TSet<TEnumAsByte<TextureGroup>> TextureGroups;
 
 public:
-    virtual bool Test_Implementation(UObject* Object) override;
+    bool Test_Implementation(UObject* Object) const override;
 };

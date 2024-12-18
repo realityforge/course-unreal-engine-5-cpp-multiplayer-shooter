@@ -32,7 +32,7 @@ void FRuleRangerModule::StartupModule()
     if (!IsRunningCommandlet())
     {
         // Add integrations of RuleRanger into Editor UI
-        UE_LOG(RuleRanger, VeryVerbose, TEXT("RuleRangerModule: Initializing Editor integration."));
+        RR_VERY_VERBOSE_ALOG("RuleRangerModule: Initializing Editor integration.");
         FRuleRangerStyle::Initialize();
         FRuleRangerStyle::ReloadTextures();
         FRuleRangerCommands::Register();
@@ -41,9 +41,7 @@ void FRuleRangerModule::StartupModule()
     }
     else
     {
-        UE_LOG(RuleRanger,
-               VeryVerbose,
-               TEXT("RuleRangerModule: Skipping Editor integration as running as a commandlet."));
+        RR_VERY_VERBOSE_ALOG("RuleRangerModule: Skipping Editor integration as running as a commandlet.");
     }
 }
 

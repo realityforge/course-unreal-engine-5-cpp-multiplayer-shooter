@@ -14,6 +14,8 @@
 
 #include "EnsureTextureMipGenValidAction.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(EnsureTextureMipGenValidAction)
+
 void UEnsureTextureMipGenValidAction::Apply_Implementation(URuleRangerActionContext* ActionContext, UObject* Object)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
@@ -77,6 +79,6 @@ void UEnsureTextureMipGenValidAction::Apply_Implementation(URuleRangerActionCont
     }
     else
     {
-        LogInfo(Texture, TEXT("Texture has a valid MipGen Setting. No Aciton required."));
+        LogInfo(Texture, TEXT("Texture has a valid MipGen Setting. No Action required."));
     }
 }

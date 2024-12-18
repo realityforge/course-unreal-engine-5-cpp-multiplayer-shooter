@@ -13,6 +13,8 @@
  */
 #include "RuleRangerRuleExclusion.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(RuleRangerRuleExclusion)
+
 bool URuleRangerRuleExclusion::ExclusionMatches(const UObject& Object, const FString& Path) const
 {
     for (auto ObjectIt = Objects.CreateConstIterator(); ObjectIt; ++ObjectIt)

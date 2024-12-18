@@ -31,5 +31,5 @@ class RULERANGER_API UPathLengthMatcher final : public URuleRangerMatcher
     int32 MaxPathLength{ 140 };
 
 public:
-    virtual bool Test_Implementation(UObject* Object) override;
+    bool Test_Implementation(UObject* Object) const override;
 };

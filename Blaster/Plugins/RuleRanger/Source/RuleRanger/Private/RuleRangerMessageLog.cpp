@@ -11,8 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
-
 #include "RuleRangerMessageLog.h"
 #include "MessageLogModule.h"
 #include "RuleRangerLogging.h"
@@ -32,7 +30,7 @@ void FRuleRangerMessageLog::Initialize()
     MessageLogModule.RegisterLogListing(GetMessageLogName(),
                                         NSLOCTEXT("RuleRanger", "RuleRangerLogLabel", "Rule Ranger"),
                                         InitOptions);
-    UE_LOG(RuleRanger, VeryVerbose, TEXT("FRuleRangerMessageLog::Shutdown(): Registered MessageLog."));
+    RR_VERY_VERBOSE_ALOG("FRuleRangerMessageLog::Shutdown(): Registered MessageLog.");
 }
 
 void FRuleRangerMessageLog::Shutdown()
@@ -43,14 +41,12 @@ void FRuleRangerMessageLog::Shutdown()
         FMessageLogModule& MessageLogModule = FModuleManager::GetModuleChecked<FMessageLogModule>(MessageLogModuleName);
         if (MessageLogModule.IsRegisteredLogListing(GetMessageLogName()))
         {
-            UE_LOG(RuleRanger, VeryVerbose, TEXT("FRuleRangerMessageLog::Shutdown(): Deregistering MessageLog."));
+            RR_VERY_VERBOSE_ALOG("FRuleRangerMessageLog::Shutdown(): Deregistering MessageLog.");
             MessageLogModule.UnregisterLogListing(GetMessageLogName());
         }
         else
         {
-            UE_LOG(RuleRanger,
-                   Verbose,
-                   TEXT("FRuleRangerMessageLog::Shutdown(): Skipping deregister of MessageLog as not registered."));
+            RR_VERBOSE_ALOG("FRuleRangerMessageLog::Shutdown(): Skipping deregister of MessageLog as not registered.");
         }
     }
 }

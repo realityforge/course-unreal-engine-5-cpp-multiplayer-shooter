@@ -29,7 +29,7 @@ class RULERANGER_API UEnsureFunctionsReturnAction final : public UBlueprintFunct
     GENERATED_BODY()
 
 protected:
-    virtual bool ShouldAnalyzeGraph(UEdGraph* Graph) const override;
+    virtual bool ShouldAnalyzeGraph(UBlueprint* Blueprint, UEdGraph* Graph) const override;
 
     virtual void AnalyzeFunction(URuleRangerActionContext* ActionContext,
                                  UBlueprint* Blueprint,

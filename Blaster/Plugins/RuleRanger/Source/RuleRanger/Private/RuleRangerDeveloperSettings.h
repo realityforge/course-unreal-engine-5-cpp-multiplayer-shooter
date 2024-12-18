@@ -34,6 +34,10 @@ public:
     /** Gets the category for the settings, some high level grouping like, Editor, Engine, Game...etc. */
     virtual FName GetCategoryName() const override { return FName("Editor"); }
 
+    /** Should we always show the message log after a request to scan assets or only when warnings or errors occur? */
+    UPROPERTY(Config, EditAnywhere, Category = "Rule Ranger", meta = (DisplayThumbnail = "false"))
+    bool bAlwaysShowMessageLog;
+
     UPROPERTY(Config, EditAnywhere, Category = "Rule Ranger", meta = (DisplayThumbnail = "false"))
     TArray<TSoftObjectPtr<URuleRangerConfig>> Configs;
 };

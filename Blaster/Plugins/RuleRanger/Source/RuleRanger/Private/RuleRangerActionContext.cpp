@@ -16,6 +16,8 @@
 #include "RuleRangerMessageLog.h"
 #include "RuleRangerRule.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(RuleRangerActionContext)
+
 ERuleRangerActionState URuleRangerActionContext::GetState()
 {
     return ActionState;
@@ -33,11 +35,18 @@ bool URuleRangerActionContext::IsDryRun()
              || ERuleRangerActionTrigger::AT_Fix == ActionTrigger);
 }
 
-void URuleRangerActionContext::ResetContext(URuleRangerRule* const InRule,
+void URuleRangerActionContext::ResetContext(URuleRangerConfig* const InConfig,
+                                            URuleRangerRuleSet* const InRuleSet,
+                                            URuleRangerRule* const InRule,
                                             UObject* const InObject,
                                             const ERuleRangerActionTrigger InActionTrigger)
 {
-    check(nullptr != InObject);
+    check(InConfig);
+    check(InRuleSet);
+    check(InRule);
+    check(InObject);
+    Config = InConfig;
+    RuleSet = InRuleSet;
     Rule = InRule;
     Object = InObject;
     ActionTrigger = InActionTrigger;

@@ -27,9 +27,17 @@ class RULERANGER_API UEnsureMaterialParametersHaveDescriptionsAction final : pub
 {
     GENERATED_BODY()
 
+    /** The number of parameters that triggers the requirement that all parameters have a group. */
+    UPROPERTY(EditAnywhere)
+    int32 Threshold{ 5 };
+
 protected:
     virtual void AnalyzeParameter(URuleRangerActionContext* ActionContext,
                                   const UMaterial* Material,
                                   const FMaterialParameterInfo& Info,
                                   const FMaterialParameterMetadata& Metadata) const override;
+    virtual bool
+    ShouldAnalyzeParameters(URuleRangerActionContext* ActionContext,
+                            const UMaterial* const Material,
+                            const TMap<FMaterialParameterInfo, FMaterialParameterMetadata>& Parameters) const override;
 };
