@@ -73,8 +73,8 @@ ABlasterCharacter::ABlasterCharacter()
 
     // Set some values for update that are relatively high as the character is the actor
     // most of interest in a fast moving FPS
-    NetUpdateFrequency = 66.f;
-    MinNetUpdateFrequency = 33.f;
+    SetNetUpdateFrequency(66.f);
+    SetMinNetUpdateFrequency(33.f);
     NetPriority = 5;
 
     DissolveTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DissolveTimelineComponent"));
