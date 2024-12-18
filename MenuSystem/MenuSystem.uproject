@@ -1,171 +1,171 @@
 {
-	"FileVersion": 3,
-	"EngineAssociation": "5.3",
-	"Category": "",
-	"Description": "",
-	"Modules": [
-		{
-			"Name": "MenuSystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"Engine"
-			]
-		}
-	],
-	"Plugins": [
-		{
-			"Name": "MultiplayerSessions",
-			"Enabled": true
-		},
-		{
-			"Name": "PluginBrowser",
-			"Enabled": true
-		},
-		{
-			"Name": "EngineAssetDefinitions",
-			"Enabled": true
-		},
-		{
-			"Name": "ContentBrowserFileDataSource",
-			"Enabled": true
-		},
-		{
-			"Name": "ContentBrowserAssetDataSource",
-			"Enabled": true
-		},
-		{
-			"Name": "ContentBrowserClassDataSource",
-			"Enabled": true
-		},
-		{
-			"Name": "ContentBrowserAliasDataSource",
-			"Enabled": true
-		},
-		{
-			"Name": "PropertyAccessNode",
-			"Enabled": true
-		},
-		{
-			"Name": "ModelingToolsEditorMode",
-			"Enabled": true,
-			"TargetAllowList": [
-				"Editor"
-			]
-		},
-		{
-			"Name": "OnlineSubsystemSteam",
-			"Enabled": true
-		},
-		{
-			"Name": "AlembicImporter",
-			"Enabled": false
-		},
-		{
-			"Name": "AndroidMedia",
-			"Enabled": false
-		},
-		{
-			"Name": "AndroidDeviceProfileSelector",
-			"Enabled": false
-		},
-		{
-			"Name": "AndroidMoviePlayer",
-			"Enabled": false
-		},
-		{
-			"Name": "AppleMoviePlayer",
-			"Enabled": false
-		},
-		{
-			"Name": "ArchVisCharacter",
-			"Enabled": false
-		},
-		{
-			"Name": "AvfMedia",
-			"Enabled": false
-		},
-		{
-			"Name": "MediaPlate",
-			"Enabled": false
-		},
-		{
-			"Name": "DatasmithContent",
-			"Enabled": false
-		},
-		{
-			"Name": "GeometryCache",
-			"Enabled": false
-		},
-		{
-			"Name": "AppleImageUtils",
-			"Enabled": false
-		},
-		{
-			"Name": "UObjectPlugin",
-			"Enabled": false
-		},
-		{
-			"Name": "ExampleDeviceProfileSelector",
-			"Enabled": false
-		},
-		{
-			"Name": "IOSDeviceProfileSelector",
-			"Enabled": false
-		},
-		{
-			"Name": "XCodeSourceCodeAccess",
-			"Enabled": false,
-			"SupportedTargetPlatforms": [
-				"Mac"
-			]
-		},
-		{
-			"Name": "XGEController",
-			"Enabled": false
-		},
-		{
-			"Name": "WmfMedia",
-			"Enabled": false
-		},
-		{
-			"Name": "WebMMoviePlayer",
-			"Enabled": false
-		},
-		{
-			"Name": "VisualStudioSourceCodeAccess",
-			"Enabled": true
-		},
-		{
-			"Name": "VisualStudioCodeSourceCodeAccess",
-			"Enabled": false
-		},
-		{
-			"Name": "WindowsMoviePlayer",
-			"Enabled": false
-		},
-		{
-			"Name": "MobilePatchingUtils",
-			"Enabled": false
-		},
-		{
-			"Name": "MacGraphicsSwitching",
-			"Enabled": false
-		},
-		{
-			"Name": "LinuxDeviceProfileSelector",
-			"Enabled": false
-		},
-		{
-			"Name": "NullSourceCodeAccess",
-			"Enabled": false
-		},
-		{
-			"Name": "CodeLiteSourceCodeAccess",
-			"Enabled": false
-		}
-	],
-	"TargetPlatforms": [
-		"Windows"
-	]
+  "FileVersion": 3,
+  "EngineAssociation": "5.3",
+  "Category": "",
+  "Description": "",
+  "Modules": [
+    {
+      "Name": "MenuSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "AdditionalDependencies": [
+        "Engine"
+      ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "MultiplayerSessions",
+      "Enabled": true
+    },
+    {
+      "Name": "PluginBrowser",
+      "Enabled": true
+    },
+    {
+      "Name": "EngineAssetDefinitions",
+      "Enabled": true
+    },
+    {
+      "Name": "ContentBrowserFileDataSource",
+      "Enabled": true
+    },
+    {
+      "Name": "ContentBrowserAssetDataSource",
+      "Enabled": true
+    },
+    {
+      "Name": "ContentBrowserClassDataSource",
+      "Enabled": true
+    },
+    {
+      "Name": "ContentBrowserAliasDataSource",
+      "Enabled": true
+    },
+    {
+      "Name": "PropertyAccessNode",
+      "Enabled": true
+    },
+    {
+      "Name": "ModelingToolsEditorMode",
+      "Enabled": true,
+      "TargetAllowList": [
+        "Editor"
+      ]
+    },
+    {
+      "Name": "OnlineSubsystemSteam",
+      "Enabled": true
+    },
+    {
+      "Name": "AlembicImporter",
+      "Enabled": false
+    },
+    {
+      "Name": "AndroidMedia",
+      "Enabled": false
+    },
+    {
+      "Name": "AndroidDeviceProfileSelector",
+      "Enabled": false
+    },
+    {
+      "Name": "AndroidMoviePlayer",
+      "Enabled": false
+    },
+    {
+      "Name": "AppleMoviePlayer",
+      "Enabled": false
+    },
+    {
+      "Name": "ArchVisCharacter",
+      "Enabled": false
+    },
+    {
+      "Name": "AvfMedia",
+      "Enabled": false
+    },
+    {
+      "Name": "MediaPlate",
+      "Enabled": false
+    },
+    {
+      "Name": "DatasmithContent",
+      "Enabled": false
+    },
+    {
+      "Name": "GeometryCache",
+      "Enabled": false
+    },
+    {
+      "Name": "AppleImageUtils",
+      "Enabled": false
+    },
+    {
+      "Name": "UObjectPlugin",
+      "Enabled": false
+    },
+    {
+      "Name": "ExampleDeviceProfileSelector",
+      "Enabled": false
+    },
+    {
+      "Name": "IOSDeviceProfileSelector",
+      "Enabled": false
+    },
+    {
+      "Name": "XCodeSourceCodeAccess",
+      "Enabled": false,
+      "SupportedTargetPlatforms": [
+        "Mac"
+      ]
+    },
+    {
+      "Name": "XGEController",
+      "Enabled": false
+    },
+    {
+      "Name": "WmfMedia",
+      "Enabled": false
+    },
+    {
+      "Name": "WebMMoviePlayer",
+      "Enabled": false
+    },
+    {
+      "Name": "VisualStudioSourceCodeAccess",
+      "Enabled": true
+    },
+    {
+      "Name": "VisualStudioCodeSourceCodeAccess",
+      "Enabled": false
+    },
+    {
+      "Name": "WindowsMoviePlayer",
+      "Enabled": false
+    },
+    {
+      "Name": "MobilePatchingUtils",
+      "Enabled": false
+    },
+    {
+      "Name": "MacGraphicsSwitching",
+      "Enabled": false
+    },
+    {
+      "Name": "LinuxDeviceProfileSelector",
+      "Enabled": false
+    },
+    {
+      "Name": "NullSourceCodeAccess",
+      "Enabled": false
+    },
+    {
+      "Name": "CodeLiteSourceCodeAccess",
+      "Enabled": false
+    }
+  ],
+  "TargetPlatforms": [
+    "Windows"
+  ]
 }
