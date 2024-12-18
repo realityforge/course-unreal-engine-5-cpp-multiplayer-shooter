@@ -26,7 +26,7 @@ AWeapon::AWeapon()
     WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     EnableCustomDepth(true);
-    WeaponMesh->SetCustomDepthStencilValue(EBlasterCustomDepthStencilValue::BlueOutline);
+    WeaponMesh->SetCustomDepthStencilValue(BlueOutline);
     // Need to mark the render state as dirty to get the stencil value updated
     // TODO: Is this really needed in a constructor??? (does constructor not just set up the default instance?)
     WeaponMesh->MarkRenderStateDirty();
@@ -111,7 +111,7 @@ void AWeapon::OnWeaponStateUpdated() const
             WeaponMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
         }
         EnableCustomDepth(true);
-        WeaponMesh->SetCustomDepthStencilValue(EBlasterCustomDepthStencilValue::BlueOutline);
+        WeaponMesh->SetCustomDepthStencilValue(BlueOutline);
         WeaponMesh->MarkRenderStateDirty();
     }
 }
