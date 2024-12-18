@@ -235,7 +235,7 @@ void AWeapon::OnRep_Owner()
     Super::OnRep_Owner();
 
     ClearCachedOwnerProperties();
-    // If we have have an owner then the next call will recache and update HUD
+    // If we have an owner, then the next call will recache and update HUD
     // otherwise out Owner is now nullptr and thus no HUD to update
     UpdateHUDAmmo();
 }
