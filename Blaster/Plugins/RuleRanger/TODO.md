@@ -12,8 +12,6 @@ Shorthand notes of where to go next with this experiment:
 
 * RuleRanger should ALSO invoke validation on each object ... otherwise problems highlighted via IsDataValid will be missed. Note that by default validation also invokes RuleRanger so we will need to guard this scenario and avoid duplicate invocations
 
-* Remove the "Actor/*" actions and replace with specific `IsDataValid()` implementations in each project. Maybe we expose the functionality as static utility functions.
-
 * Update NameConventions action to also grab data from context
 * Add concept of ExclusionSet that is a set of Rules and RuleSets that can be excluded? So we can have a common exclude for all ThirdParty stuff across projects?
 * Consider using a separate Plugin+module for Niagara checks so we can have a clean dependency tree.
