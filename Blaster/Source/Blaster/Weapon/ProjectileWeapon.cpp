@@ -1,6 +1,27 @@
 #include "Weapon/ProjectileWeapon.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Misc/DataValidation.h"
 #include "Weapon/Projectile.h"
+
+EDataValidationResult AProjectileWeapon::IsDataValid(FDataValidationContext& Context) const
+{
+    if (!GetClass()->HasAnyClassFlags(CLASS_Abstract))
+    {
+        if (!GetWeaponMesh()->DoesSocketExist(FName("MuzzleFlash")))
+        {
+            Context.AddError(FText::FromString(
+                FString::Printf(TEXT("The socket named 'MuzzleFlash' does not exist on the mesh named "
+                                     "'%s' referenced from the SkeletalMeshComponent component named '%s'. "
+                                     "The socket is required to attach the muzzle flash FX."),
+                                GetWeaponMesh()->GetSkeletalMeshAsset()
+                                    ? *GetWeaponMesh()->GetSkeletalMeshAsset()->GetOutermostObject()->GetName()
+                                    : TEXT("None"),
+                                *GetWeaponMesh()->GetName())));
+        }
+    }
+
+    return Super::IsDataValid(Context);
+}
 
 void AProjectileWeapon::Fire(const FVector& HitTarget)
 {

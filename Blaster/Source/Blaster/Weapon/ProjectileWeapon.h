@@ -14,6 +14,11 @@ class BLASTER_API AProjectileWeapon final : public AWeapon
     UPROPERTY(EditAnywhere, meta = (AllowAbstract = "false", RuleRangerRequired))
     TSubclassOf<AProjectile> ProjectileClass{ nullptr };
 
+protected:
+#if WITH_EDITOR
+    virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+#endif // WITH_EDITOR
+
 public:
     virtual void Fire(const FVector& HitTarget) override;
 };
