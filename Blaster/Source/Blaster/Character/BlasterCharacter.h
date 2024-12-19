@@ -58,6 +58,10 @@ public:
 protected:
     virtual void BeginPlay() override;
 
+#if WITH_EDITOR
+    virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+#endif // WITH_EDITOR
+
     //---------------------------------------------------------------------------
     // User Inputs Section
     //---------------------------------------------------------------------------

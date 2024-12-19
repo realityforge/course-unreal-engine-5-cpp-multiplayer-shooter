@@ -13,6 +13,7 @@
 #include "InputMappingContext.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Misc/DataValidation.h"
 #include "Net/UnrealNetwork.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PlayerController/BlasterPlayerController.h"
@@ -295,6 +296,25 @@ void ABlasterCharacter::BeginPlay()
         // Where we have authority we make sure we react to damage
         OnTakeAnyDamage.AddDynamic(this, &ABlasterCharacter::OnTakeDamage);
     }
+}
+
+EDataValidationResult ABlasterCharacter::IsDataValid(FDataValidationContext& Context) const
+{
+    if (!GetClass()->HasAnyClassFlags(CLASS_Abstract))
+    {
+        if (!GetMesh()->DoesSocketExist(FName("RightHandSocket")))
+        {
+            Context.AddError(FText::FromString(FString::Printf(
+                TEXT("The socket named 'RightHandSocket' does not exist on the mesh named "
+                     "'%s' referenced from the SkeletalMeshComponent component named '%s'. "
+                     "The socket is required to attach the weapon to when equipping weapon."),
+                GetMesh()->GetSkeletalMeshAsset() ? *GetMesh()->GetSkeletalMeshAsset()->GetOutermostObject()->GetName()
+                                                  : TEXT("None"),
+                *GetMesh()->GetName())));
+        }
+    }
+
+    return Super::IsDataValid(Context);
 }
 
 void ABlasterCharacter::OnTakeDamage([[maybe_unused]] AActor* DamagedActor,
