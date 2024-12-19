@@ -27,6 +27,15 @@ Add EnsureDataOnlyBlueprintClasses that accepts a list of ObjectType where the r
   * Rules about max number of elements in directory
   * Rules indicate which folders you are allowed to reference
   * Rules have a priority order
+    Possible Directory layout:
+    `Characters/[CharacterName]/Animations`
+    `Characters/[CharacterName]/Materials`
+    `Characters/[CharacterName]/Materials/Instances`
+    `Characters/[CharacterName]/Materials/Functions`
+    `Characters/[CharacterName]/Materials/Layers`
+    `Characters/[CharacterName]/Rigs`
+    `Characters/[CharacterName]/Textures`
+
 * Experiment rolling back treating rules/matchers/actions as assets and instead allow them as Blueprint classes
 * Support writing rules as blueprints and thus inlining matcher/action functionality into a single call?
 * Retargeters should be named as RTG_\[Source\]_To_\[Target\]
@@ -132,13 +141,3 @@ TextureFilter FGLTFTextureUtilities::GetDefaultFilter(TextureGroup LODGroup)
   * Ensure StaticMesh has valid/non-overlapping Lightmap UVs
   * Ensure StaticMesh has NO Lightmap UVs (when not using lightmass)
   * Ensure StaticMesh has UVs in Channel0 (for when material only uses world space coordinates)
-
-Add Action that applies a layout for textures based on metadata and types? Maybe something like:
-Possible Directory layout:
- `Characters/[CharacterName]/Animations`
- `Characters/[CharacterName]/Materials`
- `Characters/[CharacterName]/Materials/Instances`
- `Characters/[CharacterName]/Materials/Functions`
- `Characters/[CharacterName]/Materials/Layers`
- `Characters/[CharacterName]/Rigs`
- `Characters/[CharacterName]/Textures`
