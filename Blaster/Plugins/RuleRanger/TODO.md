@@ -59,7 +59,7 @@ Shorthand notes of where to go next with this experiment:
   * Add requirement that Enumerators are documented
 * Add the ability to add an exception for a violation from within the MessageLog. Think "Click to exclude."
 * Material Function checks:
-  * Ensure that names fpr inputs match a pattern
+  * Ensure that names for inputs match a pattern
   * Ensure that descriptions for inputs present
   * Ensure that the override name matches a pattern if exposed to library
 * Material Parameter:
