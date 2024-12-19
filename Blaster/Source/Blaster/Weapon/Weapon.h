@@ -52,7 +52,7 @@ protected:
 
 public:
     /**
-     * Called to transition object to dropped state.
+     * Called to transition the object to a dropped state.
      */
     void Dropped();
 
