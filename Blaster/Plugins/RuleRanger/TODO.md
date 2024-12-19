@@ -7,12 +7,15 @@ Shorthand notes of where to go next with this experiment:
   - AbilitySet_ -> Ability Set
   - InputData_ -> (Lyra) Input Config
 
+Add EnsureDataOnlyBlueprintClasses that accepts a list of ObjectType where the rule applied. Simplifies ShooterMP significantly
+
 * Change the way that Texture conventions are driven so that suffix is driven by variant in NameConventions. Also change `DT_DefaultTextureConventions` so that ehy are driven by variants
 * Change naming convention so that if a variant is not specified but the type has variants and the name has a suffix that matches a variant then auto-set variant (i.e. importing a texture named `T_Blah_BC` will automatically set `BaseTexture`). Maybe add a flag per NameConvention row that allows auto-setting variant?
 
 * RuleRanger should ALSO invoke validation on each object ... otherwise problems highlighted via IsDataValid will be missed. Note that by default validation also invokes RuleRanger so we will need to guard this scenario and avoid duplicate invocations
 
 * Remove the "Actor/*" actions and replace with specific `IsDataValid()` implementations in each project. Maybe we expose the functionality as static utility functions.
+
 * Update NameConventions action to also grab data from context
 * Add concept of ExclusionSet that is a set of Rules and RuleSets that can be excluded? So we can have a common exclude for all ThirdParty stuff across projects?
 * Consider using a separate Plugin+module for Niagara checks so we can have a clean dependency tree.
