@@ -46,6 +46,10 @@ protected:
 
     virtual void OnRep_Owner() override;
 
+#if WITH_EDITOR
+    virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+#endif // WITH_EDITOR
+
 public:
     /**
      * Called to transition object to dropped state.

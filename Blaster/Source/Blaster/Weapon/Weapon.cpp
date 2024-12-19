@@ -4,6 +4,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Misc/DataValidation.h"
 #include "Net/UnrealNetwork.h"
 #include "PlayerController/BlasterPlayerController.h"
 #include "Weapon/Casing.h"
@@ -239,6 +240,38 @@ void AWeapon::OnRep_Owner()
     // otherwise out Owner is now nullptr and thus no HUD to update
     UpdateHUDAmmo();
 }
+
+#if WITH_EDITOR
+EDataValidationResult AWeapon::IsDataValid(FDataValidationContext& Context) const
+{
+    if (!GetClass()->HasAnyClassFlags(CLASS_Abstract))
+    {
+        if (CasingClass && !GetWeaponMesh()->DoesSocketExist(FName("AmmoEject")))
+        {
+            Context.AddError(FText::FromString(
+                FString::Printf(TEXT("The socket named 'AmmoEject' does not exist on the mesh named '%s' referenced "
+                                     "from the 'WeaponMesh' component but the weapon has defined a CasingClass '%s' "
+                                     "and thus will attempt to eject casing during firing. This requires the presence "
+                                     "of the socket to indicate where the ammo is ejected."),
+                                GetWeaponMesh()->GetSkeletalMeshAsset()
+                                    ? *GetWeaponMesh()->GetSkeletalMeshAsset()->GetOutermostObject()->GetName()
+                                    : TEXT("None"),
+                                *CasingClass->GetOutermost()->GetName())));
+        }
+        if (!GetWeaponMesh()->DoesSocketExist(FName("LeftHandSocket")))
+        {
+            Context.AddError(FText::FromString(
+                FString::Printf(TEXT("The socket named 'LeftHandSocket' does not exist on the mesh named '%s' "
+                                     "referenced from the 'WeaponMesh' component. The socket is required to support "
+                                     "the FABRIK system to move the leftHand to support the weapon."),
+                                GetWeaponMesh()->GetSkeletalMeshAsset()
+                                    ? *GetWeaponMesh()->GetSkeletalMeshAsset()->GetOutermostObject()->GetName()
+                                    : TEXT("None"))));
+        }
+    }
+    return Super::IsDataValid(Context);
+}
+#endif
 
 void AWeapon::Dropped()
 {
