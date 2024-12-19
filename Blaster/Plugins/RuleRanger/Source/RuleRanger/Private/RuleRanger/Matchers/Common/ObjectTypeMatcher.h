@@ -28,7 +28,7 @@ class RULERANGER_API UObjectTypeMatcher final : public URuleRangerMatcher
 
     /** The type to match. */
     UPROPERTY(EditAnywhere, meta = (AllowAbstract = "true"))
-    TSubclassOf<UObject> ObjectType;
+    TSubclassOf<UObject> ObjectType{ nullptr };
 
     /** The type to match. */
     UPROPERTY(EditAnywhere, meta = (AllowAbstract = "true"))
