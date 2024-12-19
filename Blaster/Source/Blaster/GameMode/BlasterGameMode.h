@@ -14,7 +14,7 @@ namespace MatchState
     extern BLASTER_API const FName Cooldown;
 } // namespace MatchState
 
-UCLASS()
+UCLASS(Abstract)
 class BLASTER_API ABlasterGameMode final : public AGameMode
 {
     GENERATED_BODY()
